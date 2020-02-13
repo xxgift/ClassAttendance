@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:color="#C6C6C6" android:width="0.2dp" />
+            <solid android:color="@color/loginmain"/>
+            <corners android:radius="@android:dimen/app_icon_size"/>
+            <size android:width="184dp" android:height="15dp"/>
+            <padding android:right="@dimen/cardview_default_radius"/>
+        </shape>
+    </item>
+</selector>
