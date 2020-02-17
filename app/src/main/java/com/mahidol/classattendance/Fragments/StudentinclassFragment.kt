@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mahidol.classattendance.Adapter.UserAdapter
 import com.mahidol.classattendance.Models.User
+import com.mahidol.classattendance.Models.currenttotaltime
 import com.mahidol.classattendance.R
 
 import kotlinx.android.synthetic.main.fragment_studentinclass.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class StudentinclassFragment : Fragment(){
     lateinit var studentlist: List<User>
@@ -32,6 +35,17 @@ class StudentinclassFragment : Fragment(){
         addbtn_studentinclass.setOnClickListener {
             showDialog()
         }
+
+        if (currenttotaltime.isNullOrEmpty() ){
+            val sdf = SimpleDateFormat("HHmmss")
+            val timestart = sdf.format(Date())
+            currenttotaltime = timestart
+        }else{
+            var sdf = SimpleDateFormat("HHmmss")
+            var timeend = sdf.format(Date())
+            // currenttotaltime = (timeend.toInt()- currenttotaltime.toInt()).toString()
+        }
+
     }
 
     private fun showDialog(){

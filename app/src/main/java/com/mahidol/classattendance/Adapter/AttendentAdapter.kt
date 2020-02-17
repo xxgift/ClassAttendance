@@ -25,7 +25,7 @@ class AttendentAdapter(
         val attendent = view.findViewById<TextView>(R.id.msgView)
 
         val status = statusList[position]
-        attendent.text = "fonnn${status.status}"
+        attendent.text = "${status.status}"
 
 
         return view

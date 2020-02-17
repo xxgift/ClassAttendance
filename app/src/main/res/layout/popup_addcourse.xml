@@ -6,30 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-<!--    <View-->
-<!--        android:id="@+id/view4"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@color/cardview_shadow_start_color"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <!--    <View-->
-<!--        android:id="@+id/view2"-->
-<!--        android:layout_width="67dp"-->
-<!--        android:layout_height="67dp"-->
-<!--        android:layout_marginTop="204dp"-->
-<!--        android:background="@mipmap/addcourse_ic"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/view"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/view"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <!--        android:id="@+id/view4"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/cardview_shadow_start_color"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/view2"-->
+    <!--        android:layout_width="67dp"-->
+    <!--        android:layout_height="67dp"-->
+    <!--        android:layout_marginTop="204dp"-->
+    <!--        android:background="@mipmap/addcourse_ic"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/view"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/view"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <View
         android:id="@+id/view"
         android:layout_width="317dp"
-        android:layout_height="262dp"
+        android:layout_height="200dp"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,12 +39,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+
     <TextView
         android:id="@+id/textView8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="33dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="190dp"
         android:fontFamily="@font/montserrat"
         android:text="Add Course"
@@ -58,7 +60,7 @@
         android:id="@+id/addcourse_courseID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="88dp"
         android:background="@mipmap/username_edittext"
         android:ems="10"
         android:fontFamily="@font/montserrat"
@@ -72,63 +74,11 @@
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
-    <EditText
-        android:id="@+id/addcourse_hours"
-        android:layout_width="67dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="10dp"
-        android:background="@mipmap/username_edittext"
-        android:ems="10"
-        android:fontFamily="@font/montserrat"
-        android:hint="HH"
-        android:inputType="time"
-        android:textAlignment="center"
-        android:textColor="@color/purple"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/view9"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
-    <EditText
-        android:id="@+id/addcourse_minutes"
-        android:layout_width="67dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="25dp"
-        android:background="@mipmap/username_edittext"
-        android:ems="10"
-        android:fontFamily="@font/montserrat"
-        android:hint="MM"
-        android:inputType="time"
-        android:textAlignment="center"
-        android:textColor="@color/purple"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/view9"
-        app:layout_constraintTop_toTopOf="@+id/view"
-        app:layout_constraintVertical_bias="0.502" />
-
-    <View
-        android:id="@+id/view9"
-        android:layout_width="6dp"
-        android:layout_height="29dp"
-        android:layout_marginTop="25dp"
-        android:background="@mipmap/colon_ic"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
     <Button
         android:id="@+id/addcourse_cancelbtn"
         android:layout_width="159dp"
         android:layout_height="56dp"
-        android:layout_marginTop="206dp"
+        android:layout_marginTop="156dp"
         android:background="#CBCBCB"
         android:fontFamily="@font/montserrat"
         android:textAllCaps="true"
@@ -143,7 +93,7 @@
         android:id="@+id/addcourse_addbtn"
         android:layout_width="159dp"
         android:layout_height="56dp"
-        android:layout_marginTop="206dp"
+        android:layout_marginTop="156dp"
         android:background="#6586DE"
         android:fontFamily="@font/montserrat"
         android:textAllCaps="true"

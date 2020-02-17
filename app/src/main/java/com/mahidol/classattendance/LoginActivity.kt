@@ -10,7 +10,6 @@ import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.User
 import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currenttype
-
 import kotlinx.android.synthetic.main.login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -54,6 +53,8 @@ class LoginActivity : AppCompatActivity() {
                     override fun onPostExecute(result: String?) {
                         if (result != "null") {
                             userprofile = Gson().fromJson(result, User::class.java)
+                            courselistdetail = userprofile!!.courselist
+
                             //check username and password is matched
                             if (userprofile!!.password == pname) {
                                 if(userprofile!!.type == "Student"){
@@ -62,14 +63,12 @@ class LoginActivity : AppCompatActivity() {
                                     intent.putExtra("uname", uname)
                                     applicationContext.startActivity(intent)
                                     currenttype = userprofile!!.type
-                                    courselistdetail = userprofile!!.courselist
                                 }else{
                                     val intent = Intent(this@LoginActivity, BodyActivity::class.java)
                                     //transfer value of username to scan
                                     intent.putExtra("uname", uname)
                                     applicationContext.startActivity(intent)
                                     currenttype = userprofile!!.type
-                                    courselistdetail = userprofile!!.courselist
                                 }
                             } else {
                                 Toast.makeText(

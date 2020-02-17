@@ -8,11 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.User
+import com.mahidol.classattendance.Models.courselistdetail
 
 import kotlinx.android.synthetic.main.bestregister.*
 
 
-class RegisterActivity:AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
     lateinit var dataReference: DatabaseReference
     lateinit var userList: ArrayList<User>
     lateinit var courseList: ArrayList<Course>
@@ -27,7 +28,7 @@ class RegisterActivity:AppCompatActivity() {
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
 
 
-        dataReference.addValueEventListener(object: ValueEventListener {
+        dataReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
 
             }
@@ -47,17 +48,17 @@ class RegisterActivity:AppCompatActivity() {
         regist_password.text = null
 
 
-        radioGroup.setOnCheckedChangeListener{ group, checkedId ->
-                val radio: RadioButton = findViewById(checkedId)
-            type=radio.text.toString()
-                Toast.makeText(
-                    applicationContext, " On checked change : ${type}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val radio: RadioButton = findViewById(checkedId)
+            type = radio.text.toString()
+            Toast.makeText(
+                applicationContext, " On checked change : ${type}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
         register_btn.setOnClickListener {
-            if(saveData()) {
+            if (saveData()) {
                 var id: Int = radioGroup.checkedRadioButtonId
 
                 val registuser = regist_username.text.toString()
@@ -79,8 +80,9 @@ class RegisterActivity:AppCompatActivity() {
             }
         }
     }
-    var type:String = ""
-    private fun saveData():Boolean{
+
+    var type: String = ""
+    private fun saveData(): Boolean {
         val user = regist_username.text.toString()
         val pass = regist_password.text.toString()
         //check each edittext must not be null
@@ -95,7 +97,7 @@ class RegisterActivity:AppCompatActivity() {
 
         //check username is not already in use
         userList.forEach {
-            if(it.username == user){
+            if (it.username == user) {
                 regist_username.error = "Incorrect Username"
                 regist_username.text = null
                 regist_username.setHint("Enter Again")
@@ -103,7 +105,10 @@ class RegisterActivity:AppCompatActivity() {
             }
         }
         //send value to firebase
-        val userData = User(user,pass,type,null)
+        if (courselistdetail!!.isEmpty()) {
+            courselistdetail!!.add(Course("", ""))
+        }
+        val userData = User(user, pass, type, courselistdetail)
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)
