@@ -42,7 +42,7 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="33dp"
+        android:layout_marginStart="140dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="190dp"
         android:fontFamily="@font/montserrat"
@@ -101,5 +101,17 @@
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
         android:text="CANCEL" />
+
+    <ImageView
+        android:id="@+id/imageView18"
+        android:layout_width="47dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/textView8"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:srcCompat="@mipmap/addstudent_ic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

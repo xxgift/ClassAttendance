@@ -5,16 +5,13 @@
         android:id="@+id/navigation_timeline"
         android:icon="@mipmap/ic_dashboard"
         android:title="Timeline"/>
-
     <item
-        android:id="@+id/navigation_scanner"
-        android:icon="@mipmap/ic_scanner"
-        android:title="Scanner" />
-
-
+        android:id="@+id/navigation_home"
+        android:icon="@mipmap/ic_home"
+        android:title="Home"/>
     <item
-        android:id="@+id/navigation_post"
-        android:icon="@mipmap/ic_post"
-        android:title="Post"/>
+        android:id="@+id/navigation_classmaterial"
+        android:icon="@mipmap/ic_classmaterialnavi"
+        android:title="Class Materials"/>
 
 </menu>

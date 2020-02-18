@@ -62,25 +62,18 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 R.id.navigation_timeline -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Timeline"
-                    subappBar!!.text = userprofile!!.type
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(HomeFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_scanner -> {
+                R.id.navigation_home -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Scanner"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(ScannerFragment())
+                    appBar!!.text = "Home"
+                    subappBar!!.text = "Course List"
+                    replaceFragment(ThiscoursestudentFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_post -> {
-                    drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Post"
-                    subappBar!!.text = userprofile!!.type
-                    currenttype = userprofile!!.type
-                    replaceFragment(CheckinFragment())
-                    return@OnNavigationItemSelectedListener true
-                }
+
 
             };false
 
@@ -198,19 +191,11 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
             finish()
         }
-
-        if (id == R.id.student_thiscourse) {
+        if (id == R.id.student_scanner) {
             drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ThiscoursestudentFragment())
-            appBar!!.text = "Course List"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
-        }
-
-        if (id == R.id.student_classmeterial) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ClassmaterialFragment())
-            appBar!!.text = "Class Materials"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
+            replaceFragment(ScannerFragment())
+            appBar!!.text = "Scanner"
+            subappBar!!.text = "${userprofile!!.type}"
         }
         if (id == R.id.student_signout) {
             drawer!!.closeDrawer(GravityCompat.START)
