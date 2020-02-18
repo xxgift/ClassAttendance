@@ -219,7 +219,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawer!!.closeDrawer(GravityCompat.START)
             replaceFragment(ThiscourseteacherFragment())
             appBar!!.text = "Course List"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
+            subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
         }
         if (id == R.id.teacher_studentinclass) {
             drawer!!.closeDrawer(GravityCompat.START)
