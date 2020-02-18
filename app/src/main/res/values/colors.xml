@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#B19CD9</color>
+    <color name="colorPrimaryDark">#101010</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="moreBlack">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="purple">#5D3C9C</color>
+    <color name="studentcolor">#79A3E0</color>
+    <color name="studentsubcolor">#A3C1ED</color>
+    <color name="studenttextcolor">#00317E</color>
+    <color name="loginmain">#6BBFBF</color>
+    <color name="loginmainlight">#CCEBEB</color>
+
 </resources>
