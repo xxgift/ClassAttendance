@@ -6,21 +6,25 @@ import android.graphics.Point
 
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
 
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.mahidol.classattendance.Adapter.CourseAdapter
 
 import com.mahidol.classattendance.Models.Course
 
 import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
+import kotlinx.android.synthetic.main.fragment_courselist.*
+import kotlinx.android.synthetic.main.fragment_thiscourseteacher.*
 
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.android.synthetic.main.popup_addcourse.*
 
-class popup_addcourse_Fragment : DialogFragment() {
+class popup_addcourse_Fragment(var mView: View,var adapter:CourseAdapter) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
 
@@ -50,6 +54,10 @@ class popup_addcourse_Fragment : DialogFragment() {
 
         addcourse_addbtn.setOnClickListener {
             //save course data
+            //val imgEmpty = mView.findViewById<ImageView>(R.id.img_empty2)
+            if (courselistdetail.size > 0) {
+               // imgEmpty.visibility = View.INVISIBLE
+            }
             saveData()
 
         }
@@ -75,10 +83,13 @@ class popup_addcourse_Fragment : DialogFragment() {
         }
         //send value to firebase
         var randjoinID = ('A'..'z').map { it }.shuffled().subList(0, 4).joinToString("")
-        courselistdetail!!.add(Course(addcourseID,randjoinID))
+        courselistdetail!!.add(Course(addcourseID, randjoinID))
         var updateValue = dataReference.child(currentuser).child("courselist").setValue(
             courselistdetail
         )
+        adapter.notifyDataSetChanged()
+        val imgEmpty = mView.findViewById<ImageView>(R.id.img_empty2)
+        imgEmpty.visibility = View.INVISIBLE
         dialog!!.dismiss()
         return true
     }

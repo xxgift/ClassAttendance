@@ -39,34 +39,25 @@ class ThiscourseteacherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val imgEmpty = view!!.findViewById<ImageView>(R.id.img_empty2)
-
-        if ( courselistdetail!![0].courseID =="" && courselistdetail!![0].joinID=="") {
-            courselistdetail!!.removeAt(0)
-        }
-
-        if (courselistdetail!!.size >= 1) {
-            imgEmpty.visibility = ImageView.INVISIBLE
-        }
 
         adapter = CourseAdapter(mContext, R.layout.list_detail, courselistdetail)
         listview_courselist!!.adapter = adapter
-
+        val imgEmpty = view.findViewById<ImageView>(R.id.img_empty2)
+        if (courselistdetail.size > 0) {
+             imgEmpty.visibility = View.INVISIBLE
+        }
         addbtn_thiscourseT.setOnClickListener {
-            showDialog()
-
-            if (courselistdetail!!.size >= 1) {
-                imgEmpty.visibility = ImageView.INVISIBLE
-            }
+            showDialog(view,adapter)
             adapter.notifyDataSetChanged()
+
         }
 
 
     }
 
 
-    private fun showDialog() {
-        val applypopup = popup_addcourse_Fragment()
+    private fun showDialog(view: View,adapter: CourseAdapter) {
+        val applypopup = popup_addcourse_Fragment(view,adapter)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
 }

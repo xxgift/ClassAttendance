@@ -104,11 +104,8 @@ class RegisterActivity : AppCompatActivity() {
                 return false
             }
         }
-        //send value to firebase
-        if (courselistdetail!!.isEmpty()) {
-            courselistdetail!!.add(Course("", ""))
-        }
-        val userData = User(user, pass, type, courselistdetail)
+
+        val userData = User(user, pass, type,ArrayList<Course>())
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)

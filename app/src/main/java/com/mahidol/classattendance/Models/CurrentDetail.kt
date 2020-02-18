@@ -9,4 +9,4 @@ var currenttime: String? = null
 var currenttype: String? = null
 var currentstatus:String = ""
 var currenttotaltime:String? = null
-var courselistdetail:ArrayList<Course>? = arrayListOf()
+var courselistdetail:ArrayList<Course> = ArrayList<Course>()
