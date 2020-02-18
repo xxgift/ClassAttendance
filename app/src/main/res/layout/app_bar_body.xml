@@ -62,29 +62,33 @@
                     android:layout_height="45dp"
                     android:layout_alignTop="@+id/titleText"
                     android:layout_alignBottom="@+id/titleText"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginStart="350dp"
                     android:layout_marginTop="0dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_marginBottom="-1dp"
-                    android:layout_toEndOf="@+id/search"
                     android:backgroundTint="@color/colorPrimary"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:src="@mipmap/ic_more" />
 
-                <ImageButton
-                    android:id="@+id/search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/titleText"
-                    android:layout_alignBottom="@+id/titleText"
-                    android:layout_marginStart="-23dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="-1dp"
-                    android:layout_toEndOf="@+id/searcheditText"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    app:srcCompat="@drawable/ic_search" />
+                <!--                <ImageButton-->
+<!--                    android:id="@+id/search"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignTop="@+id/titleText"-->
+<!--                    android:layout_alignBottom="@+id/titleText"-->
+<!--                    android:layout_marginStart="-23dp"-->
+<!--                    android:layout_marginTop="0dp"-->
+<!--                    android:layout_marginBottom="-1dp"-->
+<!--                    android:layout_toEndOf="@+id/searcheditText"-->
+<!--                    android:backgroundTint="@color/colorPrimary"-->
+<!--                    android:paddingStart="10dp"-->
+<!--                    android:paddingEnd="10dp"-->
+<!--                    app:srcCompat="@drawable/ic_search" />-->
 
             </RelativeLayout>
 

@@ -46,7 +46,7 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private var username: TextView? = null
     private var type: TextView? = null
     private var settingBtn: ImageButton? = null
-    private var searchBtn: ImageButton? = null
+//    private var searchBtn: ImageButton? = null
 
     private var lastUpdate = 0L
 
@@ -59,7 +59,7 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_timeline -> {
+                R.id.navigation_chatroom -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Timeline"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
@@ -68,8 +68,8 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 }
                 R.id.navigation_home -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Home"
-                    subappBar!!.text = "Course List"
+                    appBar!!.text = "My Course"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(ThiscoursestudentFragment())
                     return@OnNavigationItemSelectedListener true
                 }
@@ -95,7 +95,6 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         appBar = findViewById(R.id.titleText)
         subappBar = findViewById(R.id.subtitleText)
         settingBtn = findViewById(R.id.setting)
-        searchBtn = findViewById(R.id.search)
         subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
         appBar!!.setBackgroundColor(getColor(R.color.studentcolor))
         subappBar!!.setBackgroundColor(getColor(R.color.studentsubcolor))
@@ -105,12 +104,12 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 R.color.studentcolor
             )
         )
-        searchBtn!!.setBackgroundTintList(
-            ContextCompat.getColorStateList(
-                getApplicationContext(),
-                R.color.studentcolor
-            )
-        )
+//        searchBtn!!.setBackgroundTintList(
+//            ContextCompat.getColorStateList(
+//                getApplicationContext(),
+//                R.color.studentcolor
+//            )
+//        )
 
 
         //get username from transfer data of LoginActivity
