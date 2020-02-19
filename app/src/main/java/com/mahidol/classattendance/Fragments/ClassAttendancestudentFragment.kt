@@ -25,16 +25,13 @@ class ClassAttendancestudentFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_studentinclass, container, false)
+        return inflater.inflate(R.layout.mockup_thiscoursestudent, container, false)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addbtn_studentinclass.setOnClickListener {
-            showDialog()
-        }
 
         if (currenttotaltime.isNullOrEmpty() ){
             val sdf = SimpleDateFormat("HHmmss")
@@ -48,8 +45,4 @@ class ClassAttendancestudentFragment : Fragment(){
 
     }
 
-    private fun showDialog(){
-        val applypopup =  popup_addstudent_Fragment()
-        applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
-    }
 }

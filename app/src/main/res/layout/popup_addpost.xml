@@ -41,6 +41,7 @@
         android:fontFamily="@font/montserrat"
         android:hint="Write a message"
         android:inputType="textPersonName"
+        android:maxLines="2"
         android:textAlignment="center"
         android:textColor="@color/purple"
         android:textSize="15sp"
