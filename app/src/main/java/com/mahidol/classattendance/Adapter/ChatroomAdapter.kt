@@ -36,8 +36,8 @@ class ChatroomAdapter(
             icon2.setImageResource(R.mipmap.ic_teacheravatar)
             icon1.visibility = View.INVISIBLE
         } else {
-            icon2.visibility = View.INVISIBLE
-            icon1.setImageResource(R.mipmap.ic_studentavatar)
+            icon2.setImageResource(R.mipmap.ic_studentavatar)
+            icon1.visibility = View.INVISIBLE
         }
 
         username.text = "${post.username}"
