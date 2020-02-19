@@ -8,9 +8,6 @@
         <item android:id="@+id/teacher_scanner"
             android:icon="@mipmap/ic_scanner"
             android:title="Scanner"/>
-        <item android:id="@+id/teacher_post"
-            android:icon="@mipmap/ic_pencil"
-            android:title="Post"/>
         <item android:id="@+id/teacher_logout"
             android:icon="@mipmap/ic_signout"
             android:title="Log out"/>

@@ -1,47 +1,51 @@
 package com.mahidol.classattendance.Fragments
 
+import android.app.Activity
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.google.firebase.database.*
-import com.mahidol.classattendance.Adapter.HomeAdapter
-import com.mahidol.classattendance.Models.Checkin
+import com.mahidol.classattendance.Adapter.ChatroomAdapter
+import com.mahidol.classattendance.Models.Post
 import com.mahidol.classattendance.R
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_chatroom.*
 
 
-class HomeFragment : Fragment() {
+class ChatroomFragment : Fragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
-    lateinit var checkinList: ArrayList<Checkin>
-    lateinit var adapter: HomeAdapter
+    lateinit var postList: ArrayList<Post>
+    lateinit var adapter: ChatroomAdapter
+    lateinit var mActivity: Activity
+
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context!!
+        mActivity = activity!!
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_chatroom, container, false)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         super.onAttach(context!!)
-        checkinList = arrayListOf()
-        dataReference = FirebaseDatabase.getInstance().getReference()
-        var dataQuery = dataReference.child("CheckIn").orderByChild("timestamp")
+        postList = arrayListOf()
+
+        dataReference = FirebaseDatabase.getInstance().getReference("Post")
+        var dataQuery = dataReference.orderByChild("timestamp")
 
         //add listener of search button to open navigation bar when clicked
 
@@ -73,18 +77,33 @@ class HomeFragment : Fragment() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0!!.exists()) {
-                    checkinList.clear()
+                    postList.clear()
                     for (i in p0.children) {
-                        val oneUser = i.getValue(Checkin::class.java)
-                        checkinList.add(oneUser!!)
+                        val oneUser = i.getValue(Post::class.java)
+                        postList.add(oneUser!!)
                     }
                 }
                 adapter.notifyDataSetChanged()
             }
         })
-        adapter = HomeAdapter(mContext, R.layout.list_checkin, checkinList)
-        listview_home!!.adapter = adapter
+        adapter = ChatroomAdapter(mContext, R.layout.list_post, postList)
+        listview_chatroom!!.adapter = adapter
+
+        val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_post)
+        if (postList.size > 0) {
+            imgEmpty.visibility = View.INVISIBLE
+        }
+
+        btn_addpost.setOnClickListener {
+            showDialog(view,adapter)
+            adapter.notifyDataSetChanged()
+
+        }
 
 
+    }
+    private fun showDialog(view: View,adapter: ChatroomAdapter) {
+        val applypopup = popup_addpost_Fragment(view,adapter)
+        applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
 }

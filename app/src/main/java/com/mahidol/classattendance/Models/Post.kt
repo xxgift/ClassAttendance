@@ -1,10 +1,10 @@
 package com.mahidol.classattendance.Models
 
 
-class Checkin(
+class Post(
     var username: String,
     var type: String,
-    var beacon: String,
+    var course: String,
     var content: String,
     var date: String,
     var timestamp: String

@@ -28,7 +28,6 @@ import com.google.gson.Gson
 import com.mahidol.classattendance.Fragments.*
 import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.Models.currentuser
 
 
@@ -63,14 +62,14 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Timeline"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(HomeFragment())
+                    replaceFragment(ChatroomFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_home -> {
+                R.id.navigation_mycourse -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "My Course"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(ThiscoursestudentFragment())
+                    replaceFragment(MycoursestudentFragment())
                     return@OnNavigationItemSelectedListener true
                 }
 
@@ -84,7 +83,7 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         setContentView(R.layout.activity_body_student)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        replaceFragment(HomeFragment())
+        replaceFragment(ChatroomFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
 
         //sensor
@@ -196,13 +195,7 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             appBar!!.text = "Scanner"
             subappBar!!.text = "${userprofile!!.type}"
         }
-        if (id == R.id.student_signout) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            val intent = Intent(this@BodystudentActivity, LoginActivity::class.java)
-            startActivity(intent)
-            Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
-            finish()
-        }
+
         return true
     }
 

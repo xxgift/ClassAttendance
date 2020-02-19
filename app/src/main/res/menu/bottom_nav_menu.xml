@@ -6,11 +6,11 @@
         android:icon="@mipmap/ic_dashboard"
         android:title="Chat Room"/>
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_mycourse"
         android:icon="@mipmap/ic_thiscourse"
         android:title="My Course"/>
     <item
-        android:id="@+id/navigation_classmaterial"
+        android:id="@+id/navigation_classattendance"
         android:icon="@mipmap/ic_attend"
         android:title="Class Attendance"/>
 

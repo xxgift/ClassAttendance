@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.mahidol.classattendance.Models.BBeacon
-import com.mahidol.classattendance.Models.currentbeacon
+import com.mahidol.classattendance.Models.currentcourse
 import com.mahidol.classattendance.R
 
 
@@ -33,7 +33,7 @@ class ScannerAdapter(
         placename.text = "${beacon.region}"
         time.text = "${beacon.time}"
         view.setOnClickListener {
-            currentbeacon = beacon.region
+            currentcourse = beacon.region
             Toast.makeText(mContext, "Selected ${beacon.region} Place", Toast.LENGTH_SHORT).show()
         }
 
