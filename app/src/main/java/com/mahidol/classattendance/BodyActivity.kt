@@ -15,7 +15,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -30,9 +29,6 @@ import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.SearchModel
 import com.mahidol.classattendance.Models.User
 import com.mahidol.classattendance.Models.currentuser
-
-import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
-import ir.mirrajabi.searchdialog.core.SearchResultListener
 
 
 import kotlinx.android.synthetic.main.activity_body.*
@@ -64,21 +60,21 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Timeline"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(HomeFragment())
+                    replaceFragment(ChatroomFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_home -> {
+                R.id.navigation_mycourse -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "My Course"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(ThiscourseteacherFragment())
+                    replaceFragment(MycourseteacherFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_classmaterial -> {
+                R.id.navigation_classattendance -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Class Attendance"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(ClassmaterialFragment())
+                    replaceFragment(ClassAttendanceteacherFragment())
                     return@OnNavigationItemSelectedListener true
                 }
 
@@ -92,7 +88,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_body)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        replaceFragment(HomeFragment())
+        replaceFragment(ChatroomFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
 
         //sensor
@@ -216,24 +212,14 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
             finish()
         }
-//        if (id == R.id.teacher_studentinclass) {
-//            drawer!!.closeDrawer(GravityCompat.START)
-//            replaceFragment(StudentinclassFragment())
-//            appBar!!.text = "Student List"
-//            subappBar!!.text = "Student List"
-//        }
+
         if (id == R.id.teacher_scanner) {
             drawer!!.closeDrawer(GravityCompat.START)
             replaceFragment(ScannerFragment())
             appBar!!.text = "Scanner"
             subappBar!!.text = "Scanner"
         }
-        if (id == R.id.teacher_post) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(CheckinFragment())
-            appBar!!.text = "Post"
-            subappBar!!.text = "${userprofile!!.type}"
-        }
+
         return true
     }
 

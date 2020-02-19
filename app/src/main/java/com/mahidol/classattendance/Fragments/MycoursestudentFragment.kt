@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.mahidol.classattendance.R
 
 
-class ThiscoursestudentFragment : Fragment(){
+class MycoursestudentFragment : Fragment(){
 
     override fun onCreateView(
         inflater: LayoutInflater,

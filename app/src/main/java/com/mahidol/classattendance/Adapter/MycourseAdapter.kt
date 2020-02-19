@@ -11,7 +11,7 @@ import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.R
 
 
-class CourseAdapter (
+class MycourseAdapter (
     val mContext: Context,
     val layoutResId: Int,
     val courseList: ArrayList<Course>?

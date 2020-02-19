@@ -8,16 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.mahidol.classattendance.Adapter.CourseAdapter
+import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.R
 
-import kotlinx.android.synthetic.main.fragment_thiscourseteacher.*
+import kotlinx.android.synthetic.main.fragment_mycourseteacher.*
 
 
-class ThiscourseteacherFragment : Fragment() {
+class MycourseteacherFragment : Fragment() {
     lateinit var mContext: Context
-    lateinit var adapter: CourseAdapter
+    lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
 
     override fun onCreateView(
@@ -25,7 +25,7 @@ class ThiscourseteacherFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_thiscourseteacher, container, false)
+        return inflater.inflate(R.layout.fragment_mycourseteacher, container, false)
 
     }
 
@@ -40,9 +40,9 @@ class ThiscourseteacherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = CourseAdapter(mContext, R.layout.list_detail, courselistdetail)
+        adapter = MycourseAdapter(mContext, R.layout.list_detail, courselistdetail)
         listview_courselist!!.adapter = adapter
-        val imgEmpty = view.findViewById<ImageView>(R.id.img_empty2)
+        val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_course)
         if (courselistdetail.size > 0) {
              imgEmpty.visibility = View.INVISIBLE
         }
@@ -56,7 +56,7 @@ class ThiscourseteacherFragment : Fragment() {
     }
 
 
-    private fun showDialog(view: View,adapter: CourseAdapter) {
+    private fun showDialog(view: View,adapter: MycourseAdapter) {
         val applypopup = popup_addcourse_Fragment(view,adapter)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }

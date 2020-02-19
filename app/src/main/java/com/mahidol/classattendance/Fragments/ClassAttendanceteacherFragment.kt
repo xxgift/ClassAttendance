@@ -1,4 +1,4 @@
-package ccom.mahidol.classattendance.Fragments
+package com.mahidol.classattendance.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,14 +8,14 @@ import androidx.fragment.app.Fragment
 import com.mahidol.classattendance.R
 
 
-class MockupdashboardFragment : Fragment(){
+class ClassAttendanceteacherFragment : Fragment(){
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.mockup_dashboard, container, false)
+        return inflater.inflate(R.layout.mockup_studentlist, container, false)
 
     }
 

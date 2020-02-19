@@ -9,38 +9,41 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.mahidol.classattendance.Models.Checkin
+import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 
 
-class HomeAdapter(
+class ChatroomAdapter(
     val mContext: Context,
     val layoutResId: Int,
-    val checkinList: ArrayList<Checkin>
+    val postList: ArrayList<Post>
 ) :
-    ArrayAdapter<Checkin>(mContext, layoutResId, checkinList) {
+    ArrayAdapter<Post>(mContext, layoutResId, postList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val layoutInflator: LayoutInflater = LayoutInflater.from(mContext)
         val view: View = layoutInflator.inflate(layoutResId, null)
         val username = view.findViewById<TextView>(R.id.userName)
-        val placename = view.findViewById<TextView>(R.id.beaconPlace)
+        val course = view.findViewById<TextView>(R.id.beaconPlace)
         val content = view.findViewById<TextView>(R.id.checkinContent)
-        val icon = view.findViewById<ImageView>(R.id.user_ic)
+        val icon1 = view.findViewById<ImageView>(R.id.user_ic1)
+        val icon2 = view.findViewById<ImageView>(R.id.user_ic2)
         val time = view.findViewById<TextView>(R.id.timeCheckin)
-        val user = checkinList[position]
+        val post = postList[position]
 
-        if (user.type == "Teacher") {
-            icon.setImageResource(R.mipmap.ic_teacherlove)
-        }else{
-            icon.setImageResource(R.mipmap.ic_studentlove)
+        if (currenttype == "Teacher") {
+            icon2.setImageResource(R.mipmap.ic_teacheravatar)
+            icon1.visibility = View.INVISIBLE
+        } else {
+            icon2.visibility = View.INVISIBLE
+            icon1.setImageResource(R.mipmap.ic_studentavatar)
         }
 
-        username.text = "${user.username}"
-        placename.text = "${user.beacon}"
-        content.text = "${user.content}"
-        time.text = "${user.date}"
+        username.text = "${post.username}"
+        course.text = "${post.course}"
+        content.text = "${post.content}"
+        time.text = "${post.date}"
 
 
         return view
