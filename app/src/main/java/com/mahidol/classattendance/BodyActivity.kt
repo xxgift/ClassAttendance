@@ -60,27 +60,28 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_timeline -> {
+                R.id.navigation_chatroom -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Timeline"
-                    subappBar!!.text = userprofile!!.type
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(HomeFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_scanner -> {
+                R.id.navigation_home -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Scanner"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(ScannerFragment())
+                    appBar!!.text = "My Course"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+                    replaceFragment(ThiscourseteacherFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_post -> {
+                R.id.navigation_classmaterial -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Post"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(CheckinFragment())
+                    appBar!!.text = "Class Attendance"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+                    replaceFragment(ClassmaterialFragment())
                     return@OnNavigationItemSelectedListener true
                 }
+
 
             };false
 
@@ -161,18 +162,18 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         //add listener of search button to open navigation bar when clicked
-        val search = findViewById<ImageButton>(R.id.search)
-        search.setOnClickListener {
-            val searchView:SearchView? = null
-            SimpleSearchDialogCompat(
-                this@BodyActivity, "Search", "What are you looking for...?", null, initData(),
-                SearchResultListener {baseSearchDialogCompat, item, position ->
-                    Toast.makeText(this, item.title,Toast.LENGTH_SHORT).show()
-                    baseSearchDialogCompat.dismiss()
-                }
-            ).show()
-
-        }
+//        val search = findViewById<ImageButton>(R.id.search)
+//        search.setOnClickListener {
+//            val searchView:SearchView? = null
+//            SimpleSearchDialogCompat(
+//                this@BodyActivity, "Search", "What are you looking for...?", null, initData(),
+//                SearchResultListener {baseSearchDialogCompat, item, position ->
+//                    Toast.makeText(this, item.title,Toast.LENGTH_SHORT).show()
+//                    baseSearchDialogCompat.dismiss()
+//                }
+//            ).show()
+//
+//        }
 
     }
 
@@ -215,25 +216,24 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
             finish()
         }
-        if (id == R.id.teacher_thiscourse) {
+//        if (id == R.id.teacher_studentinclass) {
+//            drawer!!.closeDrawer(GravityCompat.START)
+//            replaceFragment(StudentinclassFragment())
+//            appBar!!.text = "Student List"
+//            subappBar!!.text = "Student List"
+//        }
+        if (id == R.id.teacher_scanner) {
             drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ThiscourseteacherFragment())
-            appBar!!.text = "Course List"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
+            replaceFragment(ScannerFragment())
+            appBar!!.text = "Scanner"
+            subappBar!!.text = "Scanner"
         }
-        if (id == R.id.teacher_studentinclass) {
+        if (id == R.id.teacher_post) {
             drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(StudentinclassFragment())
-            appBar!!.text = "Student List"
-            subappBar!!.text = "Student List"
+            replaceFragment(CheckinFragment())
+            appBar!!.text = "Post"
+            subappBar!!.text = "${userprofile!!.type}"
         }
-        if (id == R.id.teacher_classmeterial) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ClassmaterialFragment())
-            appBar!!.text = "Class Materials"
-            subappBar!!.text = "Course List"
-        }
-
         return true
     }
 

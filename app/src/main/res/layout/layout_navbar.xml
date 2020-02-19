@@ -52,7 +52,7 @@
         android:layout_height="45dp"
         android:background="#D4E9FF"
         android:fontFamily="sans-serif"
-        android:src="@drawable/ic_setting"
+        android:src="@mipmap/ic_more"
         android:textColor="#101010"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"

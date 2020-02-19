@@ -15,7 +15,7 @@ class ClassmaterialFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.mockup_classmaterial, container, false)
+        return inflater.inflate(R.layout.mockup_studentlist, container, false)
 
     }
 

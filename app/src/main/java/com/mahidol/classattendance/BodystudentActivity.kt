@@ -46,7 +46,7 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private var username: TextView? = null
     private var type: TextView? = null
     private var settingBtn: ImageButton? = null
-    private var searchBtn: ImageButton? = null
+//    private var searchBtn: ImageButton? = null
 
     private var lastUpdate = 0L
 
@@ -59,28 +59,21 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_timeline -> {
+                R.id.navigation_chatroom -> {
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Timeline"
-                    subappBar!!.text = userprofile!!.type
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(HomeFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_scanner -> {
+                R.id.navigation_home -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Scanner"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(ScannerFragment())
+                    appBar!!.text = "My Course"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+                    replaceFragment(ThiscoursestudentFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_post -> {
-                    drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Post"
-                    subappBar!!.text = userprofile!!.type
-                    currenttype = userprofile!!.type
-                    replaceFragment(CheckinFragment())
-                    return@OnNavigationItemSelectedListener true
-                }
+
 
             };false
 
@@ -102,7 +95,6 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         appBar = findViewById(R.id.titleText)
         subappBar = findViewById(R.id.subtitleText)
         settingBtn = findViewById(R.id.setting)
-        searchBtn = findViewById(R.id.search)
         subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
         appBar!!.setBackgroundColor(getColor(R.color.studentcolor))
         subappBar!!.setBackgroundColor(getColor(R.color.studentsubcolor))
@@ -112,12 +104,12 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 R.color.studentcolor
             )
         )
-        searchBtn!!.setBackgroundTintList(
-            ContextCompat.getColorStateList(
-                getApplicationContext(),
-                R.color.studentcolor
-            )
-        )
+//        searchBtn!!.setBackgroundTintList(
+//            ContextCompat.getColorStateList(
+//                getApplicationContext(),
+//                R.color.studentcolor
+//            )
+//        )
 
 
         //get username from transfer data of LoginActivity
@@ -198,19 +190,11 @@ class BodystudentActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
             finish()
         }
-
-        if (id == R.id.student_thiscourse) {
+        if (id == R.id.student_scanner) {
             drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ThiscoursestudentFragment())
-            appBar!!.text = "Course List"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
-        }
-
-        if (id == R.id.student_classmeterial) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ClassmaterialFragment())
-            appBar!!.text = "Class Materials"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
+            replaceFragment(ScannerFragment())
+            appBar!!.text = "Scanner"
+            subappBar!!.text = "${userprofile!!.type}"
         }
         if (id == R.id.student_signout) {
             drawer!!.closeDrawer(GravityCompat.START)
