@@ -51,10 +51,10 @@ class RegisterActivity : AppCompatActivity() {
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
             type = radio.text.toString()
-            Toast.makeText(
-                applicationContext, " On checked change : ${type}",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                applicationContext, " On checked change : ${type}",
+//                Toast.LENGTH_SHORT
+//            ).show()
         }
 
         register_btn.setOnClickListener {
