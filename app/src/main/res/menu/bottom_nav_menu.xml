@@ -12,6 +12,6 @@
     <item
         android:id="@+id/navigation_classattendance"
         android:icon="@mipmap/ic_attend"
-        android:title="Class Attendance"/>
+        android:title="Course Attendance"/>
 
 </menu>
