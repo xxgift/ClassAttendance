@@ -12,7 +12,7 @@ import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.R
 
-import kotlinx.android.synthetic.main.fragment_mycourseteacher.*
+import kotlinx.android.synthetic.main.fragment_mycourse.*
 
 
 class MycourseteacherFragment : Fragment() {
@@ -25,7 +25,7 @@ class MycourseteacherFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_mycourseteacher, container, false)
+        return inflater.inflate(R.layout.fragment_mycourse, container, false)
 
     }
 
@@ -46,7 +46,7 @@ class MycourseteacherFragment : Fragment() {
         if (courselistdetail.size > 0) {
              imgEmpty.visibility = View.INVISIBLE
         }
-        addbtn_thiscourseT.setOnClickListener {
+        addbtn_thiscourse.setOnClickListener {
             showDialog(view,adapter)
             adapter.notifyDataSetChanged()
 

@@ -25,14 +25,14 @@ class ChatroomAdapter(
         val layoutInflator: LayoutInflater = LayoutInflater.from(mContext)
         val view: View = layoutInflator.inflate(layoutResId, null)
         val username = view.findViewById<TextView>(R.id.userName)
-        val course = view.findViewById<TextView>(R.id.beaconPlace)
-        val content = view.findViewById<TextView>(R.id.checkinContent)
+        val course = view.findViewById<TextView>(R.id.courseName)
+        val content = view.findViewById<TextView>(R.id.postContent)
         val icon1 = view.findViewById<ImageView>(R.id.user_ic1)
         val icon2 = view.findViewById<ImageView>(R.id.user_ic2)
-        val time = view.findViewById<TextView>(R.id.timeCheckin)
+        val time = view.findViewById<TextView>(R.id.timePost)
         val post = postList[position]
 
-        if (currenttype == "Teacher") {
+        if (post.type == "Teacher") {
             icon2.setImageResource(R.mipmap.ic_teacheravatar)
             icon1.visibility = View.INVISIBLE
         } else {
