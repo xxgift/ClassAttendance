@@ -116,6 +116,10 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
             dataReference.child(currentuser).child("courselist").setValue(courselistdetail)
             dataReference2.setValue(courseList)
+            adapter.notifyDataSetChanged()
+            imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
+            imgEmpty.visibility = View.INVISIBLE
+            dialog!!.dismiss()
 
         } else {
             addjoinID = addcourse_ID.text.toString()
@@ -135,7 +139,6 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             }
 
             var query = dataReference2.orderByChild("joinID").equalTo(addjoinID)
-            var flag = ""
             query.addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                 }
@@ -147,24 +150,17 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                             dataReference.child(currentuser).child("courselist")
                                 .setValue(courselistdetail)
                         }
-                        flag = "True"
+                        adapter.notifyDataSetChanged()
+                        imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
+                        imgEmpty.visibility = View.INVISIBLE
+                        dialog!!.dismiss()
+                    }else{
+                        addcourse_ID.error = "JoinID is not exist"
                     }
-                    println("yyyyyyyyyyyyyy$flag")
                 }
             })
-            println("jjjjjjjjjjj$flag")
 
-            if (flag != "True") {
-                println("fffffffffffffff$flag")
-                addcourse_ID.error = "JoinID is not exist"
-                return false
-            }
         }
-
-        adapter.notifyDataSetChanged()
-        imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
-        imgEmpty.visibility = View.INVISIBLE
-        dialog!!.dismiss()
 
         return true
 
