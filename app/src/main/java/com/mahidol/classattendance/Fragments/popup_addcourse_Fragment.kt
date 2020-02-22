@@ -3,35 +3,29 @@ package com.mahidol.classattendance.Fragments
 import android.content.Context
 
 import android.graphics.Point
-import android.os.AsyncTask
 
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 
 import androidx.fragment.app.DialogFragment
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.mahidol.classattendance.Adapter.MycourseAdapter
-import com.mahidol.classattendance.Helper.HTTPHelper
 
-import com.mahidol.classattendance.Models.Course
-
-import com.mahidol.classattendance.Models.courselistdetail
-import com.mahidol.classattendance.Models.currenttype
-import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
 
 import kotlinx.android.synthetic.main.popup_addcourse.*
+import com.mahidol.classattendance.Models.*
+
 
 class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
+    lateinit var dataReference2: DatabaseReference
     lateinit var imgEmpty: ImageView
-    lateinit var addcourseID:String
-    lateinit var addjoinID:String
-
-    var url = "https://studenttracking-47241.firebaseio.com/UserProfile/"
+    lateinit var addcourseID: String
+    lateinit var addjoinID: String
+    lateinit var courseList: ArrayList<Course>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,10 +44,30 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
         super.onViewCreated(view, savedInstanceState)
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
 
+        courseList = arrayListOf()
+        dataReference2 = FirebaseDatabase.getInstance().getReference("Course")
+        var dataQuery = dataReference2.orderByChild("courseID")
 
-        if (currenttype=="Teacher"){
+        dataQuery.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0!!.exists()) {
+                    courseList.clear()
+                    for (i in p0.children) {
+                        val oneUser = i.getValue(Course::class.java)
+                        courseList.add(oneUser!!)
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+
+        if (currenttype == "Teacher") {
             addcourse_ID.setHint("Course ID")
-        }else{
+        } else {
             addcourse_ID.setHint("Enter Join ID")
         }
 
@@ -70,7 +84,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
     private fun saveData(): Boolean {
 
-        if (currenttype=="Teacher"){
+        if (currenttype == "Teacher") {
             addcourseID = addcourse_ID.text.toString()
             //check each edittext must not be null
             if (addcourseID.isEmpty()) {
@@ -79,8 +93,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             }
 
 
-
-          //check courseID is not already in use
+            //check courseID is not already in use
             courselistdetail?.forEach {
                 if (it.courseID == addcourseID) {
                     addcourse_ID.error = "ClassID is already in used"
@@ -93,83 +106,68 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             //send value to firebase
             var randjoinID = ('A'..'z').map { it }.shuffled().subList(0, 4).joinToString("")
             courselistdetail!!.add(Course(addcourseID, randjoinID))
+            courseList.add(Course(addcourseID, randjoinID))
 
-            courselistdetail.forEach {
-                val key = it.courseID
-                dataReference.child(currentuser).child("courselist").child(key).setValue(it)
-            }
+            //set course name to be child's name
+//            courselistdetail.forEach {
+//                val key = it.courseID
+//                dataReference.child(currentuser).child("courselist").child(key).setValue(it)
+//            }
 
+            dataReference.child(currentuser).child("courselist").setValue(courselistdetail)
+            dataReference2.setValue(courseList)
 
-        }else{
+        } else {
             addjoinID = addcourse_ID.text.toString()
             //check each edittext must not be null
             if (addjoinID.isEmpty()) {
-                addcourse_ID.error = "Please enter a message"
+                addcourse_ID.error = "Please enter a joinID"
                 return false
             }
-//            var asyncTask = object : AsyncTask<String, String, String>() {
-//
-//                override fun onPreExecute() {
-//                }
-//
-//                override fun doInBackground(vararg p0: String?): String {
-//                    val helper = HTTPHelper()
-//                    return helper.getHTTPData(url + ".json")
-//                }
+            //check joinID is not already in use
+            courselistdetail?.forEach {
+                if (it.joinID == addjoinID) {
+                    addcourse_ID.error = "JoinID is already in used"
+                    addcourse_ID.text = null
+                    addcourse_ID.setHint("Enter Again")
+                    return false
+                }
+            }
 
-//                override fun onPostExecute(result: String?) {
-//                    if (result != "null") {
-//                        userprofile = Gson().fromJson(result, User::class.java)
-//                        courselistdetail = userprofile!!.courselist
-//
-//                        //check username and password is matched
-//                        if (userprofile!!.password == pname) {
-//                            if(userprofile!!.type == "Student"){
-//                                val intent = Intent(this@LoginActivity, BodystudentActivity::class.java)
-//                                //transfer value of username to scan
-//                                intent.putExtra("uname", uname)
-//                                applicationContext.startActivity(intent)
-//                                currenttype = userprofile!!.type
-//                            }else{
-//                                val intent = Intent(this@LoginActivity, BodyActivity::class.java)
-//                                //transfer value of username to scan
-//                                intent.putExtra("uname", uname)
-//                                applicationContext.startActivity(intent)
-//                                currenttype = userprofile!!.type
-//                            }
-//                        } else {
-//                            Toast.makeText(
-//                                this@LoginActivity,
-//                                "Username or Password is not matched",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//
-//                    } else {
-//                        Toast.makeText(
-//                            this@LoginActivity,
-//                            "Username or Password is not matched",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                    login_username.text = null
-//                    login_password.text = null
-//                }
-//
-//            }
-//            asyncTask.execute()
+            var query = dataReference2.orderByChild("joinID").equalTo(addjoinID)
+            var flag = ""
+            query.addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                }
+                override fun onDataChange(p0: DataSnapshot?) {
+                    if (p0!!.exists()) {
+                        for (i in p0.children) {
+                            val result = i.getValue(Course::class.java)
+                            courselistdetail.add(Course(result!!.courseID, result!!.joinID))
+                            dataReference.child(currentuser).child("courselist")
+                                .setValue(courselistdetail)
+                        }
+                        flag = "True"
+                    }
+                    println("yyyyyyyyyyyyyy$flag")
+                }
+            })
+            println("jjjjjjjjjjj$flag")
 
+            if (flag != "True") {
+                println("fffffffffffffff$flag")
+                addcourse_ID.error = "JoinID is not exist"
+                return false
+            }
         }
-
-
-
-
 
         adapter.notifyDataSetChanged()
         imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
         imgEmpty.visibility = View.INVISIBLE
         dialog!!.dismiss()
+
         return true
+
     }
 
 

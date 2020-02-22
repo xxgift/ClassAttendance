@@ -20,6 +20,7 @@ class MycourseteacherFragment : Fragment() {
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

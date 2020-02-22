@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.courselistdetail
 
 import kotlinx.android.synthetic.main.bestregister.*
 
@@ -105,7 +104,7 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        val userData = User(user, pass, type,ArrayList<Course>())
+        val userData = User(user, pass, type, ArrayList<Course>())
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)
