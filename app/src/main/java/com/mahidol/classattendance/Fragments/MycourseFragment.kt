@@ -15,7 +15,7 @@ import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
 
 
-class MycourseteacherFragment : Fragment() {
+class MycourseFragment : Fragment() {
     lateinit var mContext: Context
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
