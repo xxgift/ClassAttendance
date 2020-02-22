@@ -93,20 +93,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         appBar = findViewById(R.id.titleText)
         subappBar = findViewById(R.id.subtitleText)
 
-        if(currenttype == "Student"){
-            bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))
-            settingBtn = findViewById(R.id.setting)
-            subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
-            appBar!!.setBackgroundColor(getColor(R.color.studentcolor))
-            subappBar!!.setBackgroundColor(getColor(R.color.studentsubcolor))
-            settingBtn!!.setBackgroundTintList(
-                ContextCompat.getColorStateList(
-                    getApplicationContext(),
-                    R.color.studentcolor
-                )
-            )
-        }
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         replaceFragment(ChatroomFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
@@ -116,9 +102,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lastUpdate = System.currentTimeMillis()
 
 
-
-
-                //get username from transfer data of LoginActivity
+        //get username from transfer data of LoginActivity
         uname = intent.getStringExtra("uname")
 
         //get json file of this username
@@ -139,6 +123,17 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     type!!.text = userprofile!!.type
 
                     if(userprofile!!.type == "Student") {
+                        bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))
+                        settingBtn = findViewById(R.id.setting)
+                        subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
+                        appBar!!.setBackgroundColor(getColor(R.color.studentcolor))
+                        subappBar!!.setBackgroundColor(getColor(R.color.studentsubcolor))
+                        settingBtn!!.setBackgroundTintList(
+                            ContextCompat.getColorStateList(
+                                getApplicationContext(),
+                                R.color.studentcolor
+                            )
+                        )
                         layout_nav.setBackgroundColor(getColor(R.color.studentcolor))
                         headnavIC.setImageResource(R.mipmap.ic_studentavatar)
                     }

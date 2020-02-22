@@ -15,13 +15,12 @@ import kotlinx.android.synthetic.main.register.*
 class RegisterActivity : AppCompatActivity() {
     lateinit var dataReference: DatabaseReference
     lateinit var userList: ArrayList<User>
-    lateinit var courseList: ArrayList<Course>
+    lateinit var type: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        courseList = arrayListOf()
 
         userList = arrayListOf()
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
@@ -46,7 +45,6 @@ class RegisterActivity : AppCompatActivity() {
         regist_username.text = null
         regist_password.text = null
 
-
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
             type = radio.text.toString()
@@ -57,33 +55,18 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         register_btn.setOnClickListener {
-            if (saveData()) {
-                var id: Int = radioGroup.checkedRadioButtonId
+            saveData()
 
-                val registuser = regist_username.text.toString()
-                println(registuser)
-                if (id != -1) { // If any radio button checked from radio group
-                    // Get the instance of radio button using id
-                    val radio: RadioButton = findViewById(id)
-                    Toast.makeText(
-                        applicationContext, "On button click : ${radio.text}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    // If no radio button checked in this radio group
-                    Toast.makeText(
-                        applicationContext, "On button click : nothing selected",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
         }
     }
 
-    var type: String = ""
+
     private fun saveData(): Boolean {
         val user = regist_username.text.toString()
         val pass = regist_password.text.toString()
+        var id: Int = radioGroup.checkedRadioButtonId
+
+
         //check each edittext must not be null
         if (user.isEmpty()) {
             regist_username.error = "Please enter a message"
@@ -91,6 +74,21 @@ class RegisterActivity : AppCompatActivity() {
         }
         if (pass.isEmpty()) {
             regist_password.error = "Please enter a message"
+            return false
+        }
+
+        //check radiobutton must be selected
+        if (id != -1) { // If any radio button checked from radio group
+            // Get the instance of radio button using id
+            val radio: RadioButton = findViewById(id)
+            Toast.makeText(
+                applicationContext, "On button click : ${radio.text}",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            // If no radio button checked in this radio group
+            radio_student.error = "Please select a type"
+            radio_teacher.error = "Please select a type"
             return false
         }
 
