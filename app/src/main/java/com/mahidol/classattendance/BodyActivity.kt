@@ -29,7 +29,6 @@ import com.mahidol.classattendance.Fragments.*
 import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.SearchModel
 import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.Models.currentuser
 
 

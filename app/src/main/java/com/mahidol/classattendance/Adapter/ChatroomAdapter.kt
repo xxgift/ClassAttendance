@@ -30,14 +30,16 @@ class ChatroomAdapter(
         val icon1 = view.findViewById<ImageView>(R.id.user_ic1)
         val icon2 = view.findViewById<ImageView>(R.id.user_ic2)
         val time = view.findViewById<TextView>(R.id.timePost)
+        val bg = view.findViewById<ImageView>(R.id.post_bg)
         val post = postList[position]
 
         if (post.type == "Teacher") {
             icon2.setImageResource(R.mipmap.ic_teacheravatar)
-            icon1.visibility = View.INVISIBLE
+//            icon1.visibility = View.INVISIBLE
         } else {
-            icon2.visibility = View.INVISIBLE
+//            icon2.visibility = View.INVISIBLE
             icon1.setImageResource(R.mipmap.ic_studentavatar)
+            bg.setImageResource(R.drawable.rectanglegrey)
         }
 
         username.text = "${post.username}"
