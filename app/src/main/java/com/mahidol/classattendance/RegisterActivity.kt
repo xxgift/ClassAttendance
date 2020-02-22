@@ -9,7 +9,7 @@ import com.google.firebase.database.*
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.User
 
-import kotlinx.android.synthetic.main.bestregister.*
+import kotlinx.android.synthetic.main.register.*
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bestregister)
+        setContentView(R.layout.register)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         courseList = arrayListOf()
 
@@ -97,7 +97,7 @@ class RegisterActivity : AppCompatActivity() {
         //check username is not already in use
         userList.forEach {
             if (it.username == user) {
-                regist_username.error = "Incorrect Username"
+                regist_username.error = "Username already exists"
                 regist_username.text = null
                 regist_username.setHint("Enter Again")
                 return false

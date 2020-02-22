@@ -96,7 +96,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             //check courseID is not already in use
             courselistdetail?.forEach {
                 if (it.courseID == addcourseID) {
-                    addcourse_ID.error = "ClassID is already in used"
+                    addcourse_ID.error = "ClassID already exists"
                     addcourse_ID.text = null
                     addcourse_ID.setHint("Enter Again")
                     return false
@@ -131,7 +131,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             //check joinID is not already in use
             courselistdetail?.forEach {
                 if (it.joinID == addjoinID) {
-                    addcourse_ID.error = "JoinID is already in used"
+                    addcourse_ID.error = "JoinID already exists"
                     addcourse_ID.text = null
                     addcourse_ID.setHint("Enter Again")
                     return false
@@ -155,7 +155,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                         imgEmpty.visibility = View.INVISIBLE
                         dialog!!.dismiss()
                     }else{
-                        addcourse_ID.error = "JoinID is not exist"
+                        addcourse_ID.error = "JoinID not found"
                     }
                 }
             })

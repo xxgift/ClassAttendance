@@ -57,19 +57,12 @@ class LoginActivity : AppCompatActivity() {
 
                             //check username and password is matched
                             if (userprofile!!.password == pname) {
-                                if(userprofile!!.type == "Student"){
-                                    val intent = Intent(this@LoginActivity, BodystudentActivity::class.java)
-                                    //transfer value of username to scan
-                                    intent.putExtra("uname", uname)
-                                    applicationContext.startActivity(intent)
-                                    currenttype = userprofile!!.type
-                                }else{
-                                    val intent = Intent(this@LoginActivity, BodyActivity::class.java)
-                                    //transfer value of username to scan
-                                    intent.putExtra("uname", uname)
-                                    applicationContext.startActivity(intent)
-                                    currenttype = userprofile!!.type
-                                }
+                                val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+                                //transfer value of username to scan
+                                intent.putExtra("uname", uname)
+                                applicationContext.startActivity(intent)
+                                currenttype = userprofile!!.type
+
                             } else {
                                 Toast.makeText(
                                     this@LoginActivity,
@@ -79,11 +72,7 @@ class LoginActivity : AppCompatActivity() {
                             }
 
                         } else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "Username or Password is not matched",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                               login_username.error = "Username not found"
                         }
                         login_username.text = null
                         login_password.text = null

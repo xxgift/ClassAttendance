@@ -49,7 +49,6 @@ class ChatroomFragment : Fragment() {
 
         //add listener of search button to open navigation bar when clicked
 
-
 //        search.setOnClickListener {
 //            val searchView: SearchView? = null
 //            searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -83,7 +82,6 @@ class ChatroomFragment : Fragment() {
                         postList.add(oneUser!!)
                     }
                 }
-                adapter.notifyDataSetChanged()
             }
         })
         adapter = ChatroomAdapter(mContext, R.layout.list_post, postList)
