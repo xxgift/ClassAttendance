@@ -91,7 +91,7 @@ class ChatroomFragment : Fragment() {
 
             }
         })
-        adapter = ChatroomAdapter(context!!, R.layout.list_post, postList)
+        adapter = ChatroomAdapter(context!!,activity!!, R.layout.list_post, postList)
         listview_chatroom!!.adapter = adapter
 
 
