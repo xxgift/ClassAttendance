@@ -19,10 +19,6 @@
         <activity
             android:name=".BodyActivity"
             android:screenOrientation="portrait"/>
-
-        <activity
-            android:name=".BodystudentActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />

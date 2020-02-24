@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.google.gson.Gson
 import com.mahidol.classattendance.Helper.HTTPHelper
+import com.mahidol.classattendance.Models.Post
 import com.mahidol.classattendance.Models.User
 import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currenttype
@@ -19,9 +20,11 @@ class LoginActivity : AppCompatActivity() {
     var pname: String? = null
     var userprofile: User? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //if user have an account already then go to activity_body page (Home page)
         login_btn.setOnClickListener {
@@ -57,19 +60,12 @@ class LoginActivity : AppCompatActivity() {
 
                             //check username and password is matched
                             if (userprofile!!.password == pname) {
-                                if(userprofile!!.type == "Student"){
-                                    val intent = Intent(this@LoginActivity, BodystudentActivity::class.java)
-                                    //transfer value of username to scan
-                                    intent.putExtra("uname", uname)
-                                    applicationContext.startActivity(intent)
-                                    currenttype = userprofile!!.type
-                                }else{
-                                    val intent = Intent(this@LoginActivity, BodyActivity::class.java)
-                                    //transfer value of username to scan
-                                    intent.putExtra("uname", uname)
-                                    applicationContext.startActivity(intent)
-                                    currenttype = userprofile!!.type
-                                }
+                                currenttype = userprofile!!.type
+                                val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+                                //transfer value of username to scan
+                                intent.putExtra("uname", uname)
+                                applicationContext.startActivity(intent)
+
                             } else {
                                 Toast.makeText(
                                     this@LoginActivity,
@@ -79,11 +75,7 @@ class LoginActivity : AppCompatActivity() {
                             }
 
                         } else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "Username or Password is not matched",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                               login_username.error = "Username not found"
                         }
                         login_username.text = null
                         login_password.text = null
@@ -91,8 +83,6 @@ class LoginActivity : AppCompatActivity() {
 
                 }
                 asyncTask.execute()
-
-
             }
         }
 

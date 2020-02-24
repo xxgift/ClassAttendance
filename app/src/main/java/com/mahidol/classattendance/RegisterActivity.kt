@@ -8,21 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.courselistdetail
 
-import kotlinx.android.synthetic.main.bestregister.*
+import kotlinx.android.synthetic.main.register.*
 
 
 class RegisterActivity : AppCompatActivity() {
     lateinit var dataReference: DatabaseReference
     lateinit var userList: ArrayList<User>
-    lateinit var courseList: ArrayList<Course>
+    lateinit var type: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bestregister)
+        setContentView(R.layout.register)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        courseList = arrayListOf()
 
         userList = arrayListOf()
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
@@ -47,7 +45,6 @@ class RegisterActivity : AppCompatActivity() {
         regist_username.text = null
         regist_password.text = null
 
-
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radio: RadioButton = findViewById(checkedId)
             type = radio.text.toString()
@@ -58,33 +55,18 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         register_btn.setOnClickListener {
-            if (saveData()) {
-                var id: Int = radioGroup.checkedRadioButtonId
+            saveData()
 
-                val registuser = regist_username.text.toString()
-                println(registuser)
-                if (id != -1) { // If any radio button checked from radio group
-                    // Get the instance of radio button using id
-                    val radio: RadioButton = findViewById(id)
-                    Toast.makeText(
-                        applicationContext, "On button click : ${radio.text}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    // If no radio button checked in this radio group
-                    Toast.makeText(
-                        applicationContext, "On button click : nothing selected",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
         }
     }
 
-    var type: String = ""
+
     private fun saveData(): Boolean {
         val user = regist_username.text.toString()
         val pass = regist_password.text.toString()
+        var id: Int = radioGroup.checkedRadioButtonId
+
+
         //check each edittext must not be null
         if (user.isEmpty()) {
             regist_username.error = "Please enter a message"
@@ -95,17 +77,32 @@ class RegisterActivity : AppCompatActivity() {
             return false
         }
 
+        //check radiobutton must be selected
+        if (id != -1) { // If any radio button checked from radio group
+            // Get the instance of radio button using id
+            val radio: RadioButton = findViewById(id)
+            Toast.makeText(
+                applicationContext, "On button click : ${radio.text}",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            // If no radio button checked in this radio group
+            radio_student.error = "Please select a type"
+            radio_teacher.error = "Please select a type"
+            return false
+        }
+
         //check username is not already in use
         userList.forEach {
             if (it.username == user) {
-                regist_username.error = "Incorrect Username"
+                regist_username.error = "Username already exists"
                 regist_username.text = null
                 regist_username.setHint("Enter Again")
                 return false
             }
         }
 
-        val userData = User(user, pass, type,ArrayList<Course>())
+        val userData = User(user, pass, type, ArrayList<Course>())
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)

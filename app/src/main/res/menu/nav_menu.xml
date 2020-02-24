@@ -2,13 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-<!--        <item android:id="@+id/teacher_studentinclass"-->
-<!--            android:icon="@mipmap/ic_personnavi"-->
-<!--            android:title="Student in class"/>-->
-        <item android:id="@+id/teacher_scanner"
+        <item android:id="@+id/menu_scanner"
             android:icon="@mipmap/ic_scanner"
             android:title="Scanner"/>
-        <item android:id="@+id/teacher_logout"
+        <item android:id="@+id/menu_logout"
             android:icon="@mipmap/ic_signout"
             android:title="Log out"/>
     </group>

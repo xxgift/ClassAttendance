@@ -123,7 +123,7 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
 
         //send value to firebase
         val postData = Post(user, type, course, content, date, timestamp)
-        var updateValue = dataReference.child(user).setValue(postData)
+        var updateValue = dataReference.child(timestamp).setValue(postData)
 
         currentcontent = content
         currenttime = date

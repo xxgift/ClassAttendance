@@ -3,9 +3,8 @@
     <item>
         <shape android:shape="rectangle">
             <stroke android:color="#C6C6C6" android:width="0.2dp" />
-            <solid android:color="@color/colorPrimary"/>
-            <corners android:radius="@android:dimen/app_icon_size"/>
-            <size android:width="185dp" android:height="35dp"/>
+            <solid android:color="#F7F3F3"/>
+            <size android:width="360dp" android:height="64dp"/>
             <padding android:right="@dimen/cardview_default_radius"/>
         </shape>
     </item>

@@ -15,6 +15,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -44,6 +45,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var subappBar:TextView? = null
     private var username: TextView? = null
     private var type: TextView? = null
+    private var settingBtn: ImageButton? = null
 
     private var lastUpdate = 0L
 
@@ -67,7 +69,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "My Course"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(MycourseteacherFragment())
+                    replaceFragment(MycourseFragment())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_classattendance -> {
@@ -86,6 +88,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_body)
+        //set title page
+        appBar = findViewById(R.id.titleText)
+        subappBar = findViewById(R.id.subtitleText)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         replaceFragment(ChatroomFragment())
@@ -95,12 +100,8 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         lastUpdate = System.currentTimeMillis()
 
-        //set title page
-        appBar = findViewById(R.id.titleText)
-        subappBar = findViewById(R.id.subtitleText)
 
-
-                //get username from transfer data of LoginActivity
+        //get username from transfer data of LoginActivity
         uname = intent.getStringExtra("uname")
 
         //get json file of this username
@@ -120,14 +121,26 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     username!!.text = userprofile!!.username
                     type!!.text = userprofile!!.type
 
-                    headnavIC.setImageResource(R.mipmap.ic_teacheravatar)
-
-
+                    if(userprofile!!.type == "Student") {
+                        bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))
+                        settingBtn = findViewById(R.id.setting)
+                        subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
+                        appBar!!.setBackgroundColor(getColor(R.color.studentcolor))
+                        subappBar!!.setBackgroundColor(getColor(R.color.studentsubcolor))
+                        settingBtn!!.setBackgroundTintList(
+                            ContextCompat.getColorStateList(
+                                getApplicationContext(),
+                                R.color.studentcolor
+                            )
+                        )
+                        layout_nav.setBackgroundColor(getColor(R.color.studentcolor))
+                        headnavIC.setImageResource(R.mipmap.ic_studentavatar)
+                    }
 
                     //set current user
                     currentuser = userprofile!!.username
                     appBar!!.text = "Timeline"
-                    subappBar!!.text = userprofile!!.type
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
 
                 }
             }
@@ -205,7 +218,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id = item.itemId
 
         //go to log in page when selected log out
-        if (id == R.id.teacher_logout) {
+        if (id == R.id.menu_logout) {
             drawer!!.closeDrawer(GravityCompat.START)
             val intent = Intent(this@BodyActivity, LoginActivity::class.java)
             startActivity(intent)
@@ -213,11 +226,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             finish()
         }
 
-        if (id == R.id.teacher_scanner) {
+        if (id == R.id.menu_scanner) {
             drawer!!.closeDrawer(GravityCompat.START)
             replaceFragment(ScannerFragment())
             appBar!!.text = "Scanner"
-            subappBar!!.text = "Scanner"
+            subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
         }
 
         return true
