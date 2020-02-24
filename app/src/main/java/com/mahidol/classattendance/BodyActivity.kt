@@ -72,9 +72,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     replaceFragment(MycourseFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_classattendance -> {
+                R.id.navigation_attendance -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Course Attendance"
+                    appBar!!.text = "Attendance"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(ClassAttendanceteacherFragment())
                     return@OnNavigationItemSelectedListener true

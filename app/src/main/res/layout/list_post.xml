@@ -45,6 +45,7 @@
         android:text="TextView"
         android:textAlignment="textStart"
         android:textColor="#3A4759"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/user_ic2"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -93,6 +94,7 @@
         android:textAlignment="textEnd"
         android:textColor="#A254F2"
         android:textSize="10sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/postContent"

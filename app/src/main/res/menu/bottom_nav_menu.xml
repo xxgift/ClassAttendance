@@ -10,8 +10,8 @@
         android:icon="@mipmap/ic_thiscourse"
         android:title="My Course"/>
     <item
-        android:id="@+id/navigation_classattendance"
+        android:id="@+id/navigation_attendance"
         android:icon="@mipmap/ic_attend"
-        android:title="Course Attendance"/>
+        android:title="Attendance"/>
 
 </menu>

@@ -81,10 +81,10 @@ class RegisterActivity : AppCompatActivity() {
         if (id != -1) { // If any radio button checked from radio group
             // Get the instance of radio button using id
             val radio: RadioButton = findViewById(id)
-            Toast.makeText(
-                applicationContext, "On button click : ${radio.text}",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                applicationContext, "On button click : ${radio.text}",
+//                Toast.LENGTH_SHORT
+//            ).show()
         } else {
             // If no radio button checked in this radio group
             radio_student.error = "Please select a type"
