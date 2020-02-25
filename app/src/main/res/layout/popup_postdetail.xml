@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        android:fontFamily="@font/montserrat"
         android:maxLines="1"
         android:text="TextView"
         android:textSize="10sp"
@@ -55,6 +56,7 @@
         android:layout_height="59dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
+        android:fontFamily="@font/montserrat"
         android:maxLines="3"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/view"
@@ -69,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
+        android:fontFamily="@font/montserrat"
         android:maxLines="1"
         android:text="TextView"
         android:textColor="#A254F2"
@@ -81,11 +84,11 @@
         android:layout_width="311dp"
         android:layout_height="56dp"
         android:layout_marginTop="151dp"
-        android:background="#CBCBCB"
+        android:background="#6586DE"
         android:fontFamily="@font/montserrat"
         android:text="OK"
         android:textAllCaps="true"
-        android:textColor="#535353"
+        android:textColor="#FFFFFF"
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/view"
@@ -102,6 +105,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
-        app:srcCompat="@mipmap/ic_pencil" />
+        app:srcCompat="@mipmap/ic_loginperson" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

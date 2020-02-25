@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <stroke android:color="#C6C6C6" android:width="0.2dp" />
+            <stroke android:color="#C6C6C6" android:width="1dp" />
             <solid android:color="@color/white"/>
             <size android:width="273dp" android:height="82dp"/>
             <padding android:right="@dimen/cardview_default_radius"/>
