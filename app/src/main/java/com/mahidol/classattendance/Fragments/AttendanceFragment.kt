@@ -17,10 +17,7 @@ import com.estimote.coresdk.service.BeaconManager
 import com.mahidol.classattendance.Adapter.AttendentAdapter
 import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Adapter.ScannerAdapter
-import com.mahidol.classattendance.Models.BBeacon
-import com.mahidol.classattendance.Models.Status
-import com.mahidol.classattendance.Models.courselistdetail
-import com.mahidol.classattendance.Models.currentstatus
+import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_attendance.*
 
@@ -97,9 +94,13 @@ class AttendanceFragment : Fragment() {
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                     statusText.visibility = View.INVISIBLE
                     gif.visibility = View.INVISIBLE
-                    adapter = MycourseAdapter(mContext, R.layout.list_detail, courselistdetail)
-                    listview_attendance!!.adapter = adapter
-                    adapter.notifyDataSetChanged()
+                    if(currenttype=="Teacher") {
+                        adapter = MycourseAdapter(mContext, R.layout.list_detail, courselistdetail)
+                        listview_attendance!!.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                    }else{
+
+                    }
                 }
                 if (currentstatus == "out of class") {
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
