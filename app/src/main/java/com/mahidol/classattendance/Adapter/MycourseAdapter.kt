@@ -13,6 +13,7 @@ import com.mahidol.classattendance.Fragments.popup_delete_Fragment
 import com.mahidol.classattendance.Fragments.popup_postdetail_Fragment
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.courselistdetail
+import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
 
