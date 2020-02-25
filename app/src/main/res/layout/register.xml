@@ -80,7 +80,7 @@
         android:background="@mipmap/username_edittext"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPersonName"
+        android:inputType="textPersonName|textPassword"
         android:textAlignment="center"
         android:textColor="#188888"
         app:layout_constraintEnd_toEndOf="@+id/imageView8"

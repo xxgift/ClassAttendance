@@ -131,7 +131,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             //check joinID is not already in use
             courselistdetail?.forEach {
                 if (it.joinID == addjoinID) {
-                    addcourse_ID.error = "This is already exists"
+                    addcourse_ID.error = "This course already exists"
                     addcourse_ID.text = null
                     addcourse_ID.setHint("Enter Again")
                     return false
