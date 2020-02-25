@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.mahidol.classattendance.Models.Course
+import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
 
 
@@ -30,6 +31,10 @@ class MycourseAdapter (
         val course = courseList!![position]
         joinIDtxt.text = "JoinID"
         courseID.text = "${course.courseID}"
+        if(currenttype == "Student"){
+            joinIDtxt.visibility = View.INVISIBLE
+          joinID.visibility = View.INVISIBLE
+        }
         joinID.text = "${course.joinID}"
         owner.text = "${course.owner}"
         view.setOnClickListener {

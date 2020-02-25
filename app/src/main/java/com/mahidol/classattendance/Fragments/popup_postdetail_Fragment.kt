@@ -43,7 +43,7 @@ class popup_postdetail_Fragment(var mView: View,var user:String,var content:Stri
         super.onViewCreated(view, savedInstanceState)
 
         popup_post_username.text = "@" + user
-        popup_post_content.text = content
+        popup_post_content.text = " "+content
         popup_post_course.text = course
         popup_post_time.text = date
 
