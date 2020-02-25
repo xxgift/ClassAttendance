@@ -28,12 +28,17 @@ class ChatroomAdapter(
         val layoutInflator: LayoutInflater = LayoutInflater.from(mContext)
         val view: View = layoutInflator.inflate(layoutResId, null)
         val username = view.findViewById<TextView>(R.id.userName)
-        val course = view.findViewById<TextView>(R.id.courseName)
-        val content = view.findViewById<TextView>(R.id.postContent)
+        val username2 = view.findViewById<TextView>(R.id.userName2)
+        val course1 = view.findViewById<TextView>(R.id.courseName)
+        val course2 = view.findViewById<TextView>(R.id.courseName2)
+        val content1 = view.findViewById<TextView>(R.id.postContent)
+        val content2 = view.findViewById<TextView>(R.id.postContent2)
         val icon1 = view.findViewById<ImageView>(R.id.user_ic1)
         val icon2 = view.findViewById<ImageView>(R.id.user_ic2)
-        val time = view.findViewById<TextView>(R.id.timePost)
-        val bg = view.findViewById<ImageView>(R.id.post_bg)
+        val time1 = view.findViewById<TextView>(R.id.timePost)
+        val time2 = view.findViewById<TextView>(R.id.timePost2)
+        val bg1 = view.findViewById<ImageView>(R.id.post_bg)
+        val bg2  = view.findViewById<ImageView>(R.id.post_bg2)
         val post = postList[position]
         var popup_user: String? = null
         var popup_content: String? = null
@@ -42,36 +47,45 @@ class ChatroomAdapter(
 
         if(currenttype == "Teacher"){
             if(post.type == "Teacher"){
-                icon2.setImageResource(R.mipmap.ic_teacheravatar)
-                icon1.visibility = View.INVISIBLE
-                bg.setImageResource(R.drawable.rectangleteacher)
+                icon1.setImageResource(R.mipmap.ic_teacherchat)
+                username2.visibility = View.INVISIBLE
+                icon2.visibility = View.INVISIBLE
+                time2.visibility = View.INVISIBLE
+                course2.visibility = View.INVISIBLE
+                content2.visibility = View.INVISIBLE
+                bg2.visibility = View.INVISIBLE
+
             }else {
-                icon2.setImageResource(R.mipmap.ic_studentavatar)
+                icon2.setImageResource(R.mipmap.ic_studentchat)
+                username.visibility = View.INVISIBLE
                 icon1.visibility = View.INVISIBLE
+                time1.visibility = View.INVISIBLE
+                course1.visibility = View.INVISIBLE
+                content1.visibility = View.INVISIBLE
+                bg1.visibility = View.INVISIBLE
+                course2.setTextColor(Color.parseColor("#A254F2"))
             }
         }
         else{
-            if (post.type == "Teacher"){
-                icon2.setImageResource(R.mipmap.ic_teacheravatar)
-                icon1.visibility = View.INVISIBLE
-                bg.setImageResource(R.drawable.rectanglestudent)
-                course.setTextColor(Color.parseColor("#004cc3"))
+            if(post.type == "Teacher"){
+                icon1.setImageResource(R.mipmap.ic_teacherchat)
+                username2.visibility = View.INVISIBLE
+                icon2.visibility = View.INVISIBLE
+                time2.visibility = View.INVISIBLE
+                course2.visibility = View.INVISIBLE
+                content2.visibility = View.INVISIBLE
+                bg2.visibility = View.INVISIBLE
+                course1.setTextColor(Color.parseColor("#004cc3"))
             }else{
-                icon2.setImageResource(R.mipmap.ic_studentavatar)
+                icon2.setImageResource(R.mipmap.ic_studentchat)
+                username.visibility = View.INVISIBLE
                 icon1.visibility = View.INVISIBLE
-                course.setTextColor(Color.parseColor("#004cc3"))
+                time1.visibility = View.INVISIBLE
+                course1.visibility = View.INVISIBLE
+                content1.visibility = View.INVISIBLE
+                bg1.visibility = View.INVISIBLE
             }
         }
-
-//        if (post.type == "Teacher") {
-//                icon2.setImageResource(R.mipmap.ic_teacheravatar)
-//                icon1.visibility = View.INVISIBLE
-//                bg.setImageResource(R.drawable.rectangleteacher)
-//        } else {
-//            icon2.setImageResource(R.mipmap.ic_studentavatar)
-//            icon1.visibility = View.INVISIBLE
-////            bg.setImageResource(R.drawable.rectanglestudent)
-//        }
 
         popup_user = post.username
         popup_content = post.content
@@ -80,9 +94,13 @@ class ChatroomAdapter(
 
 
         username.text = "${post.username}"
-        course.text = "${post.course}"
-        content.text = "${post.content}"
-        time.text = "${post.date}"
+        username2.text = "${post.username}"
+        course1.text = "${post.course}"
+        content1.text = "${post.content}"
+        time1.text = "${post.date}"
+        course2.text = "${post.course}"
+        content2.text = "${post.content}"
+        time2.text = "${post.date}"
 
 
         view.setOnClickListener {
