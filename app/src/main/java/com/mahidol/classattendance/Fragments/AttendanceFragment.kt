@@ -95,7 +95,7 @@ class AttendanceFragment : Fragment() {
                     statusText.visibility = View.INVISIBLE
                     gif.visibility = View.INVISIBLE
                     if(currenttype=="Teacher") {
-                        adapter = MycourseAdapter(mContext, R.layout.list_detail, courselistdetail)
+                        adapter = MycourseAdapter(mContext, activity!!,R.layout.list_detail, courselistdetail)
                         listview_attendance!!.adapter = adapter
                         adapter.notifyDataSetChanged()
                     }else{
