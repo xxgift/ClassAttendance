@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -23,6 +22,7 @@ import com.mahidol.classattendance.Models.Status
 import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currentstatus
 import com.mahidol.classattendance.R
+import kotlinx.android.synthetic.main.fragment_attendance.*
 
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import java.text.SimpleDateFormat
@@ -31,15 +31,13 @@ import kotlin.collections.ArrayList
 import kotlin.math.pow
 
 
-class ScannerFragment : Fragment() {
+class AttendanceFragment : Fragment() {
 
     lateinit var mContext: Context
     lateinit var beaconList: ArrayList<BBeacon>
     lateinit var statusList: ArrayList<Status>
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
-    lateinit var adaptertop: ScannerAdapter
-    lateinit var adapterbottom: AttendentAdapter
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     var count = 0
@@ -51,7 +49,7 @@ class ScannerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Toast.makeText(mContext, "scanning...", Toast.LENGTH_LONG).show()
-        return inflater.inflate(R.layout.fragment_scanner, container, false)
+        return inflater.inflate(R.layout.fragment_attendance, container, false)
     }
 
 
@@ -63,16 +61,17 @@ class ScannerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val gif = view.findViewById<ImageView>(R.id.loading_gif)
 
+        Glide
+            .with(this)
+            .load(R.drawable.scanning)
+            .fitCenter()
+            .into(loading_gif)
 
         beaconList = arrayListOf()
         statusList = arrayListOf()
 
-        adaptertop = ScannerAdapter(mContext, R.layout.list_beacon, beaconList)
-        listview_scanner!!.adapter = adaptertop
-
-        adapterbottom = AttendentAdapter(mContext, R.layout.row_course, statusList)
-        listview_detail!!.adapter = adapterbottom
 
         beaconManager = BeaconManager(context)
 
@@ -91,28 +90,37 @@ class ScannerFragment : Fragment() {
 
         beaconManager!!.setRangingListener(BeaconManager.BeaconRangingListener { beaconRegion, beacons ->
 
-
             if (beacons!!.isNotEmpty()) {
                 val nearestBeacon = beacons[0]
                 currentstatus = findBeacon(nearestBeacon)
-                adaptertop.notifyDataSetChanged()
-                adapterbottom.notifyDataSetChanged()
                 if (currentstatus == "in class") {
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+                    statusText.visibility = View.INVISIBLE
+                    gif.visibility = View.INVISIBLE
+                    adapter = MycourseAdapter(mContext, R.layout.list_detail, courselistdetail)
+                    listview_attendance!!.adapter = adapter
+                    adapter.notifyDataSetChanged()
                 }
                 if (currentstatus == "out of class") {
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+                    statusText.text = currentstatus
+                    gif.visibility = View.INVISIBLE
+
                 }
                 if (currentstatus == "waiting for another") {
                     count = count + 1
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
                     if (count == 10) {
                         currentstatus = "out of class"
+                        statusText.text = currentstatus
+                        gif.visibility = View.INVISIBLE
+
                     }
                 }
             } else {
                 currentstatus == "out of class"
                 Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                gif.visibility = View.INVISIBLE
             }
         })
 

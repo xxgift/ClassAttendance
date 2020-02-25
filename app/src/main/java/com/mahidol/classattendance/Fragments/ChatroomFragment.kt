@@ -16,6 +16,9 @@ import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.Post
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_chatroom.*
+import java.util.*
+import java.util.Collections.reverse
+import kotlin.collections.ArrayList
 
 
 class ChatroomFragment : Fragment() {
@@ -82,13 +85,13 @@ class ChatroomFragment : Fragment() {
                         val oneUser = i.getValue(Post::class.java)
                         postList.add(oneUser!!)
                     }
+                    postList.reverse()
                     val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_post)
                     if (postList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
                     }
                 }
                 adapter.notifyDataSetChanged()
-
             }
         })
         adapter = ChatroomAdapter(context!!,activity!!, R.layout.list_post, postList)

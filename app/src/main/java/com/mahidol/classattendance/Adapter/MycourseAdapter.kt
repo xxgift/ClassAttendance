@@ -26,10 +26,12 @@ class MycourseAdapter (
         val courseID = view.findViewById<TextView>(R.id.Titletxt)
         val joinIDtxt = view.findViewById<TextView>(R.id.Subtitletxt)
         val joinID = view.findViewById<TextView>(R.id.SubSubtitletxt)
+        val owner = view.findViewById<TextView>(R.id.ownerCoursetxt)
         val course = courseList!![position]
         joinIDtxt.text = "JoinID"
         courseID.text = "${course.courseID}"
         joinID.text = "${course.joinID}"
+        owner.text = "${course.owner}"
         view.setOnClickListener {
             Toast.makeText(mContext, "Selected", Toast.LENGTH_SHORT).show()
         }
