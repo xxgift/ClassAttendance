@@ -53,9 +53,9 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
         courseListinspinner = arrayListOf("Please select course")
 
         if (currenttype == "Student") {
-            imagepost.setImageResource(R.mipmap.ic_studentlove)
+            imagepost.setImageResource(R.mipmap.ic_studentavatar)
         } else {
-            imagepost.setImageResource(R.mipmap.ic_teacherlove)
+            imagepost.setImageResource(R.mipmap.ic_teacheravatar)
         }
 
         courselistdetail.forEach {

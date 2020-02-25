@@ -1,8 +1,8 @@
 package com.mahidol.classattendance.Adapter
 
 
-import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,15 +40,38 @@ class ChatroomAdapter(
         var popup_course: String? = null
         var popup_date: String? = null
 
-
-        if (post.type == "Teacher") {
-            icon2.setImageResource(R.mipmap.ic_teacheravatar)
-//            icon1.visibility = View.INVISIBLE
-        } else {
-//            icon2.visibility = View.INVISIBLE
-            icon1.setImageResource(R.mipmap.ic_studentavatar)
-            bg.setImageResource(R.drawable.rectanglegrey)
+        if(currenttype == "Teacher"){
+            if(post.type == "Teacher"){
+                icon2.setImageResource(R.mipmap.ic_teacheravatar)
+                icon1.visibility = View.INVISIBLE
+                bg.setImageResource(R.drawable.rectangleteacher)
+            }else {
+                icon2.setImageResource(R.mipmap.ic_studentavatar)
+                icon1.visibility = View.INVISIBLE
+            }
         }
+        else{
+            if (post.type == "Teacher"){
+                icon2.setImageResource(R.mipmap.ic_teacheravatar)
+                icon1.visibility = View.INVISIBLE
+                bg.setImageResource(R.drawable.rectanglestudent)
+                course.setTextColor(Color.parseColor("#004cc3"))
+            }else{
+                icon2.setImageResource(R.mipmap.ic_studentavatar)
+                icon1.visibility = View.INVISIBLE
+                course.setTextColor(Color.parseColor("#004cc3"))
+            }
+        }
+
+//        if (post.type == "Teacher") {
+//                icon2.setImageResource(R.mipmap.ic_teacheravatar)
+//                icon1.visibility = View.INVISIBLE
+//                bg.setImageResource(R.drawable.rectangleteacher)
+//        } else {
+//            icon2.setImageResource(R.mipmap.ic_studentavatar)
+//            icon1.visibility = View.INVISIBLE
+////            bg.setImageResource(R.drawable.rectanglestudent)
+//        }
 
         popup_user = post.username
         popup_content = post.content
