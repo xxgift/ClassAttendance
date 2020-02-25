@@ -62,7 +62,7 @@
         android:layout_marginTop="83dp"
         android:background="@mipmap/username_edittext"
         android:ems="10"
-        android:fontFamily="monospace"
+        android:fontFamily="@font/montserrat"
         android:inputType="textPersonName"
         android:maxLines="1"
         android:textAlignment="center"
