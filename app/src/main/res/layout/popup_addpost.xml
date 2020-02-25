@@ -33,10 +33,11 @@
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
-        android:id="@+id/post_usetype"
+        android:id="@+id/post_usertype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:fontFamily="@font/montserrat"
         android:text="TextView"
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/imagepost"

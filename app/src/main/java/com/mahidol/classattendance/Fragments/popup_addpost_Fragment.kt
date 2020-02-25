@@ -48,6 +48,7 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
         super.onViewCreated(view, savedInstanceState)
 
         post_username.text = "@" + currentuser
+        post_usertype.text = currenttype
         dataReference = FirebaseDatabase.getInstance().getReference("Post")
 
         courseListinspinner = arrayListOf("Please select course")
