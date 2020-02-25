@@ -27,9 +27,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.mahidol.classattendance.Fragments.*
 import com.mahidol.classattendance.Helper.HTTPHelper
-import com.mahidol.classattendance.Models.SearchModel
-import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.currentuser
+import com.mahidol.classattendance.Models.*
 
 
 import kotlinx.android.synthetic.main.activity_body.*
@@ -37,6 +35,9 @@ import kotlinx.android.synthetic.main.header_nav.*
 
 class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     SensorEventListener {
+
+    lateinit var beaconList: ArrayList<BBeacon>
+    lateinit var statusList: ArrayList<Status>
 
     lateinit var fragmentTransaction: FragmentTransaction
     private var sensorManager: SensorManager? = null
@@ -76,7 +77,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     drawer!!.closeDrawer(GravityCompat.START)
                     appBar!!.text = "Attendance"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(ClassAttendanceteacherFragment())
+                    replaceFragment(AttendanceFragment())
                     return@OnNavigationItemSelectedListener true
                 }
 
