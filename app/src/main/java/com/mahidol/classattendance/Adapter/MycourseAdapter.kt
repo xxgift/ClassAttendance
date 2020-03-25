@@ -13,6 +13,7 @@ import com.mahidol.classattendance.Fragments.popup_delete_Fragment
 import com.mahidol.classattendance.Fragments.popup_postdetail_Fragment
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.courselistdetail
+import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
 
@@ -40,6 +41,10 @@ class MycourseAdapter (
         val course = courseList!![position]
         joinIDtxt.text = "JoinID"
         courseID.text = "${course.courseID}"
+        if(currenttype == "Student"){
+            joinIDtxt.visibility = View.INVISIBLE
+          joinID.visibility = View.INVISIBLE
+        }
         joinID.text = "${course.joinID}"
         owner.text = "${course.owner}"
         view.setOnClickListener {
