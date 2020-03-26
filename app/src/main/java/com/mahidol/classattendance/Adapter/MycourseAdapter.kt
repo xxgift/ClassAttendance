@@ -47,24 +47,36 @@ class MycourseAdapter (
         }
         joinID.text = "${course.joinID}"
         owner.text = "${course.owner}"
-        view.setOnClickListener {
-            Toast.makeText(mContext, "Selected", Toast.LENGTH_SHORT).show()
-        }
-        view.setOnLongClickListener {
 
-            view.animate().setDuration(500).alpha(0f).withEndAction {
-                courselistdetail.removeAt(position)
-                dataReference.setValue(courselistdetail)
-                notifyDataSetChanged()
-                view.alpha = 1.0F
-            }
-            return@setOnLongClickListener true
-        }
+
+
+
+
+//        view.setOnClickListener {
+//            Toast.makeText(mContext, "Selected", Toast.LENGTH_SHORT).show()
+//        }
+//        view.setOnLongClickListener {
+//
+//            view.animate().setDuration(500).alpha(0f).withEndAction {
+//                courselistdetail.removeAt(position)
+//                dataReference.setValue(courselistdetail)
+//                notifyDataSetChanged()
+//                view.alpha = 1.0F
+//                Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show()
+//            }
+//            return@setOnLongClickListener true
+//        }
+
+//        view.setOnLongClickListener {
+//            showDialog(view,position,mContext)
+//            notifyDataSetChanged()
+//            return@setOnLongClickListener true
+//        }
         return view
     }
 
-    private fun showDialog(view: View) {
-        val applypopup = popup_delete_Fragment(view)
+    private fun showDialog(view: View,position: Int,fcontext:Context) {
+        val applypopup = popup_delete_Fragment(view,position,fcontext)
         applypopup.show(mActivity!!.supportFragmentManager, "exampleBottomSheet")
     }
 }

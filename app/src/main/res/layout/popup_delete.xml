@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <Button
-        android:id="@+id/addcourse_cancelbtn"
+        android:id="@+id/delete_cancelbtn"
         android:layout_width="159dp"
         android:layout_height="56dp"
         android:layout_marginTop="100dp"
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <Button
-        android:id="@+id/addcourse_addbtn"
+        android:id="@+id/delete_deletebtn"
         android:layout_width="159dp"
         android:layout_height="56dp"
         android:layout_marginTop="100dp"
@@ -61,7 +61,7 @@
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/addcourse_cancelbtn"
+        app:layout_constraintStart_toEndOf="@+id/delete_cancelbtn"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <ImageView
