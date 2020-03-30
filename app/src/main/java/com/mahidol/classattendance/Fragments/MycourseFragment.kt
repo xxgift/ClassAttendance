@@ -88,7 +88,8 @@ class MycourseFragment : Fragment() {
                 if (touchListener.existPendingDismisses()) {
                     touchListener.undoPendingDismiss()
                 } else {
-                    Toast.makeText(mContext, "Select ${courselistdetail[position].courseID}", LENGTH_SHORT).show()
+                    Toast.makeText(mContext, "Select ${courselistdetail[position].courseID
+                    }", LENGTH_SHORT).show()
                 }
             }
 

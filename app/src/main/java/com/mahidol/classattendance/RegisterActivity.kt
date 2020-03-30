@@ -1,10 +1,16 @@
 package com.mahidol.classattendance
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.database.*
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.User
@@ -102,7 +108,16 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        val userData = User(user, pass, type, ArrayList<Course>())
+        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val permission = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_PHONE_STATE)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+        }
+        var imei = telephonyManager.imei
+
+        val userData = User(user, pass, type, ArrayList<Course>(),imei)
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)
