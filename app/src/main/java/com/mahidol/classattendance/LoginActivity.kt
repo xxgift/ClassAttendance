@@ -30,7 +30,6 @@ class LoginActivity : AppCompatActivity() {
     var pname: String? = null
     var userprofile: User? = null
 
-    var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +55,17 @@ class LoginActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
         }
         var imei = telephonyManager.imei
+
+
+        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
+
+        if(token.getString("loginusername"," ") != " "){
+            val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+            startActivity(intent)
+            intent.putExtra("uname",token.getString("uname"," "))
+            finish()
+        }
+
 
         //if user have an account already then go to activity_body page (Home page)
         login_btn.setOnClickListener {
@@ -101,7 +111,10 @@ class LoginActivity : AppCompatActivity() {
                                         //transfer value of username to scan
                                         intent.putExtra("uname", uname)
 
+
                                         var editor = token.edit()
+                                        editor.putString("loginusername",uname)
+                                        editor.commit()
 
 
 
