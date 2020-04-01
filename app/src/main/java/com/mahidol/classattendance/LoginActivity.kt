@@ -48,11 +48,16 @@ class LoginActivity : AppCompatActivity() {
 
 
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val permission = ContextCompat.checkSelfPermission(this,
+        val permissionCall = ContextCompat.checkSelfPermission(this,
             Manifest.permission.READ_PHONE_STATE)
+        val permissionLocation = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionBluetooth = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.BLUETOOTH)
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+        if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH), 1)
+
         }
         var imei = telephonyManager.imei
 
