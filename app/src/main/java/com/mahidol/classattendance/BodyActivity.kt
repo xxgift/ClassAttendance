@@ -113,6 +113,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         uname = token.getString("loginusername"," ")
 
         //get json file of this username
+
         var asyncTask = object : AsyncTask<String, String, String>() {
 
             override fun doInBackground(vararg p0: String?): String {
@@ -127,6 +128,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     username = findViewById(R.id.namenav)
                     type = findViewById(R.id.nameSurname_nav)
                     username!!.text = userprofile!!.username
+                    courselistdetail = userprofile!!.courselist
 
 
                     type!!.text = userprofile!!.type

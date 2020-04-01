@@ -14,19 +14,16 @@ import com.bumptech.glide.Glide
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion
 import com.estimote.coresdk.recognition.packets.Beacon
 import com.estimote.coresdk.service.BeaconManager
-import com.mahidol.classattendance.Adapter.AttendentAdapter
 import com.mahidol.classattendance.Adapter.MycourseAdapter
-import com.mahidol.classattendance.Adapter.ScannerAdapter
 import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_attendance.*
-
-import kotlinx.android.synthetic.main.fragment_scanner.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.pow
 
+import android.os.Handler
 
 class AttendanceFragment : Fragment() {
 
@@ -37,7 +34,10 @@ class AttendanceFragment : Fragment() {
     private var region: BeaconRegion? = null
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
-    var count = 0
+    var countforOut = 0
+    var counttoEnd = 0
+    var isScanning = false
+    var alreadyInclass = false
 
 
     override fun onCreateView(
@@ -58,13 +58,44 @@ class AttendanceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val gif = view.findViewById<ImageView>(R.id.loading_gif)
+
+
+        val gif = view!!.findViewById<ImageView>(R.id.loading_gif)
+
+        var handler = Handler()
+        var r = Runnable {
+            alreadyInclass = false
+            Toast.makeText(
+                context,
+                "not found any beacon",
+                Toast.LENGTH_SHORT
+            ).show()
+            gif.visibility = View.INVISIBLE
+            statusText.visibility = View.VISIBLE
+            adapter = MycourseAdapter(
+                mContext,
+                activity!!,
+                R.layout.list_detail,
+                courselistdetail
+            )
+            listview_attendance.adapter = null
+            adapter.notifyDataSetChanged()
+            if (isScanning) {
+                statusText.text = "Class is over"
+                beaconManager!!.stopRanging(region)
+
+            } else {
+                statusText.text = "Not found any class"
+            }
+            println("oooooooooooooooooooooooooooooooooooooooooo")
+        }
 
         Glide
             .with(this)
             .load(R.drawable.scanning)
             .fitCenter()
             .into(loading_gif)
+
 
         beaconList = arrayListOf()
         statusList = arrayListOf()
@@ -85,48 +116,108 @@ class AttendanceFragment : Fragment() {
         beaconManager!!.setForegroundScanPeriod(3000, 0)
         beaconManager!!.setBackgroundScanPeriod(3000, 0)
 
-        beaconManager!!.setRangingListener(BeaconManager.BeaconRangingListener { beaconRegion, beacons ->
 
+        beaconManager!!.setRangingListener(BeaconManager.BeaconRangingListener { beaconRegion, beacons ->
             if (beacons!!.isNotEmpty()) {
+                isScanning = true
+                handler.removeCallbacksAndMessages(null)
+                if (!alreadyInclass) {
+                    statusText.text = "Scanning"
+                    statusText.visibility = View.VISIBLE
+                    gif.visibility = View.VISIBLE
+                }
+                println("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
                 val nearestBeacon = beacons[0]
                 currentstatus = findBeacon(nearestBeacon)
                 if (currentstatus == "in class") {
+                    counttoEnd = 0
+                    countforOut = 0
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                     statusText.visibility = View.INVISIBLE
                     gif.visibility = View.INVISIBLE
-                    if(currenttype=="Teacher") {
-                        adapter = MycourseAdapter(mContext, activity!!,R.layout.list_detail, courselistdetail)
-                        listview_attendance!!.adapter = adapter
-                        adapter.notifyDataSetChanged()
-                    }else{
+                    if (!alreadyInclass) {
+                        if (currenttype == "Teacher") {
+                            adapter = MycourseAdapter(
+                                mContext,
+                                activity!!,
+                                R.layout.list_detail,
+                                courselistdetail
+                            )
+                            listview_attendance!!.adapter = adapter
+                            adapter.notifyDataSetChanged()
+                            println("b/////////////////" + countforOut + "////" + counttoEnd)
+                            println("af/////////////////" + countforOut + "////" + counttoEnd)
 
+                        } else {
+
+
+                        }
                     }
+                    alreadyInclass = true
                 }
                 if (currentstatus == "out of class") {
+                    countforOut = 0
+                    counttoEnd = counttoEnd + 1
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                     statusText.text = currentstatus
-                    gif.visibility = View.INVISIBLE
 
+                    println("/////////////////" + countforOut + "////" + counttoEnd)
                 }
                 if (currentstatus == "waiting for another") {
-                    count = count + 1
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
-                    if (count == 10) {
+
+                    countforOut = countforOut + 1
+                    println("2/////////////////" + countforOut + "////" + counttoEnd)
+                    if (countforOut == 3) {
                         currentstatus = "out of class"
+                        countforOut = 0
+                        counttoEnd = counttoEnd + 1
                         statusText.text = currentstatus
-                        gif.visibility = View.INVISIBLE
+                        println("3/////////////////" + countforOut + "////" + counttoEnd)
 
                     }
+                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
                 }
             } else {
-                currentstatus == "out of class"
+                currentstatus = "out of class"
+                countforOut = 0
+                counttoEnd = counttoEnd + 1
+                statusText.text = currentstatus
+                Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                println("4/////////////////" + countforOut + "////" + counttoEnd)
+
+            }
+
+            if (counttoEnd == 2) {
+                currentstatus = "Class is over"
+                alreadyInclass = false
                 Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
                 gif.visibility = View.INVISIBLE
+                adapter = MycourseAdapter(
+                    mContext,
+                    activity!!,
+                    R.layout.list_detail,
+                    courselistdetail
+                )
+                listview_attendance!!.adapter = null
+                adapter.notifyDataSetChanged()
+                statusText.visibility = View.VISIBLE
+                statusText.text = currentstatus
+                beaconManager!!.stopRanging(region)
             }
+
+            println("ggggggggggggggggggggg$isScanning${beaconList.size}")
+            handler.postDelayed(r, 15000)
         })
 
 
+        if (!isScanning) {
+            handler.postDelayed(r, 10000)
+            println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+        }
+
+
     }
+
 
     private fun findBeacon(beacon: Beacon): String {
         var distance =
@@ -210,7 +301,6 @@ class AttendanceFragment : Fragment() {
     override fun onPause() {
         beaconManager!!.stopRanging(region)
         super.onPause()
+        Handler().removeCallbacksAndMessages(null)
     }
-
-
 }
