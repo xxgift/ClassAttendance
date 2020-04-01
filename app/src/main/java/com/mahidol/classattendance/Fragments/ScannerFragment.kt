@@ -4,6 +4,7 @@ package com.mahidol.classattendance.Fragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,9 +95,10 @@ class ScannerFragment : Fragment() {
 
             if (beacons!!.isNotEmpty()) {
                 val nearestBeacon = beacons[0]
-                currentstatus = findBeacon(nearestBeacon)
-                adaptertop.notifyDataSetChanged()
+
                 adapterbottom.notifyDataSetChanged()
+                adaptertop.notifyDataSetChanged()
+                currentstatus = findBeacon(nearestBeacon)
                 if (currentstatus == "in class") {
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
                 }
@@ -148,7 +150,13 @@ class ScannerFragment : Fragment() {
             //เจออันซ้ำ
             if (beaconList.size >= 2) {
                 checkInClass()
-                beaconList.clear()
+
+                val handler = Handler()
+                val r = Runnable {
+                    beaconList.clear()
+                }
+                handler.postDelayed(r,1000)
+
 
             } else {
                 currentstatus = "waiting for another"
@@ -161,7 +169,13 @@ class ScannerFragment : Fragment() {
             beaconList.add(detail)
             if (beaconList.size >= 2) {
                 checkInClass()
-                beaconList.clear()
+
+                val handler = Handler()
+                val r = Runnable {
+                    beaconList.clear()
+                }
+                handler.postDelayed(r,1000)
+
             } else {
                 currentstatus = "waiting for another"
                 statusList.add(Status(currentstatus))
@@ -200,6 +214,7 @@ class ScannerFragment : Fragment() {
 
     override fun onPause() {
         beaconManager!!.stopRanging(region)
+        Handler().removeCallbacks(null)
         super.onPause()
     }
 

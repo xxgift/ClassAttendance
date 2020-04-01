@@ -51,10 +51,6 @@ class MycourseAdapter (
 
 
 
-
-//        view.setOnClickListener {
-//            Toast.makeText(mContext, "Selected", Toast.LENGTH_SHORT).show()
-//        }
 //        view.setOnLongClickListener {
 //
 //            view.animate().setDuration(500).alpha(0f).withEndAction {

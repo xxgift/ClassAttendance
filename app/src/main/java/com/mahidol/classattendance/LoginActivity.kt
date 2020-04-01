@@ -1,17 +1,27 @@
 package com.mahidol.classattendance
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.gson.Gson
 import com.mahidol.classattendance.Helper.HTTPHelper
-import com.mahidol.classattendance.Models.Post
-import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.courselistdetail
-import com.mahidol.classattendance.Models.currenttype
 import kotlinx.android.synthetic.main.login.*
+import android.provider.Settings.Secure
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.net.wifi.WifiManager
+import android.telephony.TelephonyManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.firebase.database.FirebaseDatabase
+import com.mahidol.classattendance.Models.*
+
 
 class LoginActivity : AppCompatActivity() {
     //firebase database URL
@@ -21,10 +31,41 @@ class LoginActivity : AppCompatActivity() {
     var userprofile: User? = null
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+//        val manager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        val permission = ContextCompat.checkSelfPermission(this,
+//            Manifest.permission.ACCESS_WIFI_STATE)
+//
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_WIFI_STATE), 1)
+//        }
+//        var mac = manager.connectionInfo.macAddress
+
+
+        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val permission = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_PHONE_STATE)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+        }
+        var imei = telephonyManager.imei
+
+
+        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
+
+        if(token.getString("loginusername"," ") != " "){
+            val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+            startActivity(intent)
+            intent.putExtra("uname",token.getString("uname"," "))
+            finish()
+        }
+
 
         //if user have an account already then go to activity_body page (Home page)
         login_btn.setOnClickListener {
@@ -60,11 +101,32 @@ class LoginActivity : AppCompatActivity() {
 
                             //check username and password is matched
                             if (userprofile!!.password == pname) {
-                                currenttype = userprofile!!.type
-                                val intent = Intent(this@LoginActivity, BodyActivity::class.java)
-                                //transfer value of username to scan
-                                intent.putExtra("uname", uname)
-                                applicationContext.startActivity(intent)
+
+                                if(userprofile!!.imei =="null"){
+                                    FirebaseDatabase.getInstance().getReference("UserProfile").child(userprofile!!.username).setValue(User(userprofile!!.username, userprofile!!.password, userprofile!!.type,userprofile!!.courselist,imei))
+                                }else{
+                                    if (userprofile!!.imei == imei){
+                                        currenttype = userprofile!!.type
+                                        val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+                                        //transfer value of username to scan
+                                        intent.putExtra("uname", uname)
+
+
+                                        var editor = token.edit()
+                                        editor.putString("loginusername",uname)
+                                        editor.commit()
+
+
+
+                                        applicationContext.startActivity(intent)
+                                    }else{
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "This account is logged in on another device ",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
 
                             } else {
                                 Toast.makeText(
@@ -83,6 +145,10 @@ class LoginActivity : AppCompatActivity() {
 
                 }
                 asyncTask.execute()
+
+
+
+                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
             }
         }
 

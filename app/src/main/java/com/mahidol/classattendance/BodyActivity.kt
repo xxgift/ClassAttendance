@@ -55,6 +55,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var name: String? = null
     var userprofile: User? = null
 
+
     //set listener for selected item from bottom navigation bar to go to that fragment
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -94,6 +95,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         subappBar = findViewById(R.id.subtitleText)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
+        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
+
+
         replaceFragment(ChatroomFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
 
@@ -103,9 +109,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         //get username from transfer data of LoginActivity
-        uname = intent.getStringExtra("uname")
+//        uname = intent.getStringExtra("uname")
+        uname = token.getString("loginusername"," ")
 
         //get json file of this username
+
         var asyncTask = object : AsyncTask<String, String, String>() {
 
             override fun doInBackground(vararg p0: String?): String {
@@ -120,6 +128,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     username = findViewById(R.id.namenav)
                     type = findViewById(R.id.nameSurname_nav)
                     username!!.text = userprofile!!.username
+                    courselistdetail = userprofile!!.courselist
+
+
                     type!!.text = userprofile!!.type
 
                     if(userprofile!!.type == "Student") {
@@ -140,6 +151,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     //set current user
                     currentuser = userprofile!!.username
+                    currenttype = userprofile!!.type
                     appBar!!.text = "Chat Room"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
 
@@ -217,10 +229,18 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Handle navigation view item clicks here.
         val id = item.itemId
+        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
+
 
         //go to log in page when selected log out
         if (id == R.id.menu_logout) {
             drawer!!.closeDrawer(GravityCompat.START)
+            var editor = token.edit()
+            editor.putString("loginusername"," ")
+            editor.commit()
+
+
+
             val intent = Intent(this@BodyActivity, LoginActivity::class.java)
             startActivity(intent)
             Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
