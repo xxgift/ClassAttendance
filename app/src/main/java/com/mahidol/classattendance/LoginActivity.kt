@@ -153,7 +153,7 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
             }
         }
 

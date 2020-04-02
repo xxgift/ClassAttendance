@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion
@@ -24,6 +22,8 @@ import kotlin.collections.ArrayList
 import kotlin.math.pow
 
 import android.os.Handler
+import android.widget.*
+import com.google.firebase.database.*
 
 class AttendanceFragment : Fragment() {
 
@@ -34,6 +34,9 @@ class AttendanceFragment : Fragment() {
     private var region: BeaconRegion? = null
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
+    lateinit var dataReference: DatabaseReference
+    private var subappBar: TextView? = null
+
     var countforOut = 0
     var counttoEnd = 0
     var isScanning = false
@@ -58,6 +61,12 @@ class AttendanceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var addbtn = view.findViewById<Button>(R.id.addbtn_studentlist)
+        addbtn.visibility = View.INVISIBLE
+
+        dataReference = FirebaseDatabase.getInstance().getReference("OnlineCourse")
+
+        subappBar = view.findViewById<TextView>(R.id.subtitleText)
 
 
         val gif = view!!.findViewById<ImageView>(R.id.loading_gif)
@@ -85,6 +94,7 @@ class AttendanceFragment : Fragment() {
                 beaconManager!!.stopRanging(region)
 
             } else {
+
                 statusText.text = "Not found any class"
             }
             println("oooooooooooooooooooooooooooooooooooooooooo")
@@ -145,11 +155,55 @@ class AttendanceFragment : Fragment() {
                             )
                             listview_attendance!!.adapter = adapter
                             adapter.notifyDataSetChanged()
+
+                            listview_attendance!!.onItemClickListener =
+                                AdapterView.OnItemClickListener { parent, view, position, id ->
+                                        Toast.makeText(mContext, "open ${courselistdetail[position].courseID
+                                        }", Toast.LENGTH_SHORT).show()
+                                    courselistdetail[position].courseStatus = "Online"
+                                    currentcourse = courselistdetail[position].courseID
+                                    onlinecourse.add(Course(courselistdetail[position].courseID,courselistdetail[position].joinID,courselistdetail[position].owner,courselistdetail[position].courseStatus))
+                                    dataReference.setValue(onlinecourse)
+                                    subappBar!!.text = currentcourse
+                                    addbtn.visibility = View.VISIBLE
+
+
+                                }
+
                             println("b/////////////////" + countforOut + "////" + counttoEnd)
-                            println("af/////////////////" + countforOut + "////" + counttoEnd)
 
                         } else {
 
+                            var query = dataReference.orderByChild("joinID")
+                            query.addValueEventListener(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError?) {
+                                }
+                                override fun onDataChange(p0: DataSnapshot?) {
+                                    if (p0!!.exists()) {
+                                        for (i in p0.children) {
+                                            val result = i.getValue(Course::class.java)
+                                            courselistdetail.forEach {
+                                                if(it.courseID==result!!.courseID){
+                                                    onlinecourse.add(Course(result!!.courseID, result!!.joinID,result!!.owner,result!!.courseStatus))
+                                                }
+                                            }
+                                        }
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }
+                            })
+                            adapter = MycourseAdapter(mContext, activity!!, R.layout.list_detail, onlinecourse)
+                            listview_attendance!!.adapter = adapter
+                            adapter.notifyDataSetChanged()
+
+                            listview_attendance!!.onItemClickListener =
+                                AdapterView.OnItemClickListener { parent, view, position, id ->
+                                    Toast.makeText(mContext, "open ${courselistdetail[position].courseID
+                                    }", Toast.LENGTH_SHORT).show()
+                                    courselistdetail[position].courseStatus = "Online"
+                                    onlinecourse.add(Course(courselistdetail[position].courseID,courselistdetail[position].joinID,courselistdetail[position].owner,courselistdetail[position].courseStatus))
+                                    dataReference.setValue(onlinecourse)
+                                }
 
                         }
                     }

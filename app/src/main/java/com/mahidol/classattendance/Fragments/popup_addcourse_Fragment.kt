@@ -45,7 +45,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
 
         courseList = arrayListOf()
-        dataReference2 = FirebaseDatabase.getInstance().getReference("Course")
+        dataReference2 = FirebaseDatabase.getInstance().getReference("AllCourse")
         var dataQuery = dataReference2.orderByChild("courseID")
 
         dataQuery.addValueEventListener(object : ValueEventListener {
@@ -105,8 +105,8 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
             //send value to firebase
             var randjoinID = ('A'..'z').map { it }.shuffled().subList(0, 4).joinToString("")
-            courselistdetail!!.add(Course(addcourseID, randjoinID, currentuser!!))
-            courseList.add(Course(addcourseID, randjoinID, currentuser!!))
+            courselistdetail!!.add(Course(addcourseID, randjoinID, currentuser!!,""))
+            courseList.add(Course(addcourseID, randjoinID, currentuser!!,""))
 
             //set course name to be child's name
 //            courselistdetail.forEach {
@@ -146,7 +146,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                     if (p0!!.exists()) {
                         for (i in p0.children) {
                             val result = i.getValue(Course::class.java)
-                            courselistdetail.add(Course(result!!.courseID, result!!.joinID,result!!.owner))
+                            courselistdetail.add(Course(result!!.courseID, result!!.joinID,result!!.owner,""))
                             dataReference.child(currentuser).child("courselist")
                                 .setValue(courselistdetail)
                         }
