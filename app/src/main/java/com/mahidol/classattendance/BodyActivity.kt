@@ -1,7 +1,11 @@
 package com.mahidol.classattendance
 
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -15,6 +19,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -43,7 +48,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var sensorManager: SensorManager? = null
     private var drawer: DrawerLayout? = null
     private var appBar: TextView? = null
-    private var subappBar:TextView? = null
+    private var subappBar: TextView? = null
     private var username: TextView? = null
     private var type: TextView? = null
     private var settingBtn: ImageButton? = null
@@ -87,9 +92,45 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         }
 
+    private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothManager.adapter
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_body)
+
+        // Ensures Bluetooth is available on the device and it is enabled. If not,
+        // displays a dialog requesting user permission to enable Bluetooth.
+        bluetoothAdapter?.takeIf { !it.isEnabled }?.apply {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, 2)
+        }
+
+        val permissionCall = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_PHONE_STATE
+        )
+        val permissionLocation = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        val permissionBluetooth = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.BLUETOOTH
+        )
+
+        if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.BLUETOOTH
+                ), 1
+            )
+        }
+
         //set title page
         appBar = findViewById(R.id.titleText)
         subappBar = findViewById(R.id.subtitleText)
@@ -97,7 +138,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
+        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
 
 
         replaceFragment(ChatroomFragment())
@@ -110,7 +151,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //get username from transfer data of LoginActivity
 //        uname = intent.getStringExtra("uname")
-        uname = token.getString("loginusername"," ")
+        uname = token.getString("loginusername", " ")
 
         //get json file of this username
 
@@ -118,7 +159,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             override fun doInBackground(vararg p0: String?): String {
                 val helper = HTTPHelper()
-                return helper.getHTTPData(url +uname+".json")
+                return helper.getHTTPData(url + uname + ".json")
             }
 
             override fun onPostExecute(result: String?) {
@@ -133,7 +174,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     type!!.text = userprofile!!.type
 
-                    if(userprofile!!.type == "Student") {
+                    if (userprofile!!.type == "Student") {
                         bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))
                         settingBtn = findViewById(R.id.setting)
                         subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
@@ -215,8 +256,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
-
     //function for replace fragment
     private fun replaceFragment(fragment: Fragment) {
         fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -229,16 +268,15 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Handle navigation view item clicks here.
         val id = item.itemId
-        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
+        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
 
 
         //go to log in page when selected log out
         if (id == R.id.menu_logout) {
             drawer!!.closeDrawer(GravityCompat.START)
             var editor = token.edit()
-            editor.putString("loginusername"," ")
+            editor.putString("loginusername", " ")
             editor.commit()
-
 
 
             val intent = Intent(this@BodyActivity, LoginActivity::class.java)
@@ -264,6 +302,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             getAccelerometer(event)
         }
     }
+
     private fun getAccelerometer(event: SensorEvent) {
         val values = event.values
         val x = values[0]
@@ -284,9 +323,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         }
     }
+
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
 
     }
+
     override fun onPause() {
         super.onPause()
         sensorManager!!.unregisterListener(this)
@@ -294,11 +335,12 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        sensorManager!!.registerListener(this, sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager!!.registerListener(
+            this,
+            sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
     }
-
-
-
 
 
 }

@@ -10,7 +10,6 @@ import com.mahidol.classattendance.Adapter.UserAdapter
 import com.mahidol.classattendance.Models.User
 import com.mahidol.classattendance.Models.currenttotaltime
 import com.mahidol.classattendance.R
-import kotlinx.android.synthetic.main.fragment_studentinclass.*
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -82,7 +82,7 @@ class MycourseFragment : Fragment() {
             })
 
         listview_courselist!!.setOnTouchListener(touchListener)
-        listview_courselist!!.setOnScrollListener(touchListener.makeScrollListener() as AbsListView.OnScrollListener)
+//        listview_courselist!!.setOnScrollListener(touchListener.makeScrollListener() as AbsListView.OnScrollListener)
         listview_courselist!!.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 if (touchListener.existPendingDismisses()) {
