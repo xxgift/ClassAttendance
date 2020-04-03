@@ -40,7 +40,7 @@
             app:srcCompat="@mipmap/coursenoshadowjing_ic" />
 
         <TextView
-            android:id="@+id/ownerCoursetxt"
+            android:id="@+id/SubtitleLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="@+id/imageView12" />
 
         <TextView
-            android:id="@+id/Titletxt"
+            android:id="@+id/TitletxtLeft"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -68,7 +68,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/Subtitletxt"
+            android:id="@+id/TitletxtRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -83,7 +83,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/SubSubtitletxt"
+            android:id="@+id/SubtitleRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
@@ -95,7 +95,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/list_ic"
-            app:layout_constraintTop_toBottomOf="@+id/Subtitletxt" />
+            app:layout_constraintTop_toBottomOf="@+id/TitletxtRight" />
 
         <TextView
             android:id="@+id/textView10"
@@ -107,7 +107,7 @@
             app:layout_constraintEnd_toEndOf="@+id/imageView12"
             app:layout_constraintHorizontal_bias="0.037"
             app:layout_constraintStart_toEndOf="@+id/list_ic"
-            app:layout_constraintTop_toBottomOf="@+id/Titletxt" />
+            app:layout_constraintTop_toBottomOf="@+id/TitletxtLeft" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 

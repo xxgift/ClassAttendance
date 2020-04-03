@@ -8,20 +8,16 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion
 import com.estimote.coresdk.recognition.packets.Beacon
 import com.estimote.coresdk.service.BeaconManager
-import com.mahidol.classattendance.Adapter.AttendentAdapter
+import com.mahidol.classattendance.Adapter.BeaconstatusAdapter
 import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Adapter.ScannerAdapter
-import com.mahidol.classattendance.Models.BBeacon
+import com.mahidol.classattendance.Models.IBeacon
 import com.mahidol.classattendance.Models.Status
-import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currentstatus
 import com.mahidol.classattendance.R
 
@@ -35,12 +31,12 @@ import kotlin.math.pow
 class ScannerFragment : Fragment() {
 
     lateinit var mContext: Context
-    lateinit var beaconList: ArrayList<BBeacon>
+    lateinit var beaconList: ArrayList<IBeacon>
     lateinit var statusList: ArrayList<Status>
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
     lateinit var adaptertop: ScannerAdapter
-    lateinit var adapterbottom: AttendentAdapter
+    lateinit var adapterbottom: BeaconstatusAdapter
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     var count = 0
@@ -72,7 +68,7 @@ class ScannerFragment : Fragment() {
         adaptertop = ScannerAdapter(mContext, R.layout.list_beacon, beaconList)
         listview_scanner!!.adapter = adaptertop
 
-        adapterbottom = AttendentAdapter(mContext, R.layout.row_course, statusList)
+        adapterbottom = BeaconstatusAdapter(mContext, R.layout.row_course, statusList)
         listview_detail!!.adapter = adapterbottom
 
         beaconManager = BeaconManager(context)
@@ -136,7 +132,7 @@ class ScannerFragment : Fragment() {
         val sdf = SimpleDateFormat("dd-MM-yyyy @HH:mm:ss a")
         val currentDate = sdf.format(Date())
 
-        var detail = BBeacon(
+        var detail = IBeacon(
             area!!,
             beacon.major.toString(),
             beacon.minor.toString(),
