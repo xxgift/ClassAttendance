@@ -41,7 +41,7 @@ import kotlinx.android.synthetic.main.header_nav.*
 class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     SensorEventListener {
 
-    lateinit var beaconList: ArrayList<BBeacon>
+    lateinit var beaconList: ArrayList<IBeacon>
     lateinit var statusList: ArrayList<Status>
 
     lateinit var fragmentTransaction: FragmentTransaction

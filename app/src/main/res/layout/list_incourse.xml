@@ -28,7 +28,7 @@
         app:srcCompat="@mipmap/ic_iconcourseschedule" />
 
     <TextView
-        android:id="@+id/Titletxt"
+        android:id="@+id/TitletxtLeft"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

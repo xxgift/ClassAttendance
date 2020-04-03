@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.mahidol.classattendance.Adapter.UserAdapter
 import com.mahidol.classattendance.Models.User
 import com.mahidol.classattendance.Models.currenttotaltime
 import com.mahidol.classattendance.R
@@ -17,7 +16,6 @@ import java.util.*
 class ClassAttendancestudentFragment : Fragment(){
     lateinit var studentlist: List<User>
     lateinit var mContext: Context
-    lateinit var adapter: UserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,

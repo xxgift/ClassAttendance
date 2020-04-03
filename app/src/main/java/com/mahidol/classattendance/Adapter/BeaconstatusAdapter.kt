@@ -10,7 +10,7 @@ import com.mahidol.classattendance.Models.Status
 import com.mahidol.classattendance.R
 
 
-class AttendentAdapter(
+class BeaconstatusAdapter(
     val mContext: Context,
     val layoutResId: Int,
     val statusList: ArrayList<Status>

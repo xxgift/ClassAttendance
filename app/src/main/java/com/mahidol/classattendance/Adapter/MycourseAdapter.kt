@@ -6,21 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import com.google.firebase.database.FirebaseDatabase
-import com.mahidol.classattendance.Fragments.popup_delete_Fragment
-import com.mahidol.classattendance.Fragments.popup_postdetail_Fragment
 import com.mahidol.classattendance.Models.Course
-import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currenttype
-import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
 
 
 class MycourseAdapter (
     val mContext: Context,
-    val mActivity: FragmentActivity,
     val layoutResId: Int,
     val courseList: ArrayList<Course>?
 ) :
@@ -28,16 +21,13 @@ class MycourseAdapter (
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        var dataReference = FirebaseDatabase.getInstance().getReference("UserProfile").child(
-            currentuser).child("courselist")
-
         val layoutInflator: LayoutInflater = LayoutInflater.from(mContext)
         val view: View = layoutInflator.inflate(layoutResId, null)
 
-        val courseID = view.findViewById<TextView>(R.id.Titletxt)
-        val joinIDtxt = view.findViewById<TextView>(R.id.Subtitletxt)
-        val joinID = view.findViewById<TextView>(R.id.SubSubtitletxt)
-        val owner = view.findViewById<TextView>(R.id.ownerCoursetxt)
+        val courseID = view.findViewById<TextView>(R.id.TitletxtLeft)
+        val joinIDtxt = view.findViewById<TextView>(R.id.TitletxtRight)
+        val joinID = view.findViewById<TextView>(R.id.SubtitleRight)
+        val owner = view.findViewById<TextView>(R.id.SubtitleLeft)
         val course = courseList!![position]
         joinIDtxt.text = "JoinID"
         courseID.text = "${course.courseID}"
@@ -63,16 +53,7 @@ class MycourseAdapter (
 //            return@setOnLongClickListener true
 //        }
 
-//        view.setOnLongClickListener {
-//            showDialog(view,position,mContext)
-//            notifyDataSetChanged()
-//            return@setOnLongClickListener true
-//        }
         return view
     }
 
-    private fun showDialog(view: View,position: Int,fcontext:Context) {
-        val applypopup = popup_delete_Fragment(view,position,fcontext)
-        applypopup.show(mActivity!!.supportFragmentManager, "exampleBottomSheet")
-    }
 }

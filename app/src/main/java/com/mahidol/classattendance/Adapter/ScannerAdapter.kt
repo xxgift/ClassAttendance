@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import com.mahidol.classattendance.Models.BBeacon
+import com.mahidol.classattendance.Models.IBeacon
 import com.mahidol.classattendance.Models.currentcourse
 import com.mahidol.classattendance.R
 
@@ -15,9 +15,9 @@ import com.mahidol.classattendance.R
 class ScannerAdapter(
     val mContext: Context,
     val layoutResId: Int,
-    val beaconList: ArrayList<BBeacon>
+    val beaconList: ArrayList<IBeacon>
 ) :
-    ArrayAdapter<BBeacon>(mContext, layoutResId, beaconList) {
+    ArrayAdapter<IBeacon>(mContext, layoutResId, beaconList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 

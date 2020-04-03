@@ -53,7 +53,7 @@ class MycourseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = MycourseAdapter(mContext, activity!!, R.layout.list_detail, courselistdetail)
+        adapter = MycourseAdapter(mContext, R.layout.list_detail, courselistdetail)
         listview_courselist!!.adapter = adapter
 
         val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_course)
