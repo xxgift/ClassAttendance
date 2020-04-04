@@ -23,23 +23,27 @@ import kotlin.math.pow
 
 import android.os.Handler
 import android.widget.*
+import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.database.*
-import com.mahidol.classattendance.Adapter.AttendanceAdapter
+import kotlin.collections.HashMap
 
 class AttendanceFragment : Fragment() {
 
     lateinit var mContext: Context
     lateinit var beaconList: ArrayList<IBeacon>
     lateinit var statusList: ArrayList<Status>
-    lateinit var studentList:ArrayList<Time>
+    lateinit var studentList: ArrayList<Attendance>
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
-    lateinit var dataReference2: DatabaseReference
 
-    lateinit var adapter2:AttendanceAdapter
+    lateinit var fragmentTransaction: FragmentTransaction
+
+
+    lateinit var onlineListValue:HashMap<String,Any>
+
 
     var countforOut = 0
     var counttoEnd = 0
@@ -69,8 +73,8 @@ class AttendanceFragment : Fragment() {
         subtitleTextAttendance.visibility = View.INVISIBLE
 
         dataReference = FirebaseDatabase.getInstance().getReference("OnlineCourse")
-        dataReference2 = FirebaseDatabase.getInstance().getReference("History")
 
+        onlineListValue = hashMapOf()
 
         val gif = view!!.findViewById<ImageView>(R.id.loading_gif)
 
@@ -88,13 +92,14 @@ class AttendanceFragment : Fragment() {
             adapter = MycourseAdapter(
                 mContext,
                 R.layout.list_detail,
-                courselistdetail
+                courseList
             )
             listview_attendance.adapter = null
             adapter.notifyDataSetChanged()
             if (isScanning) {
                 statusText.text = "Class is over"
                 beaconManager!!.stopRanging(region)
+                dataReference.child(currentcourse).removeValue()
 
             } else {
 
@@ -155,25 +160,50 @@ class AttendanceFragment : Fragment() {
                             adapter = MycourseAdapter(
                                 mContext,
                                 R.layout.list_detail,
-                                courselistdetail
+                                courseList
                             )
                             listview_attendance!!.adapter = adapter
                             adapter.notifyDataSetChanged()
 
                             listview_attendance!!.onItemClickListener =
                                 AdapterView.OnItemClickListener { parent, view, position, id ->
-                                        Toast.makeText(mContext, "Get Started ${courselistdetail[position].courseID
-                                        }", Toast.LENGTH_SHORT).show()
-                                    courselistdetail[position].courseStatus = "Online"
-                                    currentcourse = courselistdetail[position].courseID
+                                    Toast.makeText(
+                                        mContext, "Get Started ${courseList[position].courseID
+                                        }", Toast.LENGTH_SHORT
+                                    ).show()
+                                    courseList[position].courseStatus = "Online"
+                                    currentcourse = courseList[position].courseID
                                     queryOnline()
-                                    onlinecourse.add(Course(courselistdetail[position].courseID,courselistdetail[position].joinID,courselistdetail[position].owner,courselistdetail[position].courseStatus))
-                                    dataReference.setValue(onlinecourse)
+                                    if (onlinecourse.any { it.courseID == courseList[position].courseID }) {
+                                    } else {
+                                        onlinecourse.add(
+                                            Course(
+                                                courseList[position].courseID,
+                                                courseList[position].joinID,
+                                                courseList[position].owner,
+                                                courseList[position].courseStatus,
+                                                courseList[position].whoEnroll,
+                                                ArrayList<Material>()
+                                            )
+                                        )
+                                        onlineListValue.put(
+                                            courseList[position].courseID, Course(
+                                                courseList[position].courseID,
+                                                courseList[position].joinID,
+                                                courseList[position].owner,
+                                                courseList[position].courseStatus,
+                                                courseList[position].whoEnroll,
+                                                ArrayList<Material>()
+
+                                            )
+                                        )
+                                    }
+
+                                    dataReference.setValue(onlineListValue)
                                     addbtn_studentlist.visibility = View.VISIBLE
                                     subtitleTextAttendance.visibility = View.VISIBLE
                                     subtitleTextAttendance.text = currentcourse
-                                    adapter2 = AttendanceAdapter(mContext,R.layout.list_detail,studentList)
-
+                                    replaceFragment(LogAttendanceFragment(courseList[position].courseID))
 
                                 }
 
@@ -194,16 +224,23 @@ class AttendanceFragment : Fragment() {
                             //not finish durationtime
                             val durationtime = ""
 
-                            if (onlinecourse.size == 1){
+                            if (onlinecourse.size == 1) {
                                 currentcourse = onlinecourse[0].courseID
-                                studentList.add(Time(currentuser!!, currenttype!!,
-                                currentcourse!!,date,time,durationtime))}
+                                studentList.add(
+                                    Attendance(
+                                        currentuser!!, currenttype!!,
+                                        currentcourse!!, date, time, durationtime,"Present"
+                                    )
+                                )
+                            }
 
                             listview_attendance!!.onItemClickListener =
                                 AdapterView.OnItemClickListener { parent, view, position, id ->
-                                    Toast.makeText(mContext, "open ${courselistdetail[position].courseID
-                                    }", Toast.LENGTH_SHORT).show()
-                                    courselistdetail[position].courseStatus = "Online"
+                                    Toast.makeText(
+                                        mContext, "open ${courseList[position].courseID
+                                        }", Toast.LENGTH_SHORT
+                                    ).show()
+                                    courseList[position].courseStatus = "Online"
 
                                 }
                         }
@@ -251,13 +288,14 @@ class AttendanceFragment : Fragment() {
                 adapter = MycourseAdapter(
                     mContext,
                     R.layout.list_detail,
-                    courselistdetail
+                    courseList
                 )
                 listview_attendance!!.adapter = null
                 adapter.notifyDataSetChanged()
                 statusText.visibility = View.VISIBLE
                 statusText.text = currentstatus
                 beaconManager!!.stopRanging(region)
+                dataReference.child(currentcourse).removeValue()
             }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
@@ -325,21 +363,40 @@ class AttendanceFragment : Fragment() {
         return currentstatus
     }
 
-    private fun queryOnline(){
+    private fun queryOnline() {
         var query = dataReference.orderByChild("courseID")
         query.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
             }
+
             override fun onDataChange(p0: DataSnapshot?) {
                 if (p0!!.exists()) {
                     for (i in p0.children) {
                         val result = i.getValue(Course::class.java)
-                        if(currenttype== "Teacher"){
-                            onlinecourse.add(Course(result!!.courseID, result!!.joinID,result!!.owner,result!!.courseStatus))
-                        }else{
+                        if (currenttype == "Teacher") {
+                            onlinecourse.add(
+                                Course(
+                                    result!!.courseID,
+                                    result!!.joinID,
+                                    result!!.owner,
+                                    result!!.courseStatus,
+                                    result!!.whoEnroll,
+                                    ArrayList<Material>()
+                                )
+                            )
+                        } else {
                             courselistdetail.forEach {
-                                if(it.courseID==result!!.courseID){
-                                    onlinecourse.add(Course(result!!.courseID, result!!.joinID,result!!.owner,result!!.courseStatus))
+                                if (it.key == result!!.courseID) {
+                                    onlinecourse.add(
+                                        Course(
+                                            result!!.courseID,
+                                            result!!.joinID,
+                                            result!!.owner,
+                                            result!!.courseStatus,
+                                            result!!.whoEnroll,
+                                            ArrayList<Material>()
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -382,5 +439,13 @@ class AttendanceFragment : Fragment() {
         beaconManager!!.stopRanging(region)
         super.onPause()
         Handler().removeCallbacksAndMessages(null)
+    }
+
+
+    private fun replaceFragment(fragment: Fragment) {
+        fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragmentContainer, fragment)
+        fragmentTransaction.commit()
+
     }
 }

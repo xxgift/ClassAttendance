@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import com.mahidol.classattendance.Models.Course
@@ -12,7 +14,7 @@ import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
 
 
-class MycourseAdapter (
+class MycourseAdapter(
     val mContext: Context,
     val layoutResId: Int,
     val courseList: ArrayList<Course>?
@@ -28,18 +30,18 @@ class MycourseAdapter (
         val joinIDtxt = view.findViewById<TextView>(R.id.TitletxtRight)
         val joinID = view.findViewById<TextView>(R.id.SubtitleRight)
         val owner = view.findViewById<TextView>(R.id.SubtitleLeft)
+
         val course = courseList!![position]
+
+
         joinIDtxt.text = "JoinID"
         courseID.text = "${course.courseID}"
-        if(currenttype == "Student"){
+        if (currenttype == "Student") {
             joinIDtxt.visibility = View.INVISIBLE
-          joinID.visibility = View.INVISIBLE
+            joinID.visibility = View.INVISIBLE
         }
         joinID.text = "${course.joinID}"
         owner.text = "${course.owner}"
-
-
-
 
 //        view.setOnLongClickListener {
 //
@@ -52,6 +54,8 @@ class MycourseAdapter (
 //            }
 //            return@setOnLongClickListener true
 //        }
+
+
 
         return view
     }

@@ -24,11 +24,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.mahidol.classattendance.Fragments.*
 import com.mahidol.classattendance.Helper.HTTPHelper
@@ -44,7 +47,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var beaconList: ArrayList<IBeacon>
     lateinit var statusList: ArrayList<Status>
 
+    lateinit var dataReference: DatabaseReference
+
+
     lateinit var fragmentTransaction: FragmentTransaction
+
     private var sensorManager: SensorManager? = null
     private var drawer: DrawerLayout? = null
     private var appBar: TextView? = null
@@ -59,6 +66,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var uname: String? = null
     var name: String? = null
     var userprofile: User? = null
+
+
+
 
 
     //set listener for selected item from bottom navigation bar to go to that fragment
@@ -137,8 +147,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
         var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
+
+        dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
 
 
         replaceFragment(ChatroomFragment())
@@ -170,7 +181,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     type = findViewById(R.id.nameSurname_nav)
                     username!!.text = userprofile!!.username
                     courselistdetail = userprofile!!.courselist
-
 
                     type!!.text = userprofile!!.type
 
@@ -222,39 +232,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 drawer!!.openDrawer(GravityCompat.START)
             }
         }
-
-
-        //add listener of search button to open navigation bar when clicked
-//        val search = findViewById<ImageButton>(R.id.search)
-//        search.setOnClickListener {
-//            val searchView:SearchView? = null
-//            SimpleSearchDialogCompat(
-//                this@BodyActivity, "Search", "What are you looking for...?", null, initData(),
-//                SearchResultListener {baseSearchDialogCompat, item, position ->
-//                    Toast.makeText(this, item.title,Toast.LENGTH_SHORT).show()
-//                    baseSearchDialogCompat.dismiss()
-//                }
-//            ).show()
-//
-//        }
-
     }
-
-
-    private fun initData(): ArrayList<SearchModel> {
-        val items = ArrayList<SearchModel>()
-        items.add(SearchModel("Thailand"))
-        items.add(SearchModel("Japan"))
-        items.add(SearchModel("Korea"))
-        items.add(SearchModel("USA"))
-        items.add(SearchModel("China"))
-        items.add(SearchModel("Russia"))
-        items.add(SearchModel("Finland"))
-
-        return items
-
-    }
-
 
     //function for replace fragment
     private fun replaceFragment(fragment: Fragment) {
@@ -278,6 +256,10 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             editor.putString("loginusername", " ")
             editor.commit()
 
+            val userData = User(userprofile!!.username,userprofile!!.password , userprofile!!.type,
+                courselistdetail,"")
+            dataReference.child(userprofile!!.username).setValue(userData)
+            courseList.clear()
 
             val intent = Intent(this@BodyActivity, LoginActivity::class.java)
             startActivity(intent)
@@ -341,6 +323,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             SensorManager.SENSOR_DELAY_NORMAL
         )
     }
+
 
 
 }

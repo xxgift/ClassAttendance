@@ -11,11 +11,6 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.mahidol.classattendance.Helper.HTTPHelper
 import kotlinx.android.synthetic.main.login.*
-import android.provider.Settings.Secure
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.net.wifi.WifiManager
 import android.telephony.TelephonyManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -103,12 +98,25 @@ class LoginActivity : AppCompatActivity() {
                         if (result != "null") {
                             userprofile = Gson().fromJson(result, User::class.java)
                             courselistdetail = userprofile!!.courselist
+                            courselistdetail.forEach{
+                                courseList.add(it.value)
+                            }
+                            currentImei = imei
 
                             //check username and password is matched
                             if (userprofile!!.password == pname) {
 
-                                if(userprofile!!.imei =="null"){
+                                if(userprofile!!.imei == ""){
                                     FirebaseDatabase.getInstance().getReference("UserProfile").child(userprofile!!.username).setValue(User(userprofile!!.username, userprofile!!.password, userprofile!!.type,userprofile!!.courselist,imei))
+                                    currenttype = userprofile!!.type
+                                    val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+                                    //transfer value of username to scan
+                                    intent.putExtra("uname", uname)
+
+                                    var editor = token.edit()
+                                    editor.putString("loginusername",uname)
+                                    editor.commit()
+                                    applicationContext.startActivity(intent)
                                 }else{
                                     if (userprofile!!.imei == imei){
                                         currenttype = userprofile!!.type

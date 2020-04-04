@@ -117,7 +117,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         var imei = telephonyManager.imei
 
-        val userData = User(user, pass, type, ArrayList<Course>(),imei)
+        val userData = User(user, pass, type, HashMap<String,Course>(),imei)
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
                 Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)

@@ -14,6 +14,8 @@ import com.google.gson.Gson
 import com.mahidol.classattendance.Adapter.ChatroomAdapter
 import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.Post
+import com.mahidol.classattendance.Models.currentcourse
+
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_chatroom.*
 import java.util.*
@@ -27,6 +29,7 @@ class ChatroomFragment : Fragment() {
     lateinit var postList: ArrayList<Post>
     lateinit var adapter: ChatroomAdapter
     lateinit var mActivity: Activity
+    lateinit var allCoursename:ArrayList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,33 +49,10 @@ class ChatroomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postList = ArrayList<Post>()
-
+        allCoursename = arrayListOf()
 
         dataReference = FirebaseDatabase.getInstance().getReference("Post")
         var dataQuery = dataReference.orderByChild("timestamp")
-
-        //add listener of search button to open navigation bar when clicked
-
-//        search.setOnClickListener {
-//            val searchView: SearchView? = null
-//            searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//
-//                override fun onQueryTextChange(newText: String): Boolean {
-//                    if (TextUtils.isEmpty(newText)) {
-//                        adapter.filter("")
-//                        listview_home.clearTextFilter()
-//                    } else {
-//                        adapter.filter(newText)
-//                    }
-//                    return true
-//                }
-//
-//                override fun onQueryTextSubmit(query: String): Boolean {
-//                    // task HERE
-//                    return false
-//                }
-//            })
-//        }
 
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -94,20 +74,37 @@ class ChatroomFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         })
+
         adapter = ChatroomAdapter(context!!,activity!!, R.layout.list_post, postList)
         listview_chatroom!!.adapter = adapter
 
 
         btn_addpost.setOnClickListener {
-            showDialog(view,adapter)
+            showDialogPost(view,adapter)
             adapter.notifyDataSetChanged()
 
+        }
+        btn_sort.setOnClickListener {
+            postList.forEach {
+                var tmp = it.course
+                if (allCoursename.any { it == tmp }) {
+                } else {
+                    allCoursename.add(it.course)
+                }
+            }
+            showDialogSort(view,adapter,allCoursename,postList)
+            adapter.notifyDataSetChanged()
         }
 
 
     }
-    private fun showDialog(view: View,adapter: ChatroomAdapter) {
+    private fun showDialogPost(view: View,adapter: ChatroomAdapter) {
         val applypopup = popup_addpost_Fragment(view,adapter)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
+    private fun showDialogSort(view: View,adapter: ChatroomAdapter,allcoursename:ArrayList<String>,postList:ArrayList<Post>) {
+        val applypopup = popup_sort_Fragment(view,adapter,allcoursename,postList)
+        applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
+    }
+
 }

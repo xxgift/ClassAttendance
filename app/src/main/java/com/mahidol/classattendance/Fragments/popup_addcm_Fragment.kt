@@ -6,32 +6,30 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
-import com.mahidol.classattendance.Adapter.LogAttendanceAdapter
-import com.mahidol.classattendance.Models.Attendance
+import com.mahidol.classattendance.Adapter.MaterialAdapter
+import com.mahidol.classattendance.Models.Material
 import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
-
-import kotlinx.android.synthetic.main.popup_addcourse.*
-import kotlinx.android.synthetic.main.popup_addstudent.*
+import kotlinx.android.synthetic.main.popup_addcoursematerial.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class popup_addstudent_Fragment(var mView: View, var adapter: LogAttendanceAdapter,var coursename:String) : DialogFragment() {
+class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var coursename:String) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var imgEmpty: ImageView
-    lateinit var studentList:ArrayList<Attendance>
-    lateinit var addStudentID :String
+    lateinit var materialList:ArrayList<Material>
+    lateinit var addMaterialID :String
+    lateinit var addLink:String
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.popup_addstudent, container, false)
+        return inflater.inflate(R.layout.popup_addcoursematerial, container, false)
     }
 
     override fun onStart() {
@@ -42,35 +40,35 @@ class popup_addstudent_Fragment(var mView: View, var adapter: LogAttendanceAdapt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        addcm_coursename.text = coursename
 
-        studentList = arrayListOf()
-        val sdf = SimpleDateFormat("dd-MM-yy")
-        val date = sdf.format(Date())
+        dataReference = FirebaseDatabase.getInstance().getReference("AllCourse").child(coursename).child("Material")
 
-        dataReference = FirebaseDatabase.getInstance().getReference("AllCourse").child(coursename).child(date)
+        materialList = arrayListOf()
 
-        var dataQuery = dataReference.orderByChild("username")
+        var dataQuery = dataReference.orderByChild("materialID")
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0!!.exists()) {
-                    studentList.clear()
+                    materialList.clear()
                     for (i in p0.children) {
-                        val oneUser = i.getValue(Attendance::class.java)
-                        studentList.add(oneUser!!)
+                        val oneUser = i.getValue(Material::class.java)
+                        materialList.add(oneUser!!)
                     }
+                    materialList.reverse()
                 }
                 adapter.notifyDataSetChanged()
             }
         })
 
 
-        addstudent_cancelbtn.setOnClickListener {
+        addcm_cancelbtn.setOnClickListener {
             dialog!!.dismiss()
         }
 
-        addstudent_addbtn.setOnClickListener {
+        addcm_addbtn.setOnClickListener {
             //save course data
             saveData()
         }
@@ -80,28 +78,38 @@ class popup_addstudent_Fragment(var mView: View, var adapter: LogAttendanceAdapt
     private fun saveData(): Boolean {
 
         if (currenttype == "Teacher") {
-            addStudentID = addstudent_studentID.text.toString()
+            addMaterialID = addcm_materialID.text.toString()
+            addLink = addcm_materialLink.text.toString()
             //check each edittext must not be null
-            if (addStudentID.isEmpty()) {
-                addstudent_studentID.error = "Please enter a message"
+            if (addMaterialID.isEmpty()) {
+                addcm_materialID.error = "Please enter a message"
+                return false
+            }
+            if (addLink.isEmpty()) {
+                addcm_materialLink.error = "Please enter a message"
                 return false
             }
 
             //check MaterialID is not already in use
-            studentList?.forEach {
-                if (it.username == addStudentID) {
-                    studentList.add(Attendance(it.username,it.type,it.coursename,it.date,it.starttime,it.durationtime,"Present"))
-                    studentList.remove(it)
-                    dataReference.setValue(studentList)
+            materialList?.forEach {
+                if (it.materialID == addMaterialID) {
+                    addcm_materialID.error = "MaterialID already exists"
+                    addcm_materialID.text = null
+                    addcm_materialID.setHint("Enter Again")
                     return false
-                }else{
-                    addstudent_studentID.error = "This student has not enrolled this course"
-                    addstudent_studentID.text = null
-                    addstudent_studentID.setHint("Enter Again")
                 }
             }
 
+            val sdf = SimpleDateFormat("dd-MM-yy @HH:mm a")
+            val date = sdf.format(Date())
+            val tmp = SimpleDateFormat("yyMMddHHmmss")
+            val timestamp = tmp.format(Date())
+
             //send value to firebase
+
+            materialList.add(Material(coursename,addMaterialID,date,addLink,timestamp))
+
+            dataReference.setValue(materialList)
 
             adapter.notifyDataSetChanged()
             imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)

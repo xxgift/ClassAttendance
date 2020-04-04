@@ -55,9 +55,10 @@ class popup_delete_Fragment(var mView: View,var position:Int,var fcontext: Conte
         }
 
         delete_deletebtn.setOnClickListener {
-            courselistdetail.removeAt(position)
-            dataReference.setValue(courselistdetail)
-            ArrayAdapter<Course>(fcontext, R.layout.list_detail, courselistdetail).notifyDataSetChanged()
+            courselistdetail.remove(courseList[position].courseID)
+            courseList.removeAt(position)
+            dataReference.child(courseList[position].courseID).removeValue()
+            ArrayAdapter<Course>(fcontext, R.layout.list_detail, courseList).notifyDataSetChanged()
 //            println("hhhhhhhhhhh")
             dialog!!.dismiss()
         }
