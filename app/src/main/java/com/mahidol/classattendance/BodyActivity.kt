@@ -1,5 +1,6 @@
 package com.mahidol.classattendance
 
+
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -12,7 +13,6 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.AsyncTask
 import android.os.Bundle
-
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -25,16 +25,15 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-
-
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
-import com.mahidol.classattendance.Fragments.*
+import com.mahidol.classattendance.Fragments.AttendanceFragment
+import com.mahidol.classattendance.Fragments.ChatroomFragment
+import com.mahidol.classattendance.Fragments.MycourseFragment
+import com.mahidol.classattendance.Fragments.ScannerFragment
 import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.*
-
-
 import kotlinx.android.synthetic.main.activity_body.*
 import kotlinx.android.synthetic.main.header_nav.*
 
@@ -43,13 +42,13 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var beaconList: ArrayList<IBeacon>
     lateinit var statusList: ArrayList<Status>
-
+    private lateinit var viewModel: MainViewModel
     lateinit var fragmentTransaction: FragmentTransaction
     private var sensorManager: SensorManager? = null
     private var drawer: DrawerLayout? = null
     private var appBar: TextView? = null
-    private var subappBar: TextView? = null
-    private var username: TextView? = null
+    var subappBar: TextView? = null
+    var username: TextView? = null
     private var type: TextView? = null
     private var settingBtn: ImageButton? = null
 
@@ -70,6 +69,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     appBar!!.text = "Chat Room"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(ChatroomFragment())
+
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_mycourse -> {
@@ -84,6 +84,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     appBar!!.text = "Attendance"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(AttendanceFragment())
+
                     return@OnNavigationItemSelectedListener true
                 }
 
@@ -100,7 +101,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_body)
-
+        startService(Intent(this, NotificationService::class.java))
         // Ensures Bluetooth is available on the device and it is enabled. If not,
         // displays a dialog requesting user permission to enable Bluetooth.
         bluetoothAdapter?.takeIf { !it.isEnabled }?.apply {
@@ -154,7 +155,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         uname = token.getString("loginusername", " ")
 
         //get json file of this username
-
         var asyncTask = object : AsyncTask<String, String, String>() {
 
             override fun doInBackground(vararg p0: String?): String {
@@ -341,6 +341,16 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             SensorManager.SENSOR_DELAY_NORMAL
         )
     }
+
+    override fun onStop() {
+        super.onStop()
+        startService(Intent(this, NotificationService::class.java))
+    }
+
+//    fun closeApp(view: View?) {
+//        finish()
+//    }
+
 
 
 }

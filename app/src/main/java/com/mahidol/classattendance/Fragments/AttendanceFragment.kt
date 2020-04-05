@@ -4,26 +4,24 @@ package com.mahidol.classattendance.Fragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion
 import com.estimote.coresdk.recognition.packets.Beacon
 import com.estimote.coresdk.service.BeaconManager
+import com.google.firebase.database.*
 import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_attendance.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.pow
-
-import android.os.Handler
-import android.widget.*
-import com.google.firebase.database.*
 import com.mahidol.classattendance.Adapter.AttendanceAdapter
 
 class AttendanceFragment : Fragment() {
@@ -34,6 +32,7 @@ class AttendanceFragment : Fragment() {
     lateinit var studentList:ArrayList<Time>
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
+    lateinit var myRunnable: Runnable
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
@@ -74,8 +73,9 @@ class AttendanceFragment : Fragment() {
 
         val gif = view!!.findViewById<ImageView>(R.id.loading_gif)
 
-        var handler = Handler()
-        var r = Runnable {
+        val handler: Handler = Handler()
+
+        val myRunnable:Runnable = Runnable {
             alreadyInclass = false
             Toast.makeText(
                 context,
@@ -261,18 +261,17 @@ class AttendanceFragment : Fragment() {
             }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
-            handler.postDelayed(r, 15000)
+            handler.postDelayed(myRunnable, 15000)
         })
 
 
         if (!isScanning) {
-            handler.postDelayed(r, 10000)
+            handler.postDelayed(myRunnable, 10000)
             println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
         }
 
 
     }
-
 
     private fun findBeacon(beacon: Beacon): String {
         var distance =
@@ -382,5 +381,10 @@ class AttendanceFragment : Fragment() {
         beaconManager!!.stopRanging(region)
         super.onPause()
         Handler().removeCallbacksAndMessages(null)
+    }
+
+    override fun onDestroy() {
+        Handler().removeCallbacks(myRunnable)
+        super.onDestroy()
     }
 }
