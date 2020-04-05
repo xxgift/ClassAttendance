@@ -2,24 +2,28 @@ package com.mahidol.classattendance.Fragments
 
 import android.content.Context
 import android.graphics.Point
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.google.gson.Gson
 import com.mahidol.classattendance.Adapter.ChatroomAdapter
+import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
-import kotlinx.android.synthetic.main.popup_addpost.*
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.fragment_chatroom.*
+import kotlinx.android.synthetic.main.popup_sort.*
 
-
-class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : DialogFragment() {
+class popup_sort_Fragment(
+    var mView: View,
+    var adapter: ChatroomAdapter,
+    var allcoursename: ArrayList<String>,
+    var postList: ArrayList<Post>
+) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var courseListinspinner: ArrayList<String>
@@ -30,7 +34,7 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.popup_addpost, container, false)
+        return inflater.inflate(R.layout.popup_sort, container, false)
     }
 
     override fun onStart() {
@@ -47,22 +51,12 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        post_username.text = "@" + currentuser
-        post_usertype.text = currenttype
-        dataReference = FirebaseDatabase.getInstance().getReference("Post")
 
-        courseListinspinner = arrayListOf("Please select course")
+        courseListinspinner = arrayListOf("All Course")
 
-        if (currenttype == "Student") {
-            imagepost.setImageResource(R.mipmap.ic_studentavatar)
-        } else {
-            imagepost.setImageResource(R.mipmap.ic_teacheravatar)
+        allcoursename.forEach {
+            courseListinspinner.add(it)
         }
-
-        courselistdetail.forEach {
-            courseListinspinner.add(it.key)
-        }
-
 
         val adapter_spinner = ArrayAdapter(
             mContext, // Context
@@ -70,9 +64,9 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
             courseListinspinner // Array
         )
         adapter_spinner.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-        spinner.adapter = adapter_spinner
+        spinner_sort.adapter = adapter_spinner
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner_sort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -81,9 +75,6 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
             ) {
                 // Display the selected item text on text view
                 selectedItem = parent.getItemAtPosition(position).toString()
-                if (position > 0) {
-                    currentcourse = selectedItem
-                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -91,49 +82,20 @@ class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : Di
             }
         }
 
-        addpost_cancelbtn.setOnClickListener {
+        sort_cancelbtn.setOnClickListener {
             dialog!!.dismiss()
         }
 
-        addpost_addbtn.setOnClickListener {
-            if (selectedItem == "Please select course") {
-                post_content.error = "Please select course"
+        sort_sortbtn.setOnClickListener {
+            if (selectedItem == "All Course") {
             } else {
-                saveData()
+                currentcourse = selectedItem
+                postList.sortBy { it.course == currentcourse }
+                postList.reverse()
             }
+            adapter.notifyDataSetChanged()
+            dialog!!.dismiss()
         }
-    }
-
-
-    private fun saveData(): Boolean {
-
-        val user = currentuser!!
-        val course = currentcourse!!
-        val content = post_content.text.toString()
-        val sdf = SimpleDateFormat("dd-MM-yy @HH:mm a")
-        val date = sdf.format(Date())
-        val tmp = SimpleDateFormat("yyMMddHHmmss")
-        val timestamp = tmp.format(Date())
-        val type = currenttype!!
-
-        //check each edittext must not be null
-        if (content.isEmpty()) {
-            post_content.error = "Please enter a message"
-            return false
-        }
-
-        //send value to firebase
-        val postData = Post(user, type, course, content, date, timestamp)
-        var updateValue = dataReference.child(timestamp).setValue(postData)
-
-        currentcontent = content
-        currenttime = date
-
-        adapter.notifyDataSetChanged()
-        val imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_post)
-        imgEmpty.visibility = View.INVISIBLE
-        dialog!!.dismiss()
-        return true
     }
 
     private fun setInitDialog() {

@@ -6,6 +6,7 @@ import android.graphics.Point
 
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import android.widget.ImageView
 
 import androidx.fragment.app.DialogFragment
@@ -25,12 +26,15 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
     lateinit var imgEmpty: ImageView
     lateinit var addcourseID: String
     lateinit var addjoinID: String
-    lateinit var courseList: ArrayList<Course>
+    lateinit var whoEnrollList: ArrayList<String>
+    lateinit var allcourse: HashMap<String, Course>
+    lateinit var correct:ImageView
+    lateinit var addcourse_ID:EditText
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.popup_addcourse, container, false)
     }
@@ -42,25 +46,33 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        addcourse_ID = view.findViewById<EditText>(R.id.addcourse_ID)
+
+        correct = view.findViewById<ImageView>(R.id.correct)
+        correct.visibility = View.INVISIBLE
+
+
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
-
-        courseList = arrayListOf()
         dataReference2 = FirebaseDatabase.getInstance().getReference("AllCourse")
-        var dataQuery = dataReference2.orderByChild("courseID")
 
+        whoEnrollList = arrayListOf()
+        allcourse = hashMapOf()
+
+        var dataQuery = dataReference2.orderByChild("courseID")
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0!!.exists()) {
-                    courseList.clear()
+                    allcourse.clear()
                     for (i in p0.children) {
                         val oneUser = i.getValue(Course::class.java)
-                        courseList.add(oneUser!!)
+                        allcourse.put(oneUser!!.courseID, oneUser!!)
                     }
                 }
-                adapter.notifyDataSetChanged()
+//                adapter.notifyDataSetChanged()
             }
         })
 
@@ -84,6 +96,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
     private fun saveData(): Boolean {
 
+
         if (currenttype == "Teacher") {
             addcourseID = addcourse_ID.text.toString()
             //check each edittext must not be null
@@ -94,8 +107,8 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
 
             //check courseID is not already in use
-            courselistdetail?.forEach {
-                if (it.courseID == addcourseID) {
+            allcourse?.forEach {
+                if (it.key == addcourseID) {
                     addcourse_ID.error = "ClassID already exists"
                     addcourse_ID.text = null
                     addcourse_ID.setHint("Enter Again")
@@ -103,22 +116,27 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                 }
             }
 
+
             //send value to firebase
             var randjoinID = ('A'..'z').map { it }.shuffled().subList(0, 4).joinToString("")
-            courselistdetail!!.add(Course(addcourseID, randjoinID, currentuser!!,""))
-            courseList.add(Course(addcourseID, randjoinID, currentuser!!,""))
+            courselistdetail!!.put(addcourseID, Course(addcourseID, randjoinID, currentuser!!, "", ArrayList<String>(),
+                    ArrayList<Material>()
+            ))
+            courseList.add(Course(addcourseID, randjoinID, currentuser!!, "", ArrayList<String>(),
+                    ArrayList<Material>()
+            ))
+            allcourse.put(addcourseID, Course(addcourseID, randjoinID, currentuser!!, "", ArrayList<String>(), ArrayList<Material>()))
 
-            //set course name to be child's name
-//            courselistdetail.forEach {
-//                val key = it.courseID
-//                dataReference.child(currentuser).child("courselist").child(key).setValue(it)
-//            }
+
+
 
             dataReference.child(currentuser).child("courselist").setValue(courselistdetail)
-            dataReference2.setValue(courseList)
+            dataReference2.setValue(allcourse)
+
             adapter.notifyDataSetChanged()
             imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
             imgEmpty.visibility = View.INVISIBLE
+            correct.visibility = View.INVISIBLE
             dialog!!.dismiss()
 
         } else {
@@ -130,7 +148,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             }
             //check joinID is not already in use
             courselistdetail?.forEach {
-                if (it.joinID == addjoinID) {
+                if (it.value.joinID == addjoinID) {
                     addcourse_ID.error = "This course already exists"
                     addcourse_ID.text = null
                     addcourse_ID.setHint("Enter Again")
@@ -142,24 +160,50 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             query.addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                 }
+
                 override fun onDataChange(p0: DataSnapshot?) {
                     if (p0!!.exists()) {
+                        whoEnrollList.clear()
                         for (i in p0.children) {
                             val result = i.getValue(Course::class.java)
-                            courselistdetail.add(Course(result!!.courseID, result!!.joinID,result!!.owner,""))
-                            dataReference.child(currentuser).child("courselist")
-                                .setValue(courselistdetail)
+                            whoEnrollList = result!!.whoEnroll
+
+                            if (whoEnrollList.any { it == currentuser }) {
+                            } else {
+                                whoEnrollList.add(currentuser!!)
+                            }
+
+
+                            if (courselistdetail.any { it.key == result.courseID }) {
+                            } else {
+                                courselistdetail.put(result!!.courseID, Course(result!!.courseID, result!!.joinID, result!!.owner, "",
+                                        ArrayList<String>(), result.material
+                                ))
+                                courseList.add(Course(result!!.courseID, result!!.joinID, result!!.owner, "",
+                                        ArrayList<String>(), result.material
+                                ))
+                            }
+                            dataReference.child(result.owner).child("courselist").child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.material
+                            ))
+                            dataReference2.child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.material))
+
                         }
+                        dataReference.child(currentuser).child("courselist").setValue(
+                                courselistdetail)
+
                         adapter.notifyDataSetChanged()
                         imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
                         imgEmpty.visibility = View.INVISIBLE
-                        dialog!!.dismiss()
-                    }else{
+                        correct.visibility = View.VISIBLE
+                        addcourse_ID.setText("")
+//                        dialog!!.dismiss()
+                    } else {
+
                         addcourse_ID.error = "JoinID not found"
                     }
                 }
             })
-
+            correct.visibility = View.INVISIBLE
         }
 
         return true
