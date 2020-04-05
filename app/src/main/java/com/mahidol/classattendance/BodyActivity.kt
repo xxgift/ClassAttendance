@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -111,7 +110,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_body)
-        startService(Intent(this, NotificationService::class.java))
+        // startService(Intent(this, NotificationService::class.java))
         // Ensures Bluetooth is available on the device and it is enabled. If not,
         // displays a dialog requesting user permission to enable Bluetooth.
         bluetoothAdapter?.takeIf { !it.isEnabled }?.apply {
@@ -164,28 +163,33 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //get username from transfer data of LoginActivity
 //        uname = intent.getStringExtra("uname")
         uname = token.getString("loginusername", " ")
-
         //get json file of this username
         var asyncTask = object : AsyncTask<String, String, String>() {
-
             override fun doInBackground(vararg p0: String?): String {
                 val helper = HTTPHelper()
                 return helper.getHTTPData(url + uname + ".json")
+                runOnUiThread {
+                    username!!.text = userprofile!!.username
+                    println("+++++++++++ do in bg ++++++++++++++++++")
+                    type!!.text = userprofile!!.type
+                    println("---------- do in bg -------------------")
+                }
             }
 
             override fun onPostExecute(result: String?) {
                 if (result != "null") {
+                    println(result)
                     userprofile = Gson().fromJson(result, User::class.java)
                     //set header of navigation bar
                     username = findViewById(R.id.namenav)
                     type = findViewById(R.id.nameSurname_nav)
-                    username!!.text = userprofile!!.username
+                    //username!!.text = userprofile!!.username
                     courselistdetail = userprofile!!.courselist
                     courselistdetail.forEach{
                         courseList.add(it.value)
                     }
 
-                    type!!.text = userprofile!!.type
+//                    type!!.text = userprofile!!.type
 
                     if (userprofile!!.type == "Student") {
                         bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))
@@ -327,9 +331,13 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
     override fun onStop() {
         super.onStop()
-        startService(Intent(this, NotificationService::class.java))
+      //  startService(Intent(this, NotificationService::class.java))
     }
 
 //    fun closeApp(view: View?) {

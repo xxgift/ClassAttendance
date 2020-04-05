@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
 
-import android.os.Handler
 import android.widget.*
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.database.*
@@ -41,7 +40,7 @@ class AttendanceFragment : Fragment() {
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
-
+    var handler :Handler? = null
     lateinit var fragmentTransaction: FragmentTransaction
 
 
@@ -81,9 +80,9 @@ class AttendanceFragment : Fragment() {
 
         val gif = view!!.findViewById<ImageView>(R.id.loading_gif)
 
-        val handler: Handler = Handler()
+        handler = Handler()
 
-        val myRunnable:Runnable = Runnable {
+        myRunnable = Runnable {
             alreadyInclass = false
             Toast.makeText(
                 context,
@@ -143,7 +142,7 @@ class AttendanceFragment : Fragment() {
         beaconManager!!.setRangingListener(BeaconManager.BeaconRangingListener { beaconRegion, beacons ->
             if (beacons!!.isNotEmpty()) {
                 isScanning = true
-                handler.removeCallbacksAndMessages(null)
+                handler!!.removeCallbacksAndMessages(null)
                 if (!alreadyInclass) {
                     statusText.text = "Scanning"
                     statusText.visibility = View.VISIBLE
@@ -303,12 +302,12 @@ class AttendanceFragment : Fragment() {
             }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
-            handler.postDelayed(myRunnable, 15000)
+            handler!!.postDelayed(myRunnable, 15000)
         })
 
 
         if (!isScanning) {
-            handler.postDelayed(myRunnable, 10000)
+            handler!!.postDelayed(myRunnable, 10000)
             println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
         }
 
@@ -438,11 +437,12 @@ class AttendanceFragment : Fragment() {
         })
     }
 
-    override fun onPause() {
-        beaconManager!!.stopRanging(region)
-        super.onPause()
-        Handler().removeCallbacksAndMessages(null)
-    }
+//    override fun onPause() {
+//        beaconManager!!.stopRanging(region)
+//        super.onPause()
+//        handler!!.removeCallbacksAndMessages(null)
+//        println("88888888888888888888  on  pause 88888888888888888")
+//    }
 
 
     private fun replaceFragment(fragment: Fragment) {
@@ -453,7 +453,8 @@ class AttendanceFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        Handler().removeCallbacks(myRunnable)
+        handler!!.removeCallbacks(myRunnable)
+        println("55555555555555555 on destroy 5555555555555555555")
         super.onDestroy()
     }
 }
