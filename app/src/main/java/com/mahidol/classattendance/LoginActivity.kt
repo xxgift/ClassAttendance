@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
         var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
         println("${token.getString("loginusername", " ") }  fffffffffffffffffffffffffff")
-        if (token.getString("loginusername", " ") != null) {
+        if (token.getString("loginusername", " ") != " ") {
             val intent = Intent(this@LoginActivity, BodyActivity::class.java)
             startActivity(intent)
             intent.putExtra("uname", token.getString("uname", " "))
