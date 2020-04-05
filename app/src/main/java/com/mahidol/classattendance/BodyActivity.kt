@@ -181,6 +181,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     type = findViewById(R.id.nameSurname_nav)
                     username!!.text = userprofile!!.username
                     courselistdetail = userprofile!!.courselist
+                    courselistdetail.forEach{
+                        courseList.add(it.value)
+                    }
 
                     type!!.text = userprofile!!.type
 

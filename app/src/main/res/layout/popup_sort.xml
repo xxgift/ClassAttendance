@@ -44,7 +44,7 @@
         android:textColor="#535353"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/sort_sortbtn"
+        app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <Button
@@ -59,7 +59,7 @@
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintStart_toEndOf="@+id/sort_cancelbtn"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <ImageView
