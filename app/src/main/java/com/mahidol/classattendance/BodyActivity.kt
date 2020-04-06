@@ -173,6 +173,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     println("+++++++++++ do in bg ++++++++++++++++++")
                     type!!.text = userprofile!!.type
                     println("---------- do in bg -------------------")
+
                 }
             }
 
@@ -183,13 +184,13 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //set header of navigation bar
                     username = findViewById(R.id.namenav)
                     type = findViewById(R.id.nameSurname_nav)
-                    //username!!.text = userprofile!!.username
+                    username!!.text = userprofile!!.username
                     courselistdetail = userprofile!!.courselist
                     courselistdetail.forEach{
                         courseList.add(it.value)
                     }
 
-//                    type!!.text = userprofile!!.type
+                    type!!.text = userprofile!!.type
 
                     if (userprofile!!.type == "Student") {
                         bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))

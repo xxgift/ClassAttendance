@@ -437,12 +437,12 @@ class AttendanceFragment : Fragment() {
         })
     }
 
-//    override fun onPause() {
-//        beaconManager!!.stopRanging(region)
-//        super.onPause()
-//        handler!!.removeCallbacksAndMessages(null)
-//        println("88888888888888888888  on  pause 88888888888888888")
-//    }
+    override fun onPause() {
+        beaconManager!!.stopRanging(region)
+        super.onPause()
+        handler!!.removeCallbacksAndMessages(null)
+        println("88888888888888888888  on  pause 88888888888888888")
+    }
 
 
     private fun replaceFragment(fragment: Fragment) {
@@ -452,9 +452,9 @@ class AttendanceFragment : Fragment() {
 
     }
 
-    override fun onDestroy() {
-        handler!!.removeCallbacks(myRunnable)
-        println("55555555555555555 on destroy 5555555555555555555")
-        super.onDestroy()
-    }
+//    override fun onDestroy() {
+//        handler!!.removeCallbacks(myRunnable)
+//        println("55555555555555555 on destroy 5555555555555555555")
+//        super.onDestroy()
+//    }
 }

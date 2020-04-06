@@ -26,7 +26,6 @@ class LoginActivity : AppCompatActivity() {
     var userprofile: User? = null
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
@@ -44,26 +43,27 @@ class LoginActivity : AppCompatActivity() {
 
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val permissionCall = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.READ_PHONE_STATE)
+                Manifest.permission.READ_PHONE_STATE)
         val permissionLocation = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_FINE_LOCATION)
+                Manifest.permission.ACCESS_FINE_LOCATION)
         val permissionBluetooth = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.BLUETOOTH)
+                Manifest.permission.BLUETOOTH)
 
-        if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.BLUETOOTH), 1)
+        if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH), 1)
 
         }
         var imei = telephonyManager.imei
 
 
-        var token = getSharedPreferences("uname",Context.MODE_PRIVATE)
-
-        if(token.getString("loginusername"," ") != " "){
+        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
+        println("${token.getString("loginusername", " ") }  fffffffffffffffffffffffffff")
+        if (token.getString("loginusername", " ") != " ") {
             val intent = Intent(this@LoginActivity, BodyActivity::class.java)
             startActivity(intent)
-            intent.putExtra("uname",token.getString("uname"," "))
+            intent.putExtra("uname", token.getString("uname", " "))
             finish()
+            println("222222222222222222222222222222222222")
         }
 
 
@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
                     override fun onPreExecute() {
                         currenttype = null
                         Toast.makeText(this@LoginActivity, "Please wait...", Toast.LENGTH_SHORT)
-                            .show()
+                                .show()
                     }
 
                     override fun doInBackground(vararg p0: String?): String {
@@ -97,24 +97,25 @@ class LoginActivity : AppCompatActivity() {
                     override fun onPostExecute(result: String?) {
                         if (result != "null") {
                             userprofile = Gson().fromJson(result, User::class.java)
+                            currentuser = userprofile!!.username
                             currentImei = imei
 
                             //check username and password is matched
                             if (userprofile!!.password == pname) {
 
-                                if(userprofile!!.imei == ""){
-                                    FirebaseDatabase.getInstance().getReference("UserProfile").child(userprofile!!.username).setValue(User(userprofile!!.username, userprofile!!.password, userprofile!!.type,userprofile!!.courselist,imei))
+                                if (userprofile!!.imei == "") {
+                                    FirebaseDatabase.getInstance().getReference("UserProfile").child(userprofile!!.username).setValue(User(userprofile!!.username, userprofile!!.password, userprofile!!.type, userprofile!!.courselist, imei))
                                     currenttype = userprofile!!.type
                                     val intent = Intent(this@LoginActivity, BodyActivity::class.java)
                                     //transfer value of username to scan
                                     intent.putExtra("uname", uname)
 
                                     var editor = token.edit()
-                                    editor.putString("loginusername",uname)
+                                    editor.putString("loginusername", uname)
                                     editor.commit()
                                     applicationContext.startActivity(intent)
-                                }else{
-                                    if (userprofile!!.imei == imei){
+                                } else {
+                                    if (userprofile!!.imei == imei) {
                                         currenttype = userprofile!!.type
                                         val intent = Intent(this@LoginActivity, BodyActivity::class.java)
                                         //transfer value of username to scan
@@ -122,31 +123,31 @@ class LoginActivity : AppCompatActivity() {
 
 
                                         var editor = token.edit()
-                                        editor.putString("loginusername",uname)
+                                        editor.putString("loginusername", uname)
                                         editor.commit()
 
 
 
                                         applicationContext.startActivity(intent)
-                                    }else{
+                                    } else {
                                         Toast.makeText(
-                                            this@LoginActivity,
-                                            "This account is logged in on another device ",
-                                            Toast.LENGTH_SHORT
+                                                this@LoginActivity,
+                                                "This account is logged in on another device ",
+                                                Toast.LENGTH_SHORT
                                         ).show()
                                     }
                                 }
 
                             } else {
                                 Toast.makeText(
-                                    this@LoginActivity,
-                                    "Username or Password is not matched",
-                                    Toast.LENGTH_SHORT
+                                        this@LoginActivity,
+                                        "Username or Password is not matched",
+                                        Toast.LENGTH_SHORT
                                 ).show()
                             }
 
                         } else {
-                               login_username.error = "Username not found"
+                            login_username.error = "Username not found"
                         }
                         login_username.text = null
                         login_password.text = null
@@ -154,7 +155,6 @@ class LoginActivity : AppCompatActivity() {
 
                 }
                 asyncTask.execute()
-
 
 
 //                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
