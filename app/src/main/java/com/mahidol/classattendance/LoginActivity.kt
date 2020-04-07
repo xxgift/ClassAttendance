@@ -156,7 +156,6 @@ class LoginActivity : AppCompatActivity() {
                     }
                     asyncTask.execute()
 
-
 //                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
                 }
             }
