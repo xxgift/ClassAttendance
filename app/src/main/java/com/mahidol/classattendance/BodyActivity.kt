@@ -54,8 +54,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var drawer: DrawerLayout? = null
     private var appBar: TextView? = null
     var subappBar: TextView? = null
-    var username: TextView? = null
-    private var type: TextView? = null
     private var settingBtn: ImageButton? = null
 
     private var lastUpdate = 0L
@@ -145,6 +143,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         appBar = findViewById(R.id.titleText)
         subappBar = findViewById(R.id.subtitleText)
 
+//        username = findViewById(R.id.namenav)
+//        type = findViewById(R.id.nameSurname_nav)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
@@ -168,13 +169,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun doInBackground(vararg p0: String?): String {
                 val helper = HTTPHelper()
                 return helper.getHTTPData(url + uname + ".json")
-                runOnUiThread {
-                    username!!.text = userprofile!!.username
-                    println("+++++++++++ do in bg ++++++++++++++++++")
-                    type!!.text = userprofile!!.type
-                    println("---------- do in bg -------------------")
-
-                }
             }
 
             override fun onPostExecute(result: String?) {
@@ -182,15 +176,14 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     println(result)
                     userprofile = Gson().fromJson(result, User::class.java)
                     //set header of navigation bar
-                    username = findViewById(R.id.namenav)
-                    type = findViewById(R.id.nameSurname_nav)
-                    username!!.text = userprofile!!.username
+
+                    namenav!!.text = userprofile!!.username
                     courselistdetail = userprofile!!.courselist
                     courselistdetail.forEach{
                         courseList.add(it.value)
                     }
 
-                    type!!.text = userprofile!!.type
+                    nameSurname_nav!!.text = userprofile!!.type
 
                     if (userprofile!!.type == "Student") {
                         bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))

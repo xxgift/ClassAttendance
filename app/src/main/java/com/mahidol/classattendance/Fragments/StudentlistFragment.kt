@@ -18,29 +18,32 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.hudomju.swipe.SwipeToDismissTouchListener
 import com.hudomju.swipe.adapter.ListViewAdapter
-import com.mahidol.classattendance.Adapter.LogAttendanceAdapter
+import com.mahidol.classattendance.Adapter.StudentlistAdapter
 import com.mahidol.classattendance.Models.Attendance
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
+class
 
-class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
+StudentlistFragment (val selectnamecourse: String,val date :String) : Fragment() {
     lateinit var mContext: Context
-    lateinit var adapter: LogAttendanceAdapter
+    lateinit var adapter: StudentlistAdapter
     lateinit var mActivity: Activity
     lateinit var fragmentTransaction: FragmentTransaction
 
-    lateinit var logList: ArrayList<Attendance>
+    lateinit var studentList: ArrayList<Attendance>
 
     var dataReference =
-            FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
+        FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
 
-    var dataQuery = dataReference.orderByChild("date")
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_mycourse, container, false)
 
@@ -61,7 +64,9 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
         addbtn_thiscourse.visibility = View.INVISIBLE
         img_empty_course.setImageResource(R.mipmap.emptylog)
 
-        logList = arrayListOf()
+        studentList = arrayListOf()
+
+        var dataQuery = dataReference.child(date).orderByChild("username")
 
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -69,17 +74,14 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0!!.exists()) {
-                    logList.clear()
+                    studentList.clear()
                     for (i in p0.children) {
                         val oneUser = i.getValue(Attendance::class.java)
-                        if (logList.any { it.date == oneUser!!.date }) {
-                        } else {
-                            logList.add(oneUser!!)
-                        }
+                        studentList.add(Attendance(oneUser!!.username,oneUser.type,oneUser.coursename,oneUser.date,oneUser.starttime,oneUser.durationtime,oneUser.attendance))
                     }
                     val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_post)
-                    imgEmpty.setImageResource(R.mipmap.emptylog)
-                    if (logList.size > 0) {
+                    imgEmpty.setImageResource(R.mipmap.ic_emptystudentlist)
+                    if (studentList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
                     }
                 }
@@ -87,7 +89,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
             }
         })
 
-        adapter = LogAttendanceAdapter(mContext, R.layout.list_detail, logList)
+        adapter = StudentlistAdapter(mContext, R.layout.list_detail, studentList)
         listview_courselist!!.adapter = adapter
 
         backbtn_thiscourse.setOnClickListener {
@@ -95,15 +97,33 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
             replaceFragment(SelectFragment(selectnamecourse))
         }
 
-        listview_courselist!!.onItemClickListener =
-                AdapterView.OnItemClickListener { parent, view, position, id ->
-
-                    Toast.makeText(
-                            mContext, "Select ${logList[position].date
-                    }", LENGTH_SHORT
-                    ).show()
-                    replaceFragment(StudentlistFragment(selectnamecourse,logList[position].date))
+        val touchListener = SwipeToDismissTouchListener(
+            ListViewAdapter(listview_courselist),
+            object : SwipeToDismissTouchListener.DismissCallbacks<ListViewAdapter> {
+                override fun canDismiss(position: Int): Boolean {
+                    return true
                 }
+
+                override fun onDismiss(view: ListViewAdapter, position: Int) {
+                    studentList.removeAt(position)
+                    dataReference.setValue(studentList)
+                    adapter.notifyDataSetChanged()
+                }
+            })
+
+        listview_courselist!!.setOnTouchListener(touchListener)
+//        listview_courselist!!.setOnScrollListener(touchListener.makeScrollListener() as AbsListView.OnScrollListener)
+        listview_courselist!!.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                if (touchListener.existPendingDismisses()) {
+                    touchListener.undoPendingDismiss()
+                } else {
+                    Toast.makeText(
+                        mContext, "Select ${studentList[position].username
+                        }", LENGTH_SHORT
+                    ).show()
+                }
+            }
 
     }
 
