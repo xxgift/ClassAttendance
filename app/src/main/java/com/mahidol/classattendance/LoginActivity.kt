@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import com.google.gson.Gson
 import com.mahidol.classattendance.Helper.HTTPHelper
@@ -24,12 +25,12 @@ class LoginActivity : AppCompatActivity() {
     var uname: String? = null
     var pname: String? = null
     var userprofile: User? = null
-
+    lateinit var imei: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
 
 //        val manager = getSystemService(Context.WIFI_SERVICE) as WifiManager
 //        val permission = ContextCompat.checkSelfPermission(this,
@@ -51,122 +52,126 @@ class LoginActivity : AppCompatActivity() {
 
         if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH), 1)
-
-        }
-        var imei = telephonyManager.imei
-
-
-        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
-        println("${token.getString("loginusername", " ") }  fffffffffffffffffffffffffff")
-        if (token.getString("loginusername", " ") != " ") {
-            val intent = Intent(this@LoginActivity, BodyActivity::class.java)
-            startActivity(intent)
-            intent.putExtra("uname", token.getString("uname", " "))
-            finish()
-            println("222222222222222222222222222222222222")
         }
 
-
-        //if user have an account already then go to activity_body page (Home page)
-        login_btn.setOnClickListener {
-
-            uname = login_username.text.toString()
-            pname = login_password.text.toString()
-
-            //check username and password must not be null
-            if (uname.isNullOrEmpty()) {
-                login_username.error = "Please enter a message"
+        if (permissionCall == PackageManager.PERMISSION_GRANTED && permissionLocation == PackageManager.PERMISSION_GRANTED) {
+            setContentView(R.layout.login)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            imei = telephonyManager.imei
+            println("${token.getString("loginusername", " ")}  fffffffffffffffffffffffffff")
+            if (token.getString("loginusername", " ") != " ") {
+                val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+                startActivity(intent)
+                intent.putExtra("uname", token.getString("uname", " "))
+                finish()
+                println("222222222222222222222222222222222222")
             }
-            if (pname.isNullOrEmpty()) {
-                login_password.error = "Please enter a message"
-            }
-            if (!uname.isNullOrEmpty() && !pname.isNullOrEmpty()) {
-                var asyncTask = object : AsyncTask<String, String, String>() {
 
-                    override fun onPreExecute() {
-                        currenttype = null
-                        Toast.makeText(this@LoginActivity, "Please wait...", Toast.LENGTH_SHORT)
-                                .show()
-                    }
+            //if user have an account already then go to activity_body page (Home page)
+            login_btn.setOnClickListener {
 
-                    override fun doInBackground(vararg p0: String?): String {
-                        val helper = HTTPHelper()
-                        return helper.getHTTPData(url + uname + ".json")
-                    }
+                uname = login_username.text.toString()
+                pname = login_password.text.toString()
 
-                    override fun onPostExecute(result: String?) {
-                        if (result != "null") {
-                            userprofile = Gson().fromJson(result, User::class.java)
-                            currentuser = userprofile!!.username
-                            currentImei = imei
+                //check username and password must not be null
+                if (uname.isNullOrEmpty()) {
+                    login_username.error = "Please enter a message"
+                }
+                if (pname.isNullOrEmpty()) {
+                    login_password.error = "Please enter a message"
+                }
+                if (!uname.isNullOrEmpty() && !pname.isNullOrEmpty()) {
+                    var asyncTask = object : AsyncTask<String, String, String>() {
 
-                            //check username and password is matched
-                            if (userprofile!!.password == pname) {
+                        override fun onPreExecute() {
+                            currenttype = null
+                            Toast.makeText(this@LoginActivity, "Please wait...", Toast.LENGTH_SHORT)
+                                    .show()
+                        }
 
-                                if (userprofile!!.imei == "") {
-                                    FirebaseDatabase.getInstance().getReference("UserProfile").child(userprofile!!.username).setValue(User(userprofile!!.username, userprofile!!.password, userprofile!!.type, userprofile!!.courselist, imei))
-                                    currenttype = userprofile!!.type
-                                    val intent = Intent(this@LoginActivity, BodyActivity::class.java)
-                                    //transfer value of username to scan
-                                    intent.putExtra("uname", uname)
+                        override fun doInBackground(vararg p0: String?): String {
+                            val helper = HTTPHelper()
+                            return helper.getHTTPData(url + uname + ".json")
+                        }
 
-                                    var editor = token.edit()
-                                    editor.putString("loginusername", uname)
-                                    editor.commit()
-                                    applicationContext.startActivity(intent)
-                                } else {
-                                    if (userprofile!!.imei == imei) {
+                        override fun onPostExecute(result: String?) {
+                            if (result != "null") {
+                                userprofile = Gson().fromJson(result, User::class.java)
+                                currentuser = userprofile!!.username
+                                currentImei = imei
+
+                                //check username and password is matched
+                                if (userprofile!!.password == pname) {
+
+                                    if (userprofile!!.imei == "") {
+                                        FirebaseDatabase.getInstance().getReference("UserProfile").child(userprofile!!.username).setValue(User(userprofile!!.username, userprofile!!.password, userprofile!!.type, userprofile!!.courselist, imei))
                                         currenttype = userprofile!!.type
                                         val intent = Intent(this@LoginActivity, BodyActivity::class.java)
                                         //transfer value of username to scan
                                         intent.putExtra("uname", uname)
 
-
                                         var editor = token.edit()
                                         editor.putString("loginusername", uname)
                                         editor.commit()
-
-
-
                                         applicationContext.startActivity(intent)
                                     } else {
-                                        Toast.makeText(
-                                                this@LoginActivity,
-                                                "This account is logged in on another device ",
-                                                Toast.LENGTH_SHORT
-                                        ).show()
+                                        if (userprofile!!.imei == imei) {
+                                            currenttype = userprofile!!.type
+                                            val intent = Intent(this@LoginActivity, BodyActivity::class.java)
+                                            //transfer value of username to scan
+                                            intent.putExtra("uname", uname)
+
+
+                                            var editor = token.edit()
+                                            editor.putString("loginusername", uname)
+                                            editor.commit()
+
+
+
+                                            applicationContext.startActivity(intent)
+                                        } else {
+                                            Toast.makeText(
+                                                    this@LoginActivity,
+                                                    "This account is logged in on another device ",
+                                                    Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
+
+                                } else {
+                                    Toast.makeText(
+                                            this@LoginActivity,
+                                            "Username or Password is not matched",
+                                            Toast.LENGTH_SHORT
+                                    ).show()
                                 }
 
                             } else {
-                                Toast.makeText(
-                                        this@LoginActivity,
-                                        "Username or Password is not matched",
-                                        Toast.LENGTH_SHORT
-                                ).show()
+                                login_username.error = "Username not found"
                             }
-
-                        } else {
-                            login_username.error = "Username not found"
+                            login_username.text = null
+                            login_password.text = null
                         }
-                        login_username.text = null
-                        login_password.text = null
-                    }
 
-                }
-                asyncTask.execute()
+                    }
+                    asyncTask.execute()
 
 //                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
-        //if user doesn't have an account yet then go to register page
-        creatnewacc_btn.setOnClickListener {
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(intent)
-            login_username.text = null
-            login_password.text = null
-        }
+            //if user doesn't have an account yet then go to register page
+            creatnewacc_btn.setOnClickListener {
+                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                startActivity(intent)
+                login_username.text = null
+                login_password.text = null
+            }
 
+        }else{
+            Toast.makeText(applicationContext,"You need to allow PERMISSION_CALL and LOCATION",Toast.LENGTH_LONG).show()
+            finish()
+        }
     }
+
 }

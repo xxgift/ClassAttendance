@@ -6,20 +6,18 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
-import com.mahidol.classattendance.Adapter.LogAttendanceAdapter
+import com.mahidol.classattendance.Adapter.StudentlistAdapter
 import com.mahidol.classattendance.Models.Attendance
 import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
 
-import kotlinx.android.synthetic.main.popup_addcourse.*
 import kotlinx.android.synthetic.main.popup_addstudent.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class popup_addstudent_Fragment(var mView: View, var adapter: LogAttendanceAdapter,var coursename:String) : DialogFragment() {
+class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter, var coursename:String) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var imgEmpty: ImageView

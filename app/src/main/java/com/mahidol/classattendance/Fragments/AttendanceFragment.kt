@@ -23,9 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
 
-import android.widget.*
 import androidx.fragment.app.FragmentTransaction
-import com.google.firebase.database.*
 import kotlin.collections.HashMap
 
 class AttendanceFragment : Fragment() {
@@ -40,11 +38,12 @@ class AttendanceFragment : Fragment() {
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
-    var handler :Handler? = null
+    lateinit var dataReference2:DatabaseReference
+    var handler: Handler? = null
     lateinit var fragmentTransaction: FragmentTransaction
 
 
-    lateinit var onlineListValue:HashMap<String,Any>
+    lateinit var onlineListValue: HashMap<String, Any>
 
 
     var countforOut = 0
@@ -54,9 +53,9 @@ class AttendanceFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         Toast.makeText(mContext, "scanning...", Toast.LENGTH_LONG).show()
         return inflater.inflate(R.layout.fragment_attendance, container, false)
@@ -75,6 +74,8 @@ class AttendanceFragment : Fragment() {
         subtitleTextAttendance.visibility = View.INVISIBLE
 
         dataReference = FirebaseDatabase.getInstance().getReference("OnlineCourse")
+        dataReference2 = FirebaseDatabase.getInstance().getReference("Attendance")
+
 
         onlineListValue = hashMapOf()
 
@@ -161,62 +162,59 @@ class AttendanceFragment : Fragment() {
 
                         if (currenttype == "Teacher") {
                             adapter = MycourseAdapter(
-                                mContext,
-                                R.layout.list_detail,
-                                courseList
+                                    mContext,
+                                    R.layout.list_detail,
+                                    courseList
                             )
                             listview_attendance!!.adapter = adapter
                             adapter.notifyDataSetChanged()
 
                             listview_attendance!!.onItemClickListener =
-                                AdapterView.OnItemClickListener { parent, view, position, id ->
-                                    Toast.makeText(
-                                        mContext, "Get Started ${courseList[position].courseID
+                                    AdapterView.OnItemClickListener { parent, view, position, id ->
+                                        Toast.makeText(
+                                                mContext, "Get Started ${courseList[position].courseID
                                         }", Toast.LENGTH_SHORT
-                                    ).show()
-                                    courseList[position].courseStatus = "Online"
-                                    currentcourse = courseList[position].courseID
-                                    queryOnline()
-                                    if (onlinecourse.any { it.courseID == courseList[position].courseID }) {
-                                    } else {
-                                        onlinecourse.add(
-                                            Course(
-                                                courseList[position].courseID,
-                                                courseList[position].joinID,
-                                                courseList[position].owner,
-                                                courseList[position].courseStatus,
-                                                courseList[position].whoEnroll,
-                                                ArrayList<Material>()
+                                        ).show()
+                                        courseList[position].courseStatus = "Online"
+                                        currentcourse = courseList[position].courseID
+                                        queryOnline()
+                                        if (onlinecourse.any { it.courseID == courseList[position].courseID }) {
+                                        } else {
+                                            onlinecourse.add(
+                                                    Course(
+                                                            courseList[position].courseID,
+                                                            courseList[position].joinID,
+                                                            courseList[position].owner,
+                                                            courseList[position].courseStatus,
+                                                            courseList[position].whoEnroll,
+                                                            ArrayList<Material>()
+                                                    )
                                             )
-                                        )
-                                        onlineListValue.put(
-                                            courseList[position].courseID, Course(
-                                                courseList[position].courseID,
-                                                courseList[position].joinID,
-                                                courseList[position].owner,
-                                                courseList[position].courseStatus,
-                                                courseList[position].whoEnroll,
-                                                ArrayList<Material>()
+                                            onlineListValue.put(
+                                                    courseList[position].courseID, Course(
+                                                    courseList[position].courseID,
+                                                    courseList[position].joinID,
+                                                    courseList[position].owner,
+                                                    courseList[position].courseStatus,
+                                                    courseList[position].whoEnroll,
+                                                    ArrayList<Material>()
 
                                             )
-                                        )
+                                            )
+                                        }
+
+                                        dataReference.setValue(onlineListValue)
+                                        subtitleTextAttendance.visibility = View.VISIBLE
+                                        subtitleTextAttendance.text = currentcourse
+                                        val tmp1 = SimpleDateFormat("dd-MM-yy")
+                                        val date = tmp1.format(Date())
+                                        replaceFragment(StudentlistFragment(courseList[position].courseID,date))
+
                                     }
-
-                                    dataReference.setValue(onlineListValue)
-                                    addbtn_studentlist.visibility = View.VISIBLE
-                                    subtitleTextAttendance.visibility = View.VISIBLE
-                                    subtitleTextAttendance.text = currentcourse
-                                    replaceFragment(LogAttendanceFragment(courseList[position].courseID))
-
-                                }
 
                             println("b/////////////////" + countforOut + "////" + counttoEnd)
 
                         } else {
-
-                            adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
-                            listview_attendance!!.adapter = adapter
-                            adapter.notifyDataSetChanged()
                             queryOnline()
 
                             val tmp1 = SimpleDateFormat("dd-MM-yy")
@@ -230,22 +228,27 @@ class AttendanceFragment : Fragment() {
                             if (onlinecourse.size == 1) {
                                 currentcourse = onlinecourse[0].courseID
                                 studentList.add(
-                                    Attendance(
-                                        currentuser!!, currenttype!!,
-                                        currentcourse!!, date, time, durationtime,"Present"
-                                    )
+                                        Attendance(
+                                                currentuser!!, currenttype!!,
+                                                currentcourse!!, date, time, durationtime, "Present"
+                                        )
                                 )
+                                dataReference2.child(currentcourse).child(date).child(currentuser).setValue(studentList)
+                                replaceFragment(StudentAttendanceFragment(currentcourse!!))
+                            } else {
+                                adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
+                                listview_attendance!!.adapter = adapter
+                                adapter.notifyDataSetChanged()
+                                listview_attendance!!.onItemClickListener =
+                                        AdapterView.OnItemClickListener { parent, view, position, id ->
+                                            Toast.makeText(
+                                                    mContext, "open ${courseList[position].courseID
+                                            }", Toast.LENGTH_SHORT
+                                            ).show()
+                                            courseList[position].courseStatus = "Online"
+
+                                        }
                             }
-
-                            listview_attendance!!.onItemClickListener =
-                                AdapterView.OnItemClickListener { parent, view, position, id ->
-                                    Toast.makeText(
-                                        mContext, "open ${courseList[position].courseID
-                                        }", Toast.LENGTH_SHORT
-                                    ).show()
-                                    courseList[position].courseStatus = "Online"
-
-                                }
                         }
                     }
                     alreadyInclass = true
@@ -298,7 +301,7 @@ class AttendanceFragment : Fragment() {
                 statusText.visibility = View.VISIBLE
                 statusText.text = currentstatus
                 beaconManager!!.stopRanging(region)
-                dataReference.child(currentcourse).removeValue()
+//                dataReference.child(currentcourse).removeValue()
             }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
@@ -316,7 +319,7 @@ class AttendanceFragment : Fragment() {
 
     private fun findBeacon(beacon: Beacon): String {
         var distance =
-            (10.toDouble().pow((beacon.measuredPower.toDouble() - beacon.rssi.toDouble()) / 20))
+                (10.toDouble().pow((beacon.measuredPower.toDouble() - beacon.rssi.toDouble()) / 20))
         var area: String? = null
 
         when (beacon.major) {
@@ -330,12 +333,12 @@ class AttendanceFragment : Fragment() {
         val currentDate = sdf.format(Date())
 
         var detail = IBeacon(
-            area!!,
-            beacon.major.toString(),
-            beacon.minor.toString(),
-            beacon.rssi.toString(),
-            String.format("%.2f", distance),
-            currentDate
+                area!!,
+                beacon.major.toString(),
+                beacon.minor.toString(),
+                beacon.rssi.toString(),
+                String.format("%.2f", distance),
+                currentDate
         )
         println("++++++++++______$beaconList")
 
@@ -377,27 +380,27 @@ class AttendanceFragment : Fragment() {
                         val result = i.getValue(Course::class.java)
                         if (currenttype == "Teacher") {
                             onlinecourse.add(
-                                Course(
-                                    result!!.courseID,
-                                    result!!.joinID,
-                                    result!!.owner,
-                                    result!!.courseStatus,
-                                    result!!.whoEnroll,
-                                    ArrayList<Material>()
-                                )
-                            )
-                        } else {
-                            courselistdetail.forEach {
-                                if (it.key == result!!.courseID) {
-                                    onlinecourse.add(
-                                        Course(
+                                    Course(
                                             result!!.courseID,
                                             result!!.joinID,
                                             result!!.owner,
                                             result!!.courseStatus,
                                             result!!.whoEnroll,
                                             ArrayList<Material>()
-                                        )
+                                    )
+                            )
+                        } else {
+                            courselistdetail.forEach {
+                                if (it.key == result!!.courseID) {
+                                    onlinecourse.add(
+                                            Course(
+                                                    result!!.courseID,
+                                                    result!!.joinID,
+                                                    result!!.owner,
+                                                    result!!.courseStatus,
+                                                    result!!.whoEnroll,
+                                                    ArrayList<Material>()
+                                            )
                                     )
                                 }
                             }
