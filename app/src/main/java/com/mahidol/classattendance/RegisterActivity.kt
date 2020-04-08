@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.register.*
 
 class RegisterActivity : AppCompatActivity() {
     lateinit var dataReference: DatabaseReference
-    lateinit var userList: ArrayList<User>
+    lateinit var userList: ArrayList<String>
     lateinit var type: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +41,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (p0!!.exists()) {
                     userList.clear()
                     for (i in p0.children) {
-                        val oneUser = i.getValue(User::class.java)
+                         val oneUser = i.key
                         userList.add(oneUser!!)
                     }
                 }
@@ -100,7 +100,7 @@ class RegisterActivity : AppCompatActivity() {
 
         //check username is not already in use
         userList.forEach {
-            if (it.username == user) {
+            if (it == user) {
                 regist_username.error = "Username already exists"
                 regist_username.text = null
                 regist_username.setHint("Enter Again")
