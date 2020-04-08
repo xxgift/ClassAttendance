@@ -59,7 +59,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
 
         backbtn_thiscourse.visibility = View.VISIBLE
         addbtn_thiscourse.visibility = View.INVISIBLE
-        img_empty_course.setImageResource(R.mipmap.emptylog)
+        img_empty_course.setImageResource(R.mipmap.ic_nologattendance)
 
         logList = arrayListOf()
 
@@ -78,7 +78,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
                         }
                     }
                     val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_post)
-                    imgEmpty.setImageResource(R.mipmap.emptylog)
+                    imgEmpty.setImageResource(R.mipmap.ic_nologattendance)
                     if (logList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
                     }

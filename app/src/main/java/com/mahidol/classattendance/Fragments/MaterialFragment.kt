@@ -62,7 +62,7 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
         if (currenttype == "Teacher") {
             imgEmpty.setImageResource(R.mipmap.ic_emptycm_new)
         } else {
-            imgEmpty.setImageResource(R.mipmap.emptycm)
+            imgEmpty.setImageResource(R.mipmap.ic_emptycmstudent)
         }
 
         backbtn_thiscourse.visibility = View.VISIBLE

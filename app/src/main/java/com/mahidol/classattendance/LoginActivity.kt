@@ -96,6 +96,7 @@ class LoginActivity : AppCompatActivity() {
 
                         override fun onPostExecute(result: String?) {
                             if (result != "null") {
+                                println(result)
                                 userprofile = Gson().fromJson(result, User::class.java)
                                 println(userprofile)
                                 currentuser = userprofile!!.username
