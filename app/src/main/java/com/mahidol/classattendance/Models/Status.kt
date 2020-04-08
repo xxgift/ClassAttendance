@@ -1,6 +1,6 @@
 package com.mahidol.classattendance.Models
 
-class Status (var status: String){
-    constructor():this("")
+class Status(var status: String) {
+    constructor() : this("")
 
 }

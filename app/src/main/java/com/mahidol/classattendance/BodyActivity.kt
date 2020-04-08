@@ -238,7 +238,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //function for replace fragment
     private fun replaceFragment(fragment: Fragment) {
         fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragmentContainer, fragment)
+        fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
 
     }
@@ -324,5 +324,20 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             SensorManager.SENSOR_DELAY_NORMAL
         )
     }
+
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        //  startService(Intent(this, NotificationService::class.java))
+//    }
+
+//    fun closeApp(view: View?) {
+//        finish()
+//    }
+
+
 
 }

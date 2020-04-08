@@ -10,5 +10,5 @@ class Post(
     var timestamp: String
 ) {
     constructor() : this(
-        "", "", "","","","")
+        "", "", "", "", "", "")
 }

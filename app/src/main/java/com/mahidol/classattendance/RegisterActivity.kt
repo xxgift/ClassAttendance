@@ -120,7 +120,7 @@ class RegisterActivity : AppCompatActivity() {
         val userData = User(user, pass, type, HashMap<String,Course>(),imei)
         dataReference.child(user).setValue(userData)
             .addOnCompleteListener {
-                Toast.makeText(applicationContext, "Message save successfully", Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Register successfully", Toast.LENGTH_SHORT)
                     .show()
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 startActivity(intent)

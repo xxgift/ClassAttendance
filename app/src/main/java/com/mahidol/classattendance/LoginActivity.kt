@@ -97,7 +97,9 @@ class LoginActivity : AppCompatActivity() {
                         override fun onPostExecute(result: String?) {
                             if (result != "null") {
                                 userprofile = Gson().fromJson(result, User::class.java)
+                                println(userprofile)
                                 currentuser = userprofile!!.username
+                                println(currentuser)
                                 currentImei = imei
 
                                 //check username and password is matched
