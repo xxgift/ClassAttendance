@@ -2,27 +2,22 @@ package com.mahidol.classattendance.Fragments
 
 import android.content.Context
 import android.graphics.Point
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.database.*
-import com.google.gson.Gson
-import com.mahidol.classattendance.Adapter.ChatroomAdapter
-import com.mahidol.classattendance.Helper.HTTPHelper
+import com.mahidol.classattendance.Adapter.BoardAdapter
 import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
-import kotlinx.android.synthetic.main.fragment_chatroom.*
 import kotlinx.android.synthetic.main.popup_sort.*
 
 class popup_sort_Fragment(
-    var mView: View,
-    var adapter: ChatroomAdapter,
-    var allcoursename: ArrayList<String>,
-    var postList: ArrayList<Post>
+        var mView: View,
+        var adapter: BoardAdapter,
+        var allcoursename: ArrayList<String>,
+        var postList: ArrayList<Post>
 ) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference

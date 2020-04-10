@@ -5,16 +5,10 @@ import android.graphics.Point
 import android.os.Bundle
 import android.view.*
 
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 
-import com.mahidol.classattendance.Adapter.ChatroomAdapter
-import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.popup_postdetail.*
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 
 class popup_postdetail_Fragment(var mView: View,var user:String,var content:String,var course:String,var date:String) : DialogFragment() {

@@ -10,7 +10,7 @@ import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.mahidol.classattendance.Adapter.ChatroomAdapter
+import com.mahidol.classattendance.Adapter.BoardAdapter
 import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.popup_addpost.*
@@ -19,7 +19,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class popup_addpost_Fragment(var mView: View, var adapter: ChatroomAdapter) : DialogFragment() {
+class popup_addpost_Fragment(var mView: View, var adapter: BoardAdapter) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var courseListinspinner: ArrayList<String>

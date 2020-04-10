@@ -69,9 +69,54 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
         addbtn_thiscourse.setBackgroundResource(R.mipmap.add_btn)
 
         if (currenttype == "Teacher") {
+            imgEmpty.setImageResource(R.mipmap.ic_emptycm_new)
             addbtn_thiscourse.visibility = View.VISIBLE
+
+            val touchListener = SwipeToDismissTouchListener(
+                    ListViewAdapter(listview_courselist),
+                    object : SwipeToDismissTouchListener.DismissCallbacks<ListViewAdapter> {
+                        override fun canDismiss(position: Int): Boolean {
+                            return true
+                        }
+
+                        override fun onDismiss(view: ListViewAdapter, position: Int) {
+                            materialList.removeAt(position)
+                            dataReference.setValue(materialList)
+                            adapter.notifyDataSetChanged()
+
+                        }
+                    })
+
+            listview_courselist!!.setOnTouchListener(touchListener)
+            listview_courselist!!.onItemClickListener =
+                    AdapterView.OnItemClickListener { parent, view, position, id ->
+                        if (touchListener.existPendingDismisses()) {
+                            touchListener.undoPendingDismiss()
+                        } else {
+                            Toast.makeText(
+                                    mContext, "Select ${materialList[position].materialID
+                            }", LENGTH_SHORT
+                            ).show()
+                            val browserIntent =
+                                    Intent(Intent.ACTION_VIEW, Uri.parse(materialList[position].link))
+                            mContext.startActivity(browserIntent)
+                        }
+                    }
+
         } else {
+            imgEmpty.setImageResource(R.mipmap.emptycm)
             addbtn_thiscourse.visibility = View.INVISIBLE
+            listview_courselist!!.onItemClickListener =
+                    AdapterView.OnItemClickListener { parent, view, position, id ->
+                            Toast.makeText(
+                                    mContext, "Select ${materialList[position].materialID
+                            }", LENGTH_SHORT
+                            ).show()
+                            val browserIntent =
+                                    Intent(Intent.ACTION_VIEW, Uri.parse(materialList[position].link))
+                            mContext.startActivity(browserIntent)
+
+                    }
         }
 
         materialList = arrayListOf()
@@ -109,37 +154,6 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()
             replaceFragment(SelectFragment(selectnamecourse))
         }
-
-        val touchListener = SwipeToDismissTouchListener(
-            ListViewAdapter(listview_courselist),
-            object : SwipeToDismissTouchListener.DismissCallbacks<ListViewAdapter> {
-                override fun canDismiss(position: Int): Boolean {
-                    return true
-                }
-
-                override fun onDismiss(view: ListViewAdapter, position: Int) {
-                    materialList.removeAt(position)
-                    dataReference.setValue(materialList)
-                    adapter.notifyDataSetChanged()
-
-                }
-            })
-
-        listview_courselist!!.setOnTouchListener(touchListener)
-        listview_courselist!!.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id ->
-                if (touchListener.existPendingDismisses()) {
-                    touchListener.undoPendingDismiss()
-                } else {
-                    Toast.makeText(
-                        mContext, "Select ${materialList[position].materialID
-                        }", LENGTH_SHORT
-                    ).show()
-                    val browserIntent =
-                        Intent(Intent.ACTION_VIEW, Uri.parse(materialList[position].link))
-                    mContext.startActivity(browserIntent)
-                }
-            }
 
     }
 
