@@ -2,7 +2,6 @@ package com.mahidol.classattendance.Fragments
 
 import android.app.Activity
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,24 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.google.firebase.database.*
-import com.google.gson.Gson
-import com.mahidol.classattendance.Adapter.ChatroomAdapter
-import com.mahidol.classattendance.Helper.HTTPHelper
+import com.mahidol.classattendance.Adapter.BoardAdapter
 import com.mahidol.classattendance.Models.Post
-import com.mahidol.classattendance.Models.currentcourse
 
 import com.mahidol.classattendance.R
-import kotlinx.android.synthetic.main.fragment_chatroom.*
-import java.util.*
-import java.util.Collections.reverse
+import kotlinx.android.synthetic.main.fragment_board.*
 import kotlin.collections.ArrayList
 
 
-class ChatroomFragment : Fragment() {
+class BoardFragment : Fragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var postList: ArrayList<Post>
-    lateinit var adapter: ChatroomAdapter
+    lateinit var adapter: BoardAdapter
     lateinit var mActivity: Activity
     lateinit var allCoursename:ArrayList<String>
 
@@ -36,7 +30,7 @@ class ChatroomFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_chatroom, container, false)
+        return inflater.inflate(R.layout.fragment_board, container, false)
 
     }
 
@@ -75,7 +69,7 @@ class ChatroomFragment : Fragment() {
             }
         })
 
-        adapter = ChatroomAdapter(context!!,activity!!, R.layout.list_post, postList)
+        adapter = BoardAdapter(context!!,activity!!, R.layout.list_post, postList)
         listview_chatroom!!.adapter = adapter
 
 
@@ -98,11 +92,11 @@ class ChatroomFragment : Fragment() {
 
 
     }
-    private fun showDialogPost(view: View,adapter: ChatroomAdapter) {
+    private fun showDialogPost(view: View,adapter: BoardAdapter) {
         val applypopup = popup_addpost_Fragment(view,adapter)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
-    private fun showDialogSort(view: View,adapter: ChatroomAdapter,allcoursename:ArrayList<String>,postList:ArrayList<Post>) {
+    private fun showDialogSort(view: View, adapter: BoardAdapter, allcoursename:ArrayList<String>, postList:ArrayList<Post>) {
         val applypopup = popup_sort_Fragment(view,adapter,allcoursename,postList)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }

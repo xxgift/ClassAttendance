@@ -24,6 +24,7 @@ import java.util.*
 import kotlin.math.pow
 
 import androidx.fragment.app.FragmentTransaction
+import com.mahidol.classattendance.Adapter.StudentlistAdapter
 import kotlin.collections.HashMap
 
 class AttendanceFragment : Fragment() {
@@ -36,6 +37,7 @@ class AttendanceFragment : Fragment() {
     private var region: BeaconRegion? = null
     lateinit var myRunnable: Runnable
     lateinit var adapter: MycourseAdapter
+    lateinit var adapter2:StudentlistAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
     lateinit var dataReference2:DatabaseReference
@@ -166,6 +168,8 @@ class AttendanceFragment : Fragment() {
                                     R.layout.list_detail,
                                     courseList
                             )
+                            adapter2 = StudentlistAdapter(mContext, R.layout.list_detail, studentList)
+
                             listview_attendance!!.adapter = adapter
                             adapter.notifyDataSetChanged()
 
@@ -178,18 +182,7 @@ class AttendanceFragment : Fragment() {
                                         courseList[position].courseStatus = "Online"
                                         currentcourse = courseList[position].courseID
                                         queryOnline()
-                                        if (onlinecourse.any { it.courseID == courseList[position].courseID }) {
-                                        } else {
-                                            onlinecourse.add(
-                                                    Course(
-                                                            courseList[position].courseID,
-                                                            courseList[position].joinID,
-                                                            courseList[position].owner,
-                                                            courseList[position].courseStatus,
-                                                            courseList[position].whoEnroll,
-                                                            ArrayList<Material>()
-                                                    )
-                                            )
+//                                        if(onlinecourse.any{it.courseID == courseList[position].courseID}) {
                                             onlineListValue.put(
                                                     courseList[position].courseID, Course(
                                                     courseList[position].courseID,
@@ -201,14 +194,43 @@ class AttendanceFragment : Fragment() {
 
                                             )
                                             )
-                                        }
+//                                        }
 
                                         dataReference.setValue(onlineListValue)
                                         subtitleTextAttendance.visibility = View.VISIBLE
                                         subtitleTextAttendance.text = currentcourse
                                         val tmp1 = SimpleDateFormat("dd-MM-yy")
                                         val date = tmp1.format(Date())
-                                        replaceFragment(StudentlistFragment(courseList[position].courseID,date))
+                                        listview_attendance!!.adapter = adapter2
+
+                                        studentList = arrayListOf()
+
+                                        var dataQuery = dataReference2.child(currentcourse).child(date).orderByChild("username")
+
+                                        dataQuery.addValueEventListener(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError) {
+                                            }
+
+                                            override fun onDataChange(p0: DataSnapshot) {
+                                                if (p0!!.exists()) {
+                                                    studentList.clear()
+                                                    for (i in p0.children) {
+                                                        val oneUser = i.getValue(Attendance::class.java)
+                                                        studentList.add(Attendance(oneUser!!.username,oneUser.type,oneUser.coursename,oneUser.date,oneUser.starttime,oneUser.durationtime,oneUser.attendance))
+                                                    }
+                                                    val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_post)
+                                                    imgEmpty.visibility = View.VISIBLE
+                                                    imgEmpty.setImageResource(R.mipmap.ic_emptystudentlist)
+                                                    if (studentList.size > 0) {
+                                                        imgEmpty.visibility = View.INVISIBLE
+                                                    }
+                                                }
+                                                adapter2.notifyDataSetChanged()
+                                            }
+                                        })
+                                        adapter2.notifyDataSetChanged()
+                                        return@OnItemClickListener
+//                                        replaceFragment(StudentlistFragment(courseList[position].courseID, date))
 
                                     }
 
@@ -234,6 +256,7 @@ class AttendanceFragment : Fragment() {
                                         )
                                 )
                                 dataReference2.child(currentcourse).child(date).child(currentuser).setValue(studentList)
+                                listview_attendance.adapter = null
                                 replaceFragment(StudentAttendanceFragment(currentcourse!!))
                             } else {
                                 adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
@@ -317,6 +340,10 @@ class AttendanceFragment : Fragment() {
 
     }
 
+    private fun isEnabled(position: Int): Boolean {
+        return false
+    }
+
     private fun findBeacon(beacon: Beacon): String {
         var distance =
                 (10.toDouble().pow((beacon.measuredPower.toDouble() - beacon.rssi.toDouble()) / 20))
@@ -376,19 +403,23 @@ class AttendanceFragment : Fragment() {
 
             override fun onDataChange(p0: DataSnapshot?) {
                 if (p0!!.exists()) {
+                    onlinecourse.clear()
                     for (i in p0.children) {
                         val result = i.getValue(Course::class.java)
                         if (currenttype == "Teacher") {
-                            onlinecourse.add(
-                                    Course(
-                                            result!!.courseID,
-                                            result!!.joinID,
-                                            result!!.owner,
-                                            result!!.courseStatus,
-                                            result!!.whoEnroll,
-                                            ArrayList<Material>()
-                                    )
-                            )
+                            if (onlinecourse.any { it.courseID == result!!.courseID }) {
+                            } else {
+                                onlinecourse.add(
+                                        Course(
+                                                result!!.courseID,
+                                                result!!.joinID,
+                                                result!!.owner,
+                                                result!!.courseStatus,
+                                                result!!.whoEnroll,
+                                                ArrayList<Material>()
+                                        )
+                                )
+                            }
                         } else {
                             courselistdetail.forEach {
                                 if (it.key == result!!.courseID) {

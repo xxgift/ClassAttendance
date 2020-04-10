@@ -15,7 +15,7 @@ import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 
 
-class ChatroomAdapter(
+class BoardAdapter(
     val mContext: Context,
     val mActivity: FragmentActivity,
     val layoutResId: Int,

@@ -6,20 +6,12 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import com.google.firebase.database.FirebaseDatabase
 
-import com.mahidol.classattendance.Adapter.ChatroomAdapter
-import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.popup_delete.*
-import kotlinx.android.synthetic.main.popup_postdetail.*
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 
 class popup_delete_Fragment(var mView: View,var position:Int,var fcontext: Context) : DialogFragment() {

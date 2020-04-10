@@ -31,7 +31,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.mahidol.classattendance.Fragments.AttendanceFragment
-import com.mahidol.classattendance.Fragments.ChatroomFragment
+import com.mahidol.classattendance.Fragments.BoardFragment
 import com.mahidol.classattendance.Fragments.MycourseFragment
 import com.mahidol.classattendance.Fragments.ScannerFragment
 import com.mahidol.classattendance.Helper.HTTPHelper
@@ -71,11 +71,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_chatroom -> {
+                R.id.navigation_board -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Chat Room"
+                    appBar!!.text = "Board"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-                    replaceFragment(ChatroomFragment())
+                    replaceFragment(BoardFragment())
 
                     return@OnNavigationItemSelectedListener true
                 }
@@ -153,7 +153,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
 
 
-        replaceFragment(ChatroomFragment())
+        replaceFragment(BoardFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
 
         //sensor
@@ -204,7 +204,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //set current user
                     currentuser = userprofile!!.username
                     currenttype = userprofile!!.type
-                    appBar!!.text = "Chat Room"
+                    appBar!!.text = "Board"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
 
                 }
