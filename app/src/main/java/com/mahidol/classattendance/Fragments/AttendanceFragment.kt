@@ -24,6 +24,7 @@ import java.util.*
 import kotlin.math.pow
 
 import androidx.fragment.app.FragmentTransaction
+import com.mahidol.classattendance.BGservice
 import kotlin.collections.HashMap
 
 class AttendanceFragment : Fragment() {
@@ -70,6 +71,7 @@ class AttendanceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //BGservice()
         addbtn_studentlist.visibility = View.INVISIBLE
         subtitleTextAttendance.visibility = View.INVISIBLE
 

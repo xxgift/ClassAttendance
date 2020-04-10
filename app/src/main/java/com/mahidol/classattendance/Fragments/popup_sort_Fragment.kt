@@ -90,8 +90,7 @@ class popup_sort_Fragment(
             if (selectedItem == "All Course") {
             } else {
                 currentcourse = selectedItem
-                postList.sortBy { it.course == currentcourse }
-                postList.reverse()
+                postList.sortByDescending { it.course == currentcourse }
             }
             adapter.notifyDataSetChanged()
             dialog!!.dismiss()

@@ -73,7 +73,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             when (item.itemId) {
                 R.id.navigation_chatroom -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Chat Room"
+                    appBar!!.text = "Board"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
                     replaceFragment(ChatroomFragment())
 
@@ -204,7 +204,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //set current user
                     currentuser = userprofile!!.username
                     currenttype = userprofile!!.type
-                    appBar!!.text = "Chat Room"
+                    appBar!!.text = "Board"
                     subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
 
                 }
