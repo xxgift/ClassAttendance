@@ -328,11 +328,11 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //    override fun onBackPressed() {
 //        super.onBackPressed()
 //    }
-
-    override fun onStop() {
-        super.onStop()
-      //  startService(Intent(this, NotificationService::class.java))
-    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        //  startService(Intent(this, NotificationService::class.java))
+//    }
 
 //    fun closeApp(view: View?) {
 //        finish()

@@ -58,7 +58,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
 
         backbtn_thiscourse.visibility = View.VISIBLE
         addbtn_thiscourse.visibility = View.INVISIBLE
-        img_empty_course.setImageResource(R.mipmap.emptylog)
+        img_empty_course.setImageResource(R.mipmap.ic_nologattendance)
 
         logList = arrayListOf()
 

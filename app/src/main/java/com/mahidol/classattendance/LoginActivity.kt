@@ -44,11 +44,11 @@ class LoginActivity : AppCompatActivity() {
 
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val permissionCall = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE)
+            Manifest.permission.READ_PHONE_STATE)
         val permissionLocation = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
+            Manifest.permission.ACCESS_FINE_LOCATION)
         val permissionBluetooth = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.BLUETOOTH)
+            Manifest.permission.BLUETOOTH)
 
         if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BLUETOOTH), 1)
@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
                         override fun onPreExecute() {
                             currenttype = null
                             Toast.makeText(this@LoginActivity, "Please wait...", Toast.LENGTH_SHORT)
-                                    .show()
+                                .show()
                         }
 
                         override fun doInBackground(vararg p0: String?): String {
@@ -96,8 +96,11 @@ class LoginActivity : AppCompatActivity() {
 
                         override fun onPostExecute(result: String?) {
                             if (result != "null") {
+                                println(result)
                                 userprofile = Gson().fromJson(result, User::class.java)
+                                println(userprofile)
                                 currentuser = userprofile!!.username
+                                println(currentuser)
                                 currentImei = imei
 
                                 //check username and password is matched
@@ -131,18 +134,18 @@ class LoginActivity : AppCompatActivity() {
                                             applicationContext.startActivity(intent)
                                         } else {
                                             Toast.makeText(
-                                                    this@LoginActivity,
-                                                    "This account is logged in on another device ",
-                                                    Toast.LENGTH_SHORT
+                                                this@LoginActivity,
+                                                "This account is logged in on another device ",
+                                                Toast.LENGTH_SHORT
                                             ).show()
                                         }
                                     }
 
                                 } else {
                                     Toast.makeText(
-                                            this@LoginActivity,
-                                            "Username or Password is not matched",
-                                            Toast.LENGTH_SHORT
+                                        this@LoginActivity,
+                                        "Username or Password is not matched",
+                                        Toast.LENGTH_SHORT
                                     ).show()
                                 }
 
@@ -155,6 +158,7 @@ class LoginActivity : AppCompatActivity() {
 
                     }
                     asyncTask.execute()
+
 
 //                Toast.makeText(this@LoginActivity,">>>>>IMEI:$imei",Toast.LENGTH_SHORT).show()
                 }
