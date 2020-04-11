@@ -13,17 +13,21 @@ import com.mahidol.classattendance.R
 class LogAttendanceAdapter(
         val mContext: Context,
         val layoutResId: Int,
-        val logList: ArrayList<Attendance>
+        val logList: ArrayList<String>,
+        val selectcoursename:String
 ) :
-        ArrayAdapter<Attendance>(mContext, layoutResId, logList) {
+        ArrayAdapter<String>(mContext, layoutResId, logList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val layoutInflator: LayoutInflater = LayoutInflater.from(mContext)
         val view: View = layoutInflator.inflate(layoutResId, null)
 
-        val coursename = view.findViewById<TextView>(R.id.TitletxtLeft)
-        val date= view.findViewById<TextView>(R.id.SubtitleLeft)
+        val coursename = view.findViewById<TextView>(R.id.SubtitleLeft)
+        val date= view.findViewById<TextView>(R.id.TitletxtLeft)
+
+        view.findViewById<TextView>(R.id.TitletxtRight).visibility = View.INVISIBLE
+        view.findViewById<TextView>(R.id.SubtitleRight).visibility = View.INVISIBLE
 
 
         val ic = view.findViewById<ImageView>(R.id.list_ic)
@@ -32,8 +36,8 @@ class LogAttendanceAdapter(
 
         ic.setImageResource(R.mipmap.ic_iconcourseschedule)
 
-        coursename.text = "${log.coursename}"
-        date.text = "${log.date}"
+        coursename.text = "${selectcoursename}"
+        date.text = "${log}"
 
         return view
     }

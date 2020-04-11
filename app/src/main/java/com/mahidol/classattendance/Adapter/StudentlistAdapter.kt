@@ -40,7 +40,7 @@ class StudentlistAdapter(
         }
 
         duration.text = "${time.durationtime}"
-        username.text = "${time.username}"
+        username.text = "Name: ${time.username}     Course: ${time.coursename}"
         start.text = "Check in ${time.date} @${time.starttime}"
 
 
