@@ -29,15 +29,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/rectangle" />
 
-        <ImageView
-            android:id="@+id/list_ic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/coursenoshadowjing_ic" />
+            <ImageView
+                android:id="@+id/list_ic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_course_folder" />
 
             <TextView
                 android:id="@+id/SubtitleLeft"

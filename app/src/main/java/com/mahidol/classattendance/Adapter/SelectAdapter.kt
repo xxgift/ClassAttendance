@@ -34,8 +34,13 @@ class SelectAdapter(
 
         val select = selectList!![position]
 
+        if(select.detail == "Log Attendance"){
+            ic.setImageResource(R.mipmap.ic_log_folder)
+        }else{
+            ic.setImageResource(R.mipmap.ic_cm_folder)
+        }
 
-        ic.setImageResource(R.mipmap.ic_iconcourseschedule)
+
 
         titleRight.visibility = View.INVISIBLE
         subtitleRight.visibility = View.INVISIBLE
