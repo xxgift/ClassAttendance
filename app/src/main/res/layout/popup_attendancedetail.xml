@@ -32,15 +32,13 @@
 
     <TextView
         android:id="@+id/popup_attendance_coursename"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="116dp"
+        android:layout_width="237dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="100dp"
         android:fontFamily="@font/montserrat"
         android:maxLines="1"
-        android:text="Course"
-        android:textColor="#000000"
+        android:text="Course: EGCO001   @14-03-2020"
+        android:textColor="#8B8B8B"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
@@ -48,37 +46,20 @@
 
 
     <TextView
-        android:id="@+id/popup_attendance_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="24dp"
-        android:fontFamily="@font/montserrat"
-        android:maxLines="1"
-        android:text="Date"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
         android:id="@+id/popup_attendance_status"
         android:layout_width="253dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/montserrat"
-        android:textSize="25sp"
-        android:textAlignment="center"
         android:text="Class is over !"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
-        app:layout_constraintVertical_bias="0.524" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/popup_attendance_okbtn"

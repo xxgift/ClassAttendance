@@ -39,35 +39,34 @@ class StudentlistAdapter(
         if (currenttype == "Teacher") {
             ic.setImageResource(R.mipmap.ic_teacherlist)
             imageview.setImageResource(R.drawable.rectangleteacher)
-        } else {
+        }else{
             ic.setImageResource(R.mipmap.ic_iconstudentlist)
+            imageview.setImageResource(R.drawable.rectanglestudent)
         }
 
         if (time.attendance == "Absent") {
-            attendance.setTextColor(Color.parseColor("#7C0A02"))
+            ic.setImageResource(R.mipmap.ic_studentabsent)
+            attendance.setTextColor(Color.parseColor("#A254F2"))
             duration.text = ""
-            username.text = "Name: ${time.username}     Course: ${time.coursename}"
+            username.text = "Name: ${time.username}"
             start.text = "Absent on ${time.date}"
-            attendance.text = "${time.attendance}"
+            attendance.text = "Course: ${time.coursename}"
         }
         if (time.attendance == "Present") {
-            attendance.setTextColor(Color.parseColor("#00FF00"))
+            ic.setImageResource(R.mipmap.ic_studentpresent)
+            attendance.setTextColor(Color.parseColor("#A254F2"))
             duration.text = "${time.durationtime}"
-            username.text = "Name: ${time.username}     Course: ${time.coursename}"
+            username.text = "Name: ${time.username}"
             start.text = "Check in ${time.date} @${time.starttime}"
-            attendance.text = "${time.attendance}"
+            attendance.text = " Course: ${time.coursename}"
         }
         if (time.attendance == "Teacher") {
             attendance.setTextColor(Color.parseColor("#A254F2"))
             duration.text = ""
-            username.text = "Teacher: ${time.username}     Course: ${time.coursename}"
+            username.text = "Teacher: ${time.username}"
             start.text = "Course started at ${time.date} @${time.starttime}"
-            attendance.text = "${time.attendance}"
+            attendance.text = " Course: ${time.coursename}"
         }
-
-
-
-
 
         return view
     }
