@@ -89,8 +89,10 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
                             }
                         }
                     } else {
-                        studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
-
+                        if (studentList.any { it.key == currentuser }) {
+                        } else {
+                            studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
+                        }
                     }
                     dataReference.setValue(studentList)
                     println("fonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
