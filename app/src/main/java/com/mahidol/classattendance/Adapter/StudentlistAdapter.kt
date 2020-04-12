@@ -36,7 +36,7 @@ class StudentlistAdapter(
 
         val time = studentList[position]
 
-        if (currenttype == "Teacher") {
+        if (time.type == "Teacher") {
             ic.setImageResource(R.mipmap.ic_teacherlist)
             imageview.setImageResource(R.drawable.rectangleteacher)
         }else{

@@ -6,24 +6,6 @@
     android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/subtitleTextAttendance"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="45dp"
-        android:background="#DDD3EE"
-        android:fontFamily="@font/montserrat"
-        android:gravity="center"
-        android:paddingStart="0dp"
-        android:textAlignment="center"
-        android:textColor="#5D3C9C"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/loading_gif"
         android:layout_width="427dp"
