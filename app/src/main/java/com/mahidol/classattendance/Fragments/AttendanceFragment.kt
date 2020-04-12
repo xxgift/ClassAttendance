@@ -57,7 +57,6 @@ class AttendanceFragment : Fragment() {
 
     var countforOut = 0
     var counttoEnd = 0
-    var isScanning = false
     var alreadyInclass = false
 
 

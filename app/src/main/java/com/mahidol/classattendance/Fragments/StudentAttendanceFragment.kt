@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Chronometer
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -53,6 +55,8 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
         super.onViewCreated(view, savedInstanceState)
         val tmp = SimpleDateFormat("HH:mm:ss")
         val time = tmp.format(Date())
+        var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
+
 
         backbtn_studentAttentdance.visibility = View.INVISIBLE
         dataReference =
@@ -65,6 +69,15 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
         }
 
         if (isScanning) {
+
+            durationtime.base = SystemClock.elapsedRealtime()
+            durationtime.start()
+
+            durationtime.setOnChronometerTickListener {
+                if (!isScanning){
+                    durationtime.stop()
+                }
+            }
 
             studentList = hashMapOf()
 
