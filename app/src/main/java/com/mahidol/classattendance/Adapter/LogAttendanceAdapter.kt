@@ -34,7 +34,7 @@ class LogAttendanceAdapter(
 
         val log = logList[position]
 
-        ic.setImageResource(R.mipmap.ic_iconcourseschedule)
+        ic.setImageResource(R.mipmap.ic_logattendlist)
 
         coursename.text = "${selectcoursename}"
         date.text = "${log}"

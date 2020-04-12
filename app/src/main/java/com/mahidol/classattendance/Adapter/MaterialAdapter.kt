@@ -32,7 +32,7 @@ class MaterialAdapter(
 
         val meterial = materialList[position]
 
-        ic.setImageResource(R.mipmap.ic_iconclassmat)
+        ic.setImageResource(R.mipmap.ic_cmlist)
 
         link.text = "${meterial.link}"
         materialID.text = "${meterial.materialID}"

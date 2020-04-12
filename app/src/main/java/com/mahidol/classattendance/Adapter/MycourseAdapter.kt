@@ -43,20 +43,6 @@ class MycourseAdapter(
         joinID.text = "${course.joinID}"
         owner.text = "${course.owner}"
 
-//        view.setOnLongClickListener {
-//
-//            view.animate().setDuration(500).alpha(0f).withEndAction {
-//                courselistdetail.removeAt(position)
-//                dataReference.setValue(courselistdetail)
-//                notifyDataSetChanged()
-//                view.alpha = 1.0F
-//                Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show()
-//            }
-//            return@setOnLongClickListener true
-//        }
-
-
-
         return view
     }
 
