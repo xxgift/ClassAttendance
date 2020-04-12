@@ -138,7 +138,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
 
         backbtn_thiscourse.setOnClickListener {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()
-            replaceFragment(SelectFragment(selectnamecourse))
+            replaceFragment(LogAttendanceFragment(selectnamecourse))
         }
 
         addbtn_thiscourse.setOnClickListener {

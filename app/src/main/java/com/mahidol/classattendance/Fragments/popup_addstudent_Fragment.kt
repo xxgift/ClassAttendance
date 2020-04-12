@@ -112,16 +112,21 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
 
             //check this studentID has enrolled this course
 
-                if (whoEnroll.any{it == addStudentID}) {
+            if (whoEnroll.any { it == addStudentID }) {
+                if (studentAttendaceList.any { it.key == addStudentID }) {
+                    addstudent_studentID.error = "This student already in class"
+                    return false
+                } else {
                     studentAttendaceList.put(addStudentID, Attendance(addStudentID, "Student", coursename, date,
                             "", "", "Present"))
-                } else {
-                    println("notwhoooooooooooooo")
-                    addstudent_studentID.error = "This student has not enrolled this course"
-                    addstudent_studentID.text = null
-                    addstudent_studentID.setHint("Enter Again")
-                    return false
                 }
+            } else {
+                println("notwhoooooooooooooo")
+                addstudent_studentID.error = "This student has not enrolled this course"
+                addstudent_studentID.text = null
+                addstudent_studentID.setHint("Enter Again")
+                return false
+            }
 
 
             //send value to firebase

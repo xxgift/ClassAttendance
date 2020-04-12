@@ -36,7 +36,7 @@ class StudentlistAdapter(
 
         val time = studentList[position]
 
-        if (currenttype == "Teacher") {
+        if (time.type == "Teacher") {
             ic.setImageResource(R.mipmap.ic_teacherlist)
             imageview.setImageResource(R.drawable.rectangleteacher)
         } else {
@@ -54,7 +54,11 @@ class StudentlistAdapter(
             attendance.setTextColor(Color.parseColor("#00FF00"))
             duration.text = "${time.durationtime}"
             username.text = "Name: ${time.username}     Course: ${time.coursename}"
-            start.text = "Check in ${time.date} @${time.starttime}"
+            if (time.starttime != "") {
+                start.text = "Check in ${time.date} @${time.starttime}"
+            } else {
+                start.text = "Check in ${time.date} (Manual Add)"
+            }
             attendance.text = "${time.attendance}"
         }
         if (time.attendance == "Teacher") {

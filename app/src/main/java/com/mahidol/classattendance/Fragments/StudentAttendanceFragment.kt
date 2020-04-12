@@ -116,7 +116,11 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
                         LogAttendance = Gson().fromJson(result, Attendance::class.java)
                         backbtn_studentAttentdance.visibility = View.VISIBLE
                         course_studentAttendance.text = "Course: ${selectnamecourse}"
-                        starttime.text = "Check in at: ${LogAttendance.starttime}"
+                        if (LogAttendance.starttime != "") {
+                            starttime.text = "Check in at: ${LogAttendance.starttime}"
+                        }else{
+                            starttime.text = "Manual Add"
+                        }
                         attendance.text = LogAttendance.attendance
                         datestudentattendance.text = "Date: ${LogAttendance.date}"
                     }
