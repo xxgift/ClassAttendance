@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -239,8 +240,8 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun replaceFragment(fragment: Fragment) {
         fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
+        fragmentTransaction.addToBackStack("tag")
         fragmentTransaction.commit()
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -326,18 +327,19 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 //    override fun onBackPressed() {
-//        super.onBackPressed()
+//        // note: you can also use 'getSupportFragmentManager()'
+//        val mgr: FragmentManager = FragmentManager
+//        if (mgr.getBackStackEntryCount() === 0) {
+//            // No backstack to pop, so calling super
+//            super.onBackPressed()
+//        } else {
+//            mgr.popBackStack()
+//        }
 //    }
-//
+
 //    override fun onStop() {
 //        super.onStop()
 //        //  startService(Intent(this, NotificationService::class.java))
 //    }
-
-//    fun closeApp(view: View?) {
-//        finish()
-//    }
-
-
 
 }
