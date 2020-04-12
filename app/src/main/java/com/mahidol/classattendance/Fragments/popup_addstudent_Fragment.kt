@@ -9,25 +9,30 @@ import androidx.fragment.app.DialogFragment
 import com.google.firebase.database.*
 import com.mahidol.classattendance.Adapter.StudentlistAdapter
 import com.mahidol.classattendance.Models.Attendance
+import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
 
 import kotlinx.android.synthetic.main.popup_addstudent.*
+import java.lang.ref.PhantomReference
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
-class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter, var coursename:String) : DialogFragment() {
+class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter, var coursename: String, val date: String) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
+    lateinit var dataReference2: DatabaseReference
     lateinit var imgEmpty: ImageView
-    lateinit var studentList:ArrayList<Attendance>
-    lateinit var addStudentID :String
+    lateinit var studentAttendaceList: HashMap<String, Attendance>
+    lateinit var whoEnroll: ArrayList<String>
+    lateinit var addStudentID: String
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.popup_addstudent, container, false)
     }
@@ -41,22 +46,42 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
         super.onViewCreated(view, savedInstanceState)
 
 
-        studentList = arrayListOf()
-        val sdf = SimpleDateFormat("dd-MM-yy")
-        val date = sdf.format(Date())
+        studentAttendaceList = hashMapOf()
+        whoEnroll = arrayListOf()
 
-        dataReference = FirebaseDatabase.getInstance().getReference("AllCourse").child(coursename).child(date)
+        dataReference = FirebaseDatabase.getInstance().getReference("Attendance").child(coursename).child(date)
+        dataReference2 = FirebaseDatabase.getInstance().getReference("AllCourse")
 
-        var dataQuery = dataReference.orderByChild("username")
+        var dataQuery = dataReference.orderByChild("starttime")
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0!!.exists()) {
-                    studentList.clear()
+                    studentAttendaceList.clear()
                     for (i in p0.children) {
                         val oneUser = i.getValue(Attendance::class.java)
-                        studentList.add(oneUser!!)
+                        studentAttendaceList.put(oneUser!!.username, oneUser)
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+        dataReference2.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0!!.exists()) {
+                    whoEnroll.clear()
+                    for (i in p0.children) {
+                        val oneUser = i.getValue(Course::class.java)
+                        if (oneUser!!.courseID == coursename) {
+                            whoEnroll = oneUser!!.whoEnroll
+                            println("whooooooooooooooooooo${whoEnroll}")
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged()
@@ -85,25 +110,24 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
                 return false
             }
 
-            //check MaterialID is not already in use
-            studentList?.forEach {
-                if (it.username == addStudentID) {
-                    studentList.add(Attendance(it.username,it.type,it.coursename,it.date,it.starttime,it.durationtime,"Present"))
-                    studentList.remove(it)
-                    dataReference.setValue(studentList)
-                    return false
-                }else{
+            //check this studentID has enrolled this course
+
+                if (whoEnroll.any{it == addStudentID}) {
+                    studentAttendaceList.put(addStudentID, Attendance(addStudentID, "Student", coursename, date,
+                            "", "", "Present"))
+                } else {
+                    println("notwhoooooooooooooo")
                     addstudent_studentID.error = "This student has not enrolled this course"
                     addstudent_studentID.text = null
                     addstudent_studentID.setHint("Enter Again")
+                    return false
                 }
-            }
+
 
             //send value to firebase
+            dataReference.setValue(studentAttendaceList)
 
             adapter.notifyDataSetChanged()
-            imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)
-            imgEmpty.visibility = View.INVISIBLE
             dialog!!.dismiss()
 
         }

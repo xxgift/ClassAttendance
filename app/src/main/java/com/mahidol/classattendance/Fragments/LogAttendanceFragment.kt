@@ -16,10 +16,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.hudomju.swipe.SwipeToDismissTouchListener
-import com.hudomju.swipe.adapter.ListViewAdapter
 import com.mahidol.classattendance.Adapter.LogAttendanceAdapter
 import com.mahidol.classattendance.Models.Attendance
+import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
 
@@ -30,7 +29,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
     lateinit var mActivity: Activity
     lateinit var fragmentTransaction: FragmentTransaction
 
-    lateinit var logList: ArrayList<Attendance>
+    lateinit var logList: ArrayList<String>
 
     var dataReference =
             FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
@@ -71,23 +70,22 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
                 if (p0!!.exists()) {
                     logList.clear()
                     for (i in p0.children) {
-                        val oneUser = i.getValue(Attendance::class.java)
-                        if (logList.any { it.date == oneUser!!.date }) {
+                        val oneUser = i.key
+                        println("gggggggggggggg${oneUser!!}")
+                        if (logList.any { it == oneUser }) {
                         } else {
-                            logList.add(oneUser!!)
+                            logList.add(oneUser)
                         }
                     }
-                    val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_post)
-                    imgEmpty.setImageResource(R.mipmap.ic_nologattendance)
                     if (logList.size > 0) {
-                        imgEmpty.visibility = View.INVISIBLE
+                        view.findViewById<ImageView>(R.id.img_empty_course).visibility = View.INVISIBLE
                     }
                 }
                 adapter.notifyDataSetChanged()
             }
         })
-
-        adapter = LogAttendanceAdapter(mContext, R.layout.list_detail, logList)
+        println("lllllllllllllllll${logList}")
+        adapter = LogAttendanceAdapter(mContext, R.layout.list_detail, logList, selectnamecourse)
         listview_courselist!!.adapter = adapter
 
         backbtn_thiscourse.setOnClickListener {
@@ -99,10 +97,14 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
                 AdapterView.OnItemClickListener { parent, view, position, id ->
 
                     Toast.makeText(
-                            mContext, "Select ${logList[position].date
+                            mContext, "Select ${logList[position]
                     }", LENGTH_SHORT
                     ).show()
-                    replaceFragment(StudentlistFragment(selectnamecourse,logList[position].date))
+                    if (currenttype == "Teacher") {
+                        replaceFragment(StudentlistFragment(selectnamecourse, logList[position], false))
+                    }else{
+                        replaceFragment(StudentAttendanceFragment(selectnamecourse,logList[position],false))
+                    }
                 }
 
     }

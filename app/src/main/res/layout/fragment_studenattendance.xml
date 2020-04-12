@@ -5,36 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<TextView
-        android:id="@+id/subtitleTextStudentAttendance"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="45dp"
-        android:background="#DDD3EE"
+
+    <TextView
+        android:id="@+id/course_studentAttendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="105dp"
         android:fontFamily="@font/montserrat"
-        android:gravity="center"
-        android:paddingStart="0dp"
-        android:textAlignment="center"
-        android:textColor="#5D3C9C"
-        android:textSize="14sp"
+        android:text="Course :"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="430dp"
-        android:layout_height="602dp"
-        android:layout_marginTop="160dp"
+        android:layout_height="530dp"
+        android:layout_marginTop="20dp"
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/halfnoshadow_bg" />
+        app:layout_constraintTop_toBottomOf="@+id/datestudentattendance"
+        app:srcCompat="@mipmap/bg_thiscoursestudent" />
 
     <ImageView
         android:id="@+id/imageView11"
@@ -46,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/studentface_ic" />
+        app:srcCompat="@mipmap/ic_studentface" />
 
     <TextView
         android:id="@+id/attendance"
@@ -67,7 +64,7 @@
         android:id="@+id/chronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="560dp"
+        android:layout_marginTop="550dp"
         android:textColor="@color/white"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,22 +75,40 @@
         android:id="@+id/starttime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="620dp"
+        android:layout_marginTop="600dp"
         android:text="Check in at :"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/backbtn_studentAttentdance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="300dp"
+        android:layout_marginBottom="50dp"
+        android:background="@mipmap/back_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.961" />
+
     <TextView
         android:id="@+id/datestudentattendance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="650dp"
-        android:textSize="16sp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/course_studentAttendance" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
