@@ -68,6 +68,17 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
         backbtn_thiscourse.visibility = View.VISIBLE
         addbtn_thiscourse.visibility = View.INVISIBLE
         addbtn_thiscourse.setBackgroundResource(R.mipmap.btn_addstudent)
+
+        if (isScanning) {
+            backbtn_thiscourse.visibility = View.INVISIBLE
+            if (currenttype=="Teacher"){
+                img_empty_course.setImageResource(R.mipmap.ic_emptystudentlist)
+                addbtn_thiscourse.visibility = View.VISIBLE
+            }
+        }else{
+            img_empty_course.setImageResource(R.mipmap.ic_nostudentinclass)
+        }
+
         if (currenttype == "Teacher") {
             val touchListener = SwipeToDismissTouchListener(
                     ListViewAdapter(listview_courselist),
@@ -93,13 +104,12 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
                         }
                     }
         }
-        img_empty_course.setImageResource(R.mipmap.ic_emptystudentlist)
 
         studentList = arrayListOf()
         studentListValue = hashMapOf()
         whoEnroll = arrayListOf()
 
-        var dataQuery = dataReference.child(date).orderByChild("username")
+        var dataQuery = dataReference.child(date).orderByChild("type")
 
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -117,6 +127,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
                     if (studentList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
                     }
+                    studentList.reverse()
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -124,17 +135,6 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
 
         adapter = StudentlistAdapter(mContext, R.layout.list_detail, studentList)
         listview_courselist!!.adapter = adapter
-
-        if (isScanning) {
-            backbtn_thiscourse.visibility = View.INVISIBLE
-            if (currenttype=="Teacher"){
-                addbtn_thiscourse.visibility = View.VISIBLE
-            }
-        }
-
-
-
-
 
         backbtn_thiscourse.setOnClickListener {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()

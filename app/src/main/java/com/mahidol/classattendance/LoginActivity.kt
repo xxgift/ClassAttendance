@@ -117,6 +117,7 @@ class LoginActivity : AppCompatActivity() {
                                         editor.putString("loginusername", uname)
                                         editor.commit()
                                         applicationContext.startActivity(intent)
+                                        finish()
                                     } else {
                                         if (userprofile!!.imei == imei) {
                                             currenttype = userprofile!!.type
@@ -132,6 +133,7 @@ class LoginActivity : AppCompatActivity() {
 
 
                                             applicationContext.startActivity(intent)
+                                            finish()
                                         } else {
                                             Toast.makeText(
                                                 this@LoginActivity,
@@ -170,6 +172,7 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(intent)
                 login_username.text = null
                 login_password.text = null
+                finish()
             }
 
         }else{
