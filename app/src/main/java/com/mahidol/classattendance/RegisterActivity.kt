@@ -16,6 +16,7 @@ import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.User
 
 import kotlinx.android.synthetic.main.register.*
+import java.lang.Double.parseDouble
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -100,16 +101,23 @@ class RegisterActivity : AppCompatActivity() {
         if (type=="Teacher"){
             if(user.substring(0,1)== "t"){
             }else{
-                regist_username.error = "Username of TEACHER must be in the form of Txxxxxxx"
+                regist_username.error = "Username of TEACHER must be in the form of t*******"
                 return false
             }
         }
         if (type=="Student"){
             if(user.substring(0,1) == "u"){
             }else{
-                regist_username.error = "Username of STUDENT must be in the form of Uxxxxxxx"
+                regist_username.error = "Username of STUDENT must be in the form of u*******"
                 return false
             }
+        }
+
+        try {
+            val num = parseDouble(user.substring(1))
+        } catch (e: NumberFormatException) {
+           regist_username.error = "the characters after \"t\" or \"u\" must be numeric"
+            return false
         }
 
 
