@@ -68,10 +68,9 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun saveData(): Boolean {
-        val user = regist_username.text.toString()
+        val user = regist_username.text.toString().decapitalize()
         val pass = regist_password.text.toString()
         var id: Int = radioGroup.checkedRadioButtonId
-
 
         //check each edittext must not be null
         if (user.isEmpty()) {
@@ -97,6 +96,23 @@ class RegisterActivity : AppCompatActivity() {
             radio_teacher.error = "Please select a type"
             return false
         }
+
+        if (type=="Teacher"){
+            if(user.substring(0,1)== "t"){
+            }else{
+                regist_username.error = "Username of TEACHER must be in the form of Txxxxxxx"
+                return false
+            }
+        }
+        if (type=="Student"){
+            if(user.substring(0,1) == "u"){
+            }else{
+                regist_username.error = "Username of STUDENT must be in the form of Uxxxxxxx"
+                return false
+            }
+        }
+
+
 
         //check username is not already in use
         userList.forEach {

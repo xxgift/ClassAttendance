@@ -53,7 +53,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val tmp = SimpleDateFormat("HH:mm:ss")
+        val tmp = SimpleDateFormat("HH:mm:ss a")
         val time = tmp.format(Date())
         var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
 
@@ -68,16 +68,19 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
             replaceFragment(LogAttendanceFragment(selectnamecourse))
         }
 
+        durationtime.setOnChronometerTickListener {
+            println("isscaninggggggggggg ${isScanning}")
+            if (!isScanning){
+                durationtime.stop()
+            }
+        }
+
         if (isScanning) {
 
             durationtime.base = SystemClock.elapsedRealtime()
             durationtime.start()
 
-            durationtime.setOnChronometerTickListener {
-                if (!isScanning){
-                    durationtime.stop()
-                }
-            }
+
 
             studentList = hashMapOf()
 
