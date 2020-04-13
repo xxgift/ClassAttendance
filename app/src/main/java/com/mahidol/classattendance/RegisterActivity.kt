@@ -100,14 +100,14 @@ class RegisterActivity : AppCompatActivity() {
         if (type=="Teacher"){
             if(user.substring(0,1)== "t"){
             }else{
-                regist_username.error = "Username of TEACHER must be in the form of Txxxxxxx"
+                regist_username.error = "Username of TEACHER must be in the form of t*******"
                 return false
             }
         }
         if (type=="Student"){
             if(user.substring(0,1) == "u"){
             }else{
-                regist_username.error = "Username of STUDENT must be in the form of Uxxxxxxx"
+                regist_username.error = "Username of STUDENT must be in the form of u*******"
                 return false
             }
         }
