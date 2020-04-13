@@ -9,7 +9,9 @@ import androidx.fragment.app.DialogFragment
 import com.google.firebase.database.*
 import com.mahidol.classattendance.Adapter.MaterialAdapter
 import com.mahidol.classattendance.Models.Material
+import com.mahidol.classattendance.Models.courselistdetail
 import com.mahidol.classattendance.Models.currenttype
+import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.popup_addcoursematerial.*
 import java.text.SimpleDateFormat
@@ -19,6 +21,7 @@ import kotlin.collections.ArrayList
 class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var coursename:String) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
+    lateinit var dataReference2: DatabaseReference
     lateinit var imgEmpty: ImageView
     lateinit var materialList:ArrayList<Material>
     lateinit var addMaterialID :String
@@ -42,12 +45,14 @@ class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var cou
 
         addcm_coursename.text = coursename
 
-        dataReference = FirebaseDatabase.getInstance().getReference("AllCourse").child(coursename).child("Material")
+        dataReference = FirebaseDatabase.getInstance().getReference("AllCourse").child(coursename).child("courseMaterial")
+        dataReference2 = FirebaseDatabase.getInstance().getReference("UserProfile").child(currentuser).child("courselist").child(coursename).child("courseMaterial")
+
 
         materialList = arrayListOf()
 
-        var dataQuery = dataReference.orderByChild("materialID")
-        dataQuery.addValueEventListener(object : ValueEventListener {
+        var dataQuery = dataReference.orderByChild("date")
+        dataQuery.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
@@ -107,9 +112,11 @@ class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var cou
 
             //send value to firebase
 
+            courselistdetail[coursename]!!.courseMaterial.add(Material(coursename,addMaterialID,date,addLink,timestamp))
             materialList.add(Material(coursename,addMaterialID,date,addLink,timestamp))
 
             dataReference.setValue(materialList)
+            dataReference2.setValue(materialList)
 
             adapter.notifyDataSetChanged()
             imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_course)

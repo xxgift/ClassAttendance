@@ -53,7 +53,7 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
         dataReference2 = FirebaseDatabase.getInstance().getReference("AllCourse")
 
         var dataQuery = dataReference.orderByChild("starttime")
-        dataQuery.addValueEventListener(object : ValueEventListener {
+        dataQuery.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -69,7 +69,7 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
             }
         })
 
-        dataReference2.addValueEventListener(object : ValueEventListener {
+        dataReference2.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 

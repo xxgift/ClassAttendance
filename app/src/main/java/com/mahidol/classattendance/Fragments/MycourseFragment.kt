@@ -36,7 +36,7 @@ class MycourseFragment : Fragment() {
     var dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
     var dataReference2 = FirebaseDatabase.getInstance().getReference("AllCourse")
 
-    var url = "https://studenttracking-47241.firebaseio.com/UserProfile/"
+    var url = "https://studenttracking-47241.firebaseio.com/AllCourse/"
 
 
     override fun onCreateView(
@@ -84,11 +84,12 @@ class MycourseFragment : Fragment() {
                     }
 
                     override fun onDismiss(view: ListViewAdapter, position: Int) {
+
                         var asyncTask = object : AsyncTask<String, String, String>() {
 
                             override fun doInBackground(vararg p0: String?): String {
                                 val helper = HTTPHelper()
-                                return helper.getHTTPData(url + courseList[position].owner + "/courselist/" + courseList[position].courseID + ".json")
+                                return helper.getHTTPData(url + courseList[position].courseID + ".json")
                             }
 
                             override fun onPostExecute(result: String?) {
@@ -97,27 +98,29 @@ class MycourseFragment : Fragment() {
                                     whoEnrollList = thisCourse!!.whoEnroll
                                     println(whoEnrollList + "111111")
 
-                                    if (whoEnrollList.any { it == currentuser }) {
+                                    if (currenttype == "Student") {
+//                                        if (whoEnrollList.any { it == currentuser }) {
                                         whoEnrollList.remove(currentuser)
                                         println(whoEnrollList + "33333")
-                                    }
-
-                                    if (currenttype == "Teacher") {
-                                        dataReference2.child(courseList[position].courseID).removeValue()
+                                        dataReference.child(thisCourse.owner).child("courselist").child(thisCourse.courseID).setValue(Course(thisCourse.courseID, thisCourse.joinID, thisCourse.owner, thisCourse.courseStatus, whoEnrollList, thisCourse.courseMaterial))
+                                        dataReference2.child(thisCourse.courseID).setValue(Course(thisCourse.courseID, thisCourse.joinID, thisCourse.owner, thisCourse.courseStatus, whoEnrollList, thisCourse.courseMaterial))
+//                                        }
                                     } else {
-                                        dataReference.child(courseList[position].owner).child("courselist").child(courseList[position].courseID).setValue(Course(courseList[position].courseID, courseList[position].joinID, courseList[position].owner, courseList[position].courseStatus, whoEnrollList, courseList[position].material))
-                                        dataReference2.child(courseList[position].courseID).setValue(Course(courseList[position].courseID, courseList[position].joinID, courseList[position].owner, courseList[position].courseStatus, whoEnrollList, courseList[position].material))
+                                        dataReference2.child(thisCourse.courseID).removeValue()
                                     }
 
+                                    println(whoEnrollList + "44444")
+                                    courselistdetail.remove(courseList[position].courseID)
+                                    courseList.removeAt(position)
+                                    dataReference.child(currentuser).child("courselist").setValue(courselistdetail)
+                                    adapter.notifyDataSetChanged()
                                 }
-                                courselistdetail.remove(courseList[position].courseID)
-                                courseList.removeAt(position)
-                                dataReference.child(currentuser).child("courselist").setValue(courselistdetail)
-                                println(whoEnrollList + "44444")
-                                adapter.notifyDataSetChanged()
                             }
                         }
-                        asyncTask.execute()
+                        if (courseList[position].courseID != null) {
+                            asyncTask.execute()
+                        }
+
                         println(whoEnrollList + "2222")
                     }
                 })
@@ -127,6 +130,7 @@ class MycourseFragment : Fragment() {
         listview_courselist!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             if (touchListener.existPendingDismisses()) {
                 touchListener.undoPendingDismiss()
+                println("hereeeeeeeeeeeeeeeee")
             } else {
                 Toast.makeText(mContext, "Select ${courseList[position].courseID
                 }", LENGTH_SHORT).show()
