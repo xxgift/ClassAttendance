@@ -23,7 +23,7 @@ import com.mahidol.classattendance.Models.Attendance
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.R
-import kotlinx.android.synthetic.main.fragment_mycourse.*
+import kotlinx.android.synthetic.main.fragment_studentlist.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -50,7 +50,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_mycourse, container, false)
+        return inflater.inflate(R.layout.fragment_studentlist, container, false)
 
     }
 
@@ -65,23 +65,25 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        backbtn_thiscourse.visibility = View.VISIBLE
-        addbtn_thiscourse.visibility = View.INVISIBLE
-        addbtn_thiscourse.setBackgroundResource(R.mipmap.btn_addstudent)
+        backbtn_studentlist.visibility = View.VISIBLE
+        addbtn_studentlist.visibility = View.INVISIBLE
+        appbar_course_studentlist.text = "        Course :  ${selectnamecourse}"
+        appbar_date_studentlist.text = "             Date: ${date}"
+
 
         if (isScanning) {
-            backbtn_thiscourse.visibility = View.INVISIBLE
+            backbtn_studentlist.visibility = View.INVISIBLE
             if (currenttype=="Teacher"){
-                img_empty_course.setImageResource(R.mipmap.ic_emptystudentlist)
-                addbtn_thiscourse.visibility = View.VISIBLE
+                img_empty_studentlist.setImageResource(R.mipmap.ic_emptystudentlist)
+                addbtn_studentlist.visibility = View.VISIBLE
             }
         }else{
-            img_empty_course.setImageResource(R.mipmap.ic_nostudentinclass)
+            img_empty_studentlist.setImageResource(R.mipmap.ic_nostudentinclass)
         }
 
         if (currenttype == "Teacher") {
             val touchListener = SwipeToDismissTouchListener(
-                    ListViewAdapter(listview_courselist),
+                    ListViewAdapter(listview_studentlist),
                     object : SwipeToDismissTouchListener.DismissCallbacks<ListViewAdapter> {
                         override fun canDismiss(position: Int): Boolean {
                             return true
@@ -95,9 +97,9 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
                         }
                     })
 
-            listview_courselist!!.setOnTouchListener(touchListener)
+            listview_studentlist!!.setOnTouchListener(touchListener)
 //        listview_courselist!!.setOnScrollListener(touchListener.makeScrollListener() as AbsListView.OnScrollListener)
-            listview_courselist!!.onItemClickListener =
+            listview_studentlist!!.onItemClickListener =
                     AdapterView.OnItemClickListener { parent, view, position, id ->
                         if (touchListener.existPendingDismisses()) {
                             touchListener.undoPendingDismiss()
@@ -123,7 +125,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
                         studentListValue.put(oneUser!!.username,Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
                         studentList.add(Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
                     }
-                    val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_course)
+                    val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_studentlist)
                     if (studentList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
                     }
@@ -134,14 +136,14 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
         })
 
         adapter = StudentlistAdapter(mContext, R.layout.list_detail, studentList)
-        listview_courselist!!.adapter = adapter
+        listview_studentlist!!.adapter = adapter
 
-        backbtn_thiscourse.setOnClickListener {
+        backbtn_studentlist.setOnClickListener {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()
             replaceFragment(LogAttendanceFragment(selectnamecourse))
         }
 
-        addbtn_thiscourse.setOnClickListener {
+        addbtn_studentlist.setOnClickListener {
             showDialog(view,adapter)
             adapter.notifyDataSetChanged()
         }
