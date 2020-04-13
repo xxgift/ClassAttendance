@@ -51,7 +51,7 @@ class AttendanceFragment : Fragment() {
 
     val tmp = SimpleDateFormat("dd-MM-yy")
     val date = tmp.format(Date())
-    val tmp2 = SimpleDateFormat("HH:mm:ss")
+    val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
 

@@ -37,9 +37,9 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
     lateinit var mActivity: Activity
     lateinit var fragmentTransaction: FragmentTransaction
 
-    lateinit var studentListValue: HashMap<String,Attendance>
-    lateinit var studentList:ArrayList<Attendance>
-    lateinit var whoEnroll:ArrayList<String>
+    lateinit var studentListValue: HashMap<String, Attendance>
+    lateinit var studentList: ArrayList<Attendance>
+    lateinit var whoEnroll: ArrayList<String>
 
     var dataReference =
             FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
@@ -72,12 +72,11 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
 
 
         if (isScanning) {
-            backbtn_studentlist.visibility = View.INVISIBLE
-            if (currenttype=="Teacher"){
+            if (currenttype == "Teacher") {
                 img_empty_studentlist.setImageResource(R.mipmap.ic_emptystudentlist)
                 addbtn_studentlist.visibility = View.VISIBLE
             }
-        }else{
+        } else {
             img_empty_studentlist.setImageResource(R.mipmap.ic_nostudentinclass)
         }
 
@@ -122,14 +121,13 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
                     studentList.clear()
                     for (i in p0.children) {
                         val oneUser = i.getValue(Attendance::class.java)
-                        studentListValue.put(oneUser!!.username,Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
+                        studentListValue.put(oneUser!!.username, Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
                         studentList.add(Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
                     }
                     val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_studentlist)
                     if (studentList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
                     }
-                    studentList.reverse()
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -140,18 +138,22 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
 
         backbtn_studentlist.setOnClickListener {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()
-            replaceFragment(LogAttendanceFragment(selectnamecourse))
+            if (isScanning) {
+                replaceFragment(AttendanceFragment())
+            } else {
+                replaceFragment(LogAttendanceFragment(selectnamecourse))
+            }
         }
 
         addbtn_studentlist.setOnClickListener {
-            showDialog(view,adapter)
+            showDialog(view, adapter)
             adapter.notifyDataSetChanged()
         }
 
     }
 
     private fun showDialog(view: View, adapter: StudentlistAdapter) {
-        val applypopup = popup_addstudent_Fragment(view, adapter,selectnamecourse,date)
+        val applypopup = popup_addstudent_Fragment(view, adapter, selectnamecourse, date)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
 
