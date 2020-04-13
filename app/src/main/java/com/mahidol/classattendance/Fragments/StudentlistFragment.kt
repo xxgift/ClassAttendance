@@ -111,7 +111,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
         studentListValue = hashMapOf()
         whoEnroll = arrayListOf()
 
-        var dataQuery = dataReference.child(date).orderByChild("type")
+        var dataQuery = dataReference.child(date).orderByChild("username")
 
         dataQuery.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {

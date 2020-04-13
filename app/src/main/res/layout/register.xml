@@ -55,6 +55,18 @@
         app:layout_constraintTop_toTopOf="@+id/imageView8"
         app:srcCompat="@mipmap/ic_registperson" />
 
+    <TextView
+        android:id="@+id/regist_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="**  TEACHER ( i.e t*******) OR STUDENT ( i.e. u*******)"
+        android:textAlignment="center"
+        android:textColor="#188888"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView8"
+        app:layout_constraintStart_toStartOf="@+id/imageView8"
+        app:layout_constraintTop_toBottomOf="@id/imageView9" />
 
     <EditText
         android:id="@+id/regist_username"
