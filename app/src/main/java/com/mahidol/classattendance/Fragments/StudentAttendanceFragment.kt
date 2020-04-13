@@ -57,94 +57,95 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
         val time = tmp.format(Date())
         var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
 
-
-        backbtn_studentAttentdance.visibility = View.INVISIBLE
         dataReference =
                 FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
                         .child(date)
 
         backbtn_studentAttentdance.setOnClickListener {
             Toast.makeText(mContext, "back", Toast.LENGTH_SHORT).show()
-            replaceFragment(LogAttendanceFragment(selectnamecourse))
+            if (isScanning) {
+                replaceFragment(AttendanceFragment())
+            } else {
+                replaceFragment(LogAttendanceFragment(selectnamecourse))
+            }
         }
 
         durationtime.setOnChronometerTickListener {
             println("isscaninggggggggggg ${isScanning}")
-            if (!isScanning){
+            if (!isScanning) {
                 durationtime.stop()
             }
         }
 
-        if (isScanning) {
+        var asyncTask = object : AsyncTask<String, String, String>() {
+            override fun onPreExecute() {
+                super.onPreExecute()
+                if (isScanning) {
+                    durationtime.base = SystemClock.elapsedRealtime()
+                    durationtime.start()
 
-            durationtime.base = SystemClock.elapsedRealtime()
-            durationtime.start()
+                    studentList = hashMapOf()
 
+                    var dataQuery = dataReference.orderByChild("starttime")
 
-
-            studentList = hashMapOf()
-
-            var dataQuery = dataReference.orderByChild("starttime")
-
-            dataQuery.addValueEventListener(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                }
-
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0!!.exists()) {
-                        studentList.clear()
-                        if (studentList.any { it.key == currentuser }) {
-                        } else {
-                            studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
+                    dataQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
                         }
-                        for (i in p0.children) {
-                            val oneUser = i.getValue(Attendance::class.java)
-                            if (studentList.any { it.key == oneUser!!.username }) {
-                            } else {
-                                studentList.put(oneUser!!.username, oneUser)
+
+                        override fun onDataChange(p0: DataSnapshot) {
+                            if (p0!!.exists()) {
+                                studentList.clear()
+                                for (i in p0.children) {
+                                    val oneUser = i.getValue(Attendance::class.java)
+                                    studentList.put(oneUser!!.username, oneUser)
+                                }
                             }
+                            if (studentList.any { it.key == currentuser }) {
+                            } else {
+                                studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
+                            }
+                            dataReference.setValue(studentList)
+                            println("fonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                         }
+                    })
+                }
+            }
+
+            override fun doInBackground(vararg p0: String?): String {
+                val helper = HTTPHelper()
+                return helper.getHTTPData("https://studenttracking-47241.firebaseio.com/Attendance/" + selectnamecourse + "/" + date + "/" + currentuser + ".json")
+            }
+
+            override fun onPostExecute(result: String?) {
+                if (result != "null") {
+                    LogAttendance = Gson().fromJson(result, Attendance::class.java)
+                    if (isScanning) {
+                        course_studentAttendance.text = "Course: ${selectnamecourse}"
+                        starttime.text = "Check in at: ${LogAttendance.starttime}"
+                        attendance.text = "Present"
+                        datestudentattendance.text = "Date: ${date}"
                     } else {
-                        if (studentList.any { it.key == currentuser }) {
-                        } else {
-                            studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
-                        }
-                    }
-                    dataReference.setValue(studentList)
-                    println("fonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
-                }
-
-            })
-            course_studentAttendance.text = "Course: ${selectnamecourse}"
-            starttime.text = "Check in at: ${time}"
-            attendance.text = "Present"
-            datestudentattendance.text = "Date: ${date}"
-        } else {
-            var asyncTask = object : AsyncTask<String, String, String>() {
-                override fun doInBackground(vararg p0: String?): String {
-                    val helper = HTTPHelper()
-                    return helper.getHTTPData("https://studenttracking-47241.firebaseio.com/Attendance/" + selectnamecourse + "/" + date + "/" + currentuser + ".json")
-                }
-
-                override fun onPostExecute(result: String?) {
-                    if (result != "null") {
                         println(result)
-                        LogAttendance = Gson().fromJson(result, Attendance::class.java)
-                        backbtn_studentAttentdance.visibility = View.VISIBLE
                         course_studentAttendance.text = "Course: ${selectnamecourse}"
                         if (LogAttendance.starttime != "") {
                             starttime.text = "Check in at: ${LogAttendance.starttime}"
-                        }else{
+                        } else {
                             starttime.text = "Manual Add"
                         }
                         attendance.text = LogAttendance.attendance
                         datestudentattendance.text = "Date: ${LogAttendance.date}"
                     }
+                } else {
+                    if (isScanning) {
+                        course_studentAttendance.text = "Course: ${selectnamecourse}"
+                        starttime.text = "Check in at: ${time}"
+                        attendance.text = "Present"
+                        datestudentattendance.text = "Date: ${date}"
+                    }
                 }
             }
-            asyncTask.execute()
-
         }
+        asyncTask.execute()
 
 
     }

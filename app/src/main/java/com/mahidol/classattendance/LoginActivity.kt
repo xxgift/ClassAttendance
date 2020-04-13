@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
             //if user have an account already then go to activity_body page (Home page)
             login_btn.setOnClickListener {
 
-                uname = login_username.text.toString()
+                uname = login_username.text.toString().decapitalize()
                 pname = login_password.text.toString()
 
                 //check username and password must not be null
