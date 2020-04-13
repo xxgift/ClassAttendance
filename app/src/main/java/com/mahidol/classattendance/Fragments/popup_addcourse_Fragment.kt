@@ -157,7 +157,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
             }
 
             var query = dataReference2.orderByChild("joinID").equalTo(addjoinID)
-            query.addValueEventListener(object : ValueEventListener {
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                 }
 
@@ -173,19 +173,20 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                                 whoEnrollList.add(currentuser!!)
                             }
 
+                            dataReference.child(result.owner).child("courselist").child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.courseMaterial
+                            ))
+                            dataReference2.child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.courseMaterial))
 
+                            println("materialllllllllllll${result.courseMaterial}")
                             if (courselistdetail.any { it.key == result.courseID }) {
                             } else {
                                 courselistdetail.put(result!!.courseID, Course(result!!.courseID, result!!.joinID, result!!.owner, "",
-                                        ArrayList<String>(), result.material
+                                        ArrayList<String>(), ArrayList<Material>()
                                 ))
                                 courseList.add(Course(result!!.courseID, result!!.joinID, result!!.owner, "",
-                                        ArrayList<String>(), result.material
+                                        ArrayList<String>(), ArrayList<Material>()
                                 ))
                             }
-                            dataReference.child(result.owner).child("courselist").child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.material
-                            ))
-                            dataReference2.child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.material))
 
                         }
                         dataReference.child(currentuser).child("courselist").setValue(

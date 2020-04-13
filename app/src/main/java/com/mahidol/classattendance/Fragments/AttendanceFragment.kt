@@ -429,7 +429,7 @@ class AttendanceFragment : Fragment() {
                 courseList
         )
         var query = dataReference.orderByChild("courseID")
-        query.addValueEventListener(object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
             }
 

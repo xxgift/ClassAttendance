@@ -35,7 +35,8 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
 
     var dataReference =
         FirebaseDatabase.getInstance().getReference("AllCourse").child(selectnamecourse)
-            .child("Material")
+            .child("courseMaterial")
+    var dataReference2 = FirebaseDatabase.getInstance().getReference("UserProfile").child(currentuser).child("courselist").child(selectnamecourse).child("courseMaterial")
     var dataQuery = dataReference.orderByChild("timestamp")
 
     override fun onCreateView(
@@ -63,6 +64,45 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
         backbtn_thiscourse.visibility = View.VISIBLE
         addbtn_thiscourse.setBackgroundResource(R.mipmap.add_btn)
 
+
+
+        materialList = arrayListOf()
+
+        dataQuery.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0!!.exists()) {
+                    materialList.clear()
+                    for (i in p0.children) {
+                        val oneUser = i.getValue(Material::class.java)
+                        materialList.add(oneUser!!)
+                    }
+                    materialList.reverse()
+
+                    if (materialList.size > 0) {
+                        imgEmpty.visibility = View.INVISIBLE
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+
+        adapter = MaterialAdapter(mContext, R.layout.list_detail, materialList)
+        listview_courselist!!.adapter = adapter
+
+        addbtn_thiscourse.setOnClickListener {
+            showDialog(view, adapter, selectnamecourse)
+            adapter.notifyDataSetChanged()
+        }
+
+        backbtn_thiscourse.setOnClickListener {
+            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
+            replaceFragment(SelectFragment(selectnamecourse))
+        }
+
         if (currenttype == "Teacher") {
             imgEmpty.setImageResource(R.mipmap.ic_emptycm_new)
             addbtn_thiscourse.visibility = View.VISIBLE
@@ -77,6 +117,7 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
                         override fun onDismiss(view: ListViewAdapter, position: Int) {
                             materialList.removeAt(position)
                             dataReference.setValue(materialList)
+                            dataReference2.setValue(materialList)
                             adapter.notifyDataSetChanged()
 
                         }
@@ -114,41 +155,7 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
                     }
         }
 
-        materialList = arrayListOf()
 
-        dataQuery.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0!!.exists()) {
-                    materialList.clear()
-                    for (i in p0.children) {
-                        val oneUser = i.getValue(Material::class.java)
-                        materialList.add(oneUser!!)
-                    }
-                    materialList.reverse()
-
-                    if (materialList.size > 0) {
-                        imgEmpty.visibility = View.INVISIBLE
-                    }
-                }
-                adapter.notifyDataSetChanged()
-            }
-        })
-
-        adapter = MaterialAdapter(mContext, R.layout.list_detail, materialList)
-        listview_courselist!!.adapter = adapter
-
-        addbtn_thiscourse.setOnClickListener {
-            showDialog(view, adapter, selectnamecourse)
-            adapter.notifyDataSetChanged()
-        }
-
-        backbtn_thiscourse.setOnClickListener {
-            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
-            replaceFragment(SelectFragment(selectnamecourse))
-        }
 
     }
 
