@@ -39,31 +39,34 @@ class StudentlistAdapter(
         if (time.type == "Teacher") {
             ic.setImageResource(R.mipmap.ic_teacherlist)
             imageview.setImageResource(R.drawable.rectangleteacher)
-        }else
+        }else{
+            ic.setImageResource(R.mipmap.ic_iconstudentlist)
+        }
 
         if (time.attendance == "Absent") {
             attendance.setTextColor(Color.parseColor("#7C0A02"))
             duration.text = ""
-            username.text = "Name: ${time.username}     Course: ${time.coursename}"
-            start.text = "Absent on ${time.date}"
+            username.text = "${time.username}"
             attendance.text = "${time.attendance}"
+            start.text = ""
+
         }
         if (time.attendance == "Present") {
             attendance.setTextColor(Color.parseColor("#00FF00"))
             duration.text = "${time.durationtime}"
-            username.text = "Name: ${time.username}     Course: ${time.coursename}"
+            username.text = "${time.username}"
             if (time.starttime != "") {
-                start.text = "Check in ${time.date} @${time.starttime}"
+                start.text = "Check in @${time.starttime}"
             } else {
-                start.text = "Check in ${time.date} (Manual Add)"
+                start.text = "(Manual Add)"
             }
             attendance.text = "${time.attendance}"
         }
         if (time.attendance == "Teacher") {
             attendance.setTextColor(Color.parseColor("#A254F2"))
             duration.text = ""
-            username.text = "Teacher: ${time.username}     Course: ${time.coursename}"
-            start.text = "Course started at ${time.date} @${time.starttime}"
+            username.text = "Teacher: ${time.username}"
+            start.text = "Course started at ${time.starttime}"
             attendance.text = "${time.attendance}"
         }
 
