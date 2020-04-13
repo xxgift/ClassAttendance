@@ -12,14 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="300dp"
-        android:layout_marginBottom="50dp"
-        android:background="@mipmap/back_button"
+        android:layout_marginBottom="40dp"
+        android:background="@mipmap/ic_backbtnnew"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961" />
+        app:layout_constraintVertical_bias="1.0" />
+
     <Button
         android:id="@+id/addbtn_thiscourse"
         android:layout_width="wrap_content"
@@ -33,7 +34,7 @@
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ListView
         android:id="@+id/listview_courselist"

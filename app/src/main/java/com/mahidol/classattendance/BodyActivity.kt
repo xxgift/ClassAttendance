@@ -199,7 +199,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             )
                         )
                         layout_nav.setBackgroundColor(getColor(R.color.studentcolor))
-                        headnavIC.setImageResource(R.mipmap.ic_studentavatar)
+                        headnavIC.setImageResource(R.mipmap.ic_studentnew)
                     }
 
                     //set current user

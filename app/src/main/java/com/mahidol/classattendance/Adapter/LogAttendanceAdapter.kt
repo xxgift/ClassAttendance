@@ -31,6 +31,7 @@ class LogAttendanceAdapter(
 
 
         val ic = view.findViewById<ImageView>(R.id.list_ic)
+        val onlinesign = view.findViewById<ImageView>(R.id.imageView2)
 
         val log = logList[position]
 
@@ -38,7 +39,7 @@ class LogAttendanceAdapter(
 
         coursename.text = "${selectcoursename}"
         date.text = "${log}"
-
+        onlinesign.visibility = View.INVISIBLE
         return view
     }
 }

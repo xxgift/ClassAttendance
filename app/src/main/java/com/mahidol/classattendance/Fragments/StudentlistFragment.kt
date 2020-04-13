@@ -67,8 +67,8 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
 
         backbtn_studentlist.visibility = View.VISIBLE
         addbtn_studentlist.visibility = View.INVISIBLE
-        appbar_course_studentlist.text = "        Course :  ${selectnamecourse}"
-        appbar_date_studentlist.text = "             Date: ${date}"
+        appbar_course_studentlist.text = "Course : ${selectnamecourse}"
+        appbar_date_studentlist.text =   "Date : ${date}"
 
 
         if (isScanning) {

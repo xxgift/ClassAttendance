@@ -29,32 +29,34 @@ class StudentlistAdapter(
         val start = view.findViewById<TextView>(R.id.SubtitleLeft)
         val attendance = view.findViewById<TextView>(R.id.TitletxtRight)
 
-
         val ic = view.findViewById<ImageView>(R.id.list_ic)
         val imageview = view.findViewById<ImageView>(R.id.imageView_list)
+        val onlinesign = view.findViewById<ImageView>(R.id.imageView2)
 
 
         val time = studentList[position]
 
         if (time.type == "Teacher") {
-            ic.setImageResource(R.mipmap.ic_teacherlist)
+            ic.setImageResource(R.mipmap.ic_teachernew)
             imageview.setImageResource(R.drawable.rectangleteacher)
         }else{
-            ic.setImageResource(R.mipmap.ic_iconstudentlist)
+            ic.setImageResource(R.mipmap.ic_studentnew)
         }
 
         if (time.attendance == "Absent") {
-            attendance.setTextColor(Color.parseColor("#7C0A02"))
+            attendance.setTextColor(Color.parseColor("#E0563C"))
             duration.text = ""
             username.text = "${time.username}"
             attendance.text = "${time.attendance}"
             start.text = ""
+            onlinesign.setImageResource(R.drawable.offlinecircle)
 
         }
         if (time.attendance == "Present") {
-            attendance.setTextColor(Color.parseColor("#00FF00"))
+            attendance.setTextColor(Color.parseColor("#57BE37"))
             duration.text = "${time.durationtime}"
             username.text = "${time.username}"
+
             if (time.starttime != "") {
                 start.text = "Check in @${time.starttime}"
             } else {
@@ -68,6 +70,7 @@ class StudentlistAdapter(
             username.text = "${time.username}"
             start.text = "Course started at ${time.starttime}"
             attendance.text = "${time.attendance}"
+            onlinesign.visibility = View.INVISIBLE
         }
 
 

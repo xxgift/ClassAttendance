@@ -29,11 +29,11 @@ class MaterialAdapter(
         val date = view.findViewById<TextView>(R.id.TitletxtRight)
         val link = view.findViewById<TextView>(R.id.SubtitleLeft)
         var ic = view.findViewById<ImageView>(R.id.list_ic)
-
+        val onlinesign = view.findViewById<ImageView>(R.id.imageView2)
         val meterial = materialList[position]
 
         ic.setImageResource(R.mipmap.ic_cmlist)
-
+        onlinesign.visibility = View.INVISIBLE
         link.text = "${meterial.link}"
         materialID.text = "${meterial.materialID}"
         date.text = "${meterial.date}"

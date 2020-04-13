@@ -54,9 +54,9 @@ class popup_addpost_Fragment(var mView: View, var adapter: BoardAdapter) : Dialo
         courseListinspinner = arrayListOf("Please select course")
 
         if (currenttype == "Student") {
-            imagepost.setImageResource(R.mipmap.ic_studentavatar)
+            imagepost.setImageResource(R.mipmap.ic_studentnew)
         } else {
-            imagepost.setImageResource(R.mipmap.ic_teacheravatar)
+            imagepost.setImageResource(R.mipmap.ic_teachernew)
         }
 
         courselistdetail.forEach {

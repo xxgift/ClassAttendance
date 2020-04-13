@@ -11,7 +11,7 @@ import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.popup_postdetail.*
 
 
-class popup_postdetail_Fragment(var mView: View,var user:String,var content:String,var course:String,var date:String) : DialogFragment() {
+class popup_postdetail_Fragment(var mView: View,var user:String,var content:String,var course:String,var date:String, var type:String) : DialogFragment() {
     lateinit var mContext: Context
 
     override fun onCreateView(
@@ -40,7 +40,11 @@ class popup_postdetail_Fragment(var mView: View,var user:String,var content:Stri
         popup_post_content.text = " "+content
         popup_post_course.text = course
         popup_post_time.text = date
-
+        if(type == "Teacher"){
+            imageView17.setImageResource(R.mipmap.ic_teachernew)
+        }else{
+            imageView17.setImageResource(R.mipmap.ic_studentnew)
+        }
        popup_post_okbtn.setOnClickListener {
             dialog!!.dismiss()
         }

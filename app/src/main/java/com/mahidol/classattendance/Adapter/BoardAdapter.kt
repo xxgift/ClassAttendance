@@ -44,10 +44,10 @@ class BoardAdapter(
         var popup_content: String? = null
         var popup_course: String? = null
         var popup_date: String? = null
-
+        var popup_type: String? = null
         if(currenttype == "Teacher"){
             if(post.type == "Teacher"){
-                icon1.setImageResource(R.mipmap.ic_teacherchat)
+                icon1.setImageResource(R.mipmap.ic_teachernew)
                 username2.visibility = View.INVISIBLE
                 icon2.visibility = View.INVISIBLE
                 time2.visibility = View.INVISIBLE
@@ -56,7 +56,7 @@ class BoardAdapter(
                 bg2.visibility = View.INVISIBLE
 
             }else {
-                icon2.setImageResource(R.mipmap.ic_studentchat)
+                icon2.setImageResource(R.mipmap.ic_studentnew)
                 username.visibility = View.INVISIBLE
                 icon1.visibility = View.INVISIBLE
                 time1.visibility = View.INVISIBLE
@@ -68,7 +68,7 @@ class BoardAdapter(
         }
         else{
             if(post.type == "Teacher"){
-                icon1.setImageResource(R.mipmap.ic_teacherchat)
+                icon1.setImageResource(R.mipmap.ic_teachernew)
                 username2.visibility = View.INVISIBLE
                 icon2.visibility = View.INVISIBLE
                 time2.visibility = View.INVISIBLE
@@ -77,7 +77,7 @@ class BoardAdapter(
                 bg2.visibility = View.INVISIBLE
                 course1.setTextColor(Color.parseColor("#004cc3"))
             }else{
-                icon2.setImageResource(R.mipmap.ic_studentchat)
+                icon2.setImageResource(R.mipmap.ic_studentnew)
                 username.visibility = View.INVISIBLE
                 icon1.visibility = View.INVISIBLE
                 time1.visibility = View.INVISIBLE
@@ -91,6 +91,7 @@ class BoardAdapter(
         popup_content = post.content
         popup_date = post.date
         popup_course = post.course
+        popup_type = post.type
 
 
         username.text = "${post.username}"
@@ -104,15 +105,15 @@ class BoardAdapter(
 
 
         view.setOnClickListener {
-            showDialog(view,popup_user,popup_content,popup_course,popup_date)
+            showDialog(view,popup_user,popup_content,popup_course,popup_date,popup_type)
 
         }
 
         return view
     }
 
-    private fun showDialog(view: View,user:String,content:String,course: String,date:String) {
-        val applypopup = popup_postdetail_Fragment(view,user,content,course,date)
+    private fun showDialog(view: View,user:String,content:String,course: String,date:String,type:String) {
+        val applypopup = popup_postdetail_Fragment(view,user,content,course,date,type)
         applypopup.show(mActivity!!.supportFragmentManager, "exampleBottomSheet")
     }
 }

@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.FragmentActivity
 import com.mahidol.classattendance.Models.Course
 import com.mahidol.classattendance.Models.currenttype
@@ -30,10 +27,10 @@ class MycourseAdapter(
         val joinIDtxt = view.findViewById<TextView>(R.id.TitletxtRight)
         val joinID = view.findViewById<TextView>(R.id.SubtitleRight)
         val owner = view.findViewById<TextView>(R.id.SubtitleLeft)
-
+        val onlinesign = view.findViewById<ImageView>(R.id.imageView2)
         val course = courseList!![position]
 
-
+        onlinesign.visibility = View.INVISIBLE
         joinIDtxt.text = "JoinID"
         courseID.text = "${course.courseID}"
         if (currenttype == "Student") {
