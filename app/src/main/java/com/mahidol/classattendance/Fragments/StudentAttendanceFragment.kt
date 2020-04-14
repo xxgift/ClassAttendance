@@ -18,13 +18,14 @@ import com.mahidol.classattendance.Helper.HTTPHelper
 import com.mahidol.classattendance.Models.Attendance
 import com.mahidol.classattendance.Models.currenttype
 import com.mahidol.classattendance.Models.currentuser
+import com.mahidol.classattendance.Models.isScanning
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_studenattendance.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
-class StudentAttendanceFragment(val selectnamecourse: String, val date: String, val isScanning: Boolean) : Fragment() {
+class StudentAttendanceFragment(val selectnamecourse: String, val date: String, val time: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var mActivity: Activity
 
@@ -53,8 +54,6 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val tmp = SimpleDateFormat("HH:mm:ss a")
-        val time = tmp.format(Date())
         var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
 
         dataReference =
@@ -74,7 +73,11 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
             println("isscaninggggggggggg ${isScanning}")
             if (!isScanning) {
                 durationtime.stop()
+                println("stoppppppppppjjjjjjj"+durationtime.text)
+//                val temp = HashMap<String, Attendance>()
+//                temp.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse!!, date, currentstarttime , durationtime, "Present"))
             }
+
         }
 
         var asyncTask = object : AsyncTask<String, String, String>() {
@@ -119,6 +122,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
             override fun onPostExecute(result: String?) {
                 if (result != "null") {
                     LogAttendance = Gson().fromJson(result, Attendance::class.java)
+                    currentstarttime = LogAttendance.starttime
                     if (isScanning) {
                         course_studentAttendance.text = "Course: ${selectnamecourse}"
                         starttime.text = "Check in at: ${LogAttendance.starttime}"
@@ -137,6 +141,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
                     }
                 } else {
                     if (isScanning) {
+                        currentstarttime = time
                         course_studentAttendance.text = "Course: ${selectnamecourse}"
                         starttime.text = "Check in at: ${time}"
                         attendance.text = "Present"

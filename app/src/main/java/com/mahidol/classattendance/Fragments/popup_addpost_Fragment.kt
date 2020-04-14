@@ -126,9 +126,6 @@ class popup_addpost_Fragment(var mView: View, var adapter: BoardAdapter) : Dialo
         val postData = Post(user, type, course, content, date, timestamp)
         var updateValue = dataReference.child(timestamp).setValue(postData)
 
-        currentcontent = content
-        currenttime = date
-
         adapter.notifyDataSetChanged()
         val imgEmpty = mView.findViewById<ImageView>(R.id.img_empty_post)
         imgEmpty.visibility = View.INVISIBLE

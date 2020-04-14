@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener
 import com.mahidol.classattendance.Adapter.LogAttendanceAdapter
 import com.mahidol.classattendance.Models.Attendance
 import com.mahidol.classattendance.Models.currenttype
+import com.mahidol.classattendance.Models.isScanning
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
 
@@ -59,6 +60,8 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
         backbtn_thiscourse.visibility = View.VISIBLE
         addbtn_thiscourse.visibility = View.INVISIBLE
         img_empty_course.setImageResource(R.mipmap.ic_nologattendance)
+
+        isScanning= false
 
         logList = arrayListOf()
 
@@ -103,7 +106,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
                     if (currenttype == "Teacher") {
                         replaceFragment(StudentlistFragment(selectnamecourse, logList[position], false))
                     }else{
-                        replaceFragment(StudentAttendanceFragment(selectnamecourse,logList[position],false))
+                        replaceFragment(StudentAttendanceFragment(selectnamecourse,logList[position],""))
                     }
                 }
 

@@ -45,12 +45,13 @@ class AttendanceFragment : Fragment() {
     var handler: Handler? = null
     lateinit var fragmentTransaction: FragmentTransaction
 
-
+    lateinit var onlinecourse:ArrayList<Course>
     lateinit var onlineListValue: HashMap<String, Any>
     lateinit var whoEnroll: ArrayList<String>
 
     val tmp = SimpleDateFormat("dd-MM-yy")
     val date = tmp.format(Date())
+//    val date = "11-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
@@ -92,6 +93,7 @@ class AttendanceFragment : Fragment() {
 
         onlineListValue = hashMapOf()
         whoEnroll = arrayListOf()
+        onlinecourse = arrayListOf()
 
         img.visibility = View.INVISIBLE
 
@@ -481,7 +483,7 @@ class AttendanceFragment : Fragment() {
                             if (onlinecourse.size == 1) {
                                 currentcourse = onlinecourse[0].courseID
                                 listview_attendance.adapter = null
-                                addFragment(StudentAttendanceFragment(currentcourse!!, date, true))
+                                addFragment(StudentAttendanceFragment(currentcourse!!, date,time))
                             } else {
                                 println("sizeeeeeeenot000000000")
                                 adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
@@ -505,7 +507,7 @@ class AttendanceFragment : Fragment() {
                                             }
                                             currentcourse = onlinecourse[position].courseID
                                             listview_attendance.adapter = null
-                                            addFragment(StudentAttendanceFragment(currentcourse!!, date, true))
+                                            addFragment(StudentAttendanceFragment(currentcourse!!, date,time))
                                         }
 
                             }
