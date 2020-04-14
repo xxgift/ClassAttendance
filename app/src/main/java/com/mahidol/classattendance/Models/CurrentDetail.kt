@@ -7,8 +7,7 @@ var currentcourse: String? = null
 var currenttype: String? = null
 var currentstatus: String = ""
 var currentImei: String = ""
-var currentdurationtime:String = ""
-var currentstarttime: String = ""
+
 var courselistdetail: HashMap<String, Course> = HashMap<String, Course>()
 var courseList: ArrayList<Course> = ArrayList<Course>()
 

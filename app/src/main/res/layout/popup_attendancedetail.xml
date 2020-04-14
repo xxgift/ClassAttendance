@@ -36,7 +36,7 @@
         android:layout_height="22dp"
         android:layout_marginTop="100dp"
         android:fontFamily="@font/montserrat"
-        android:text="Course: EGCO001"
+        android:text="Course: "
         android:textColor="#8B8B8B"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/view"
@@ -59,6 +59,7 @@
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
         app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/popup_attendance_date"
         android:layout_width="wrap_content"
@@ -67,7 +68,7 @@
         android:layout_marginEnd="24dp"
         android:fontFamily="@font/montserrat"
         android:maxLines="1"
-        android:text="TextView"
+        android:text="Date :"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintHorizontal_bias="1.0"
