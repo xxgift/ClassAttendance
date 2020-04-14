@@ -30,7 +30,7 @@ class SelectAdapter(
         val subtitleRight = view.findViewById<TextView>(R.id.SubtitleRight)
 
         val ic = view.findViewById<ImageView>(R.id.list_ic)
-
+        val onlinesign = view.findViewById<ImageView>(R.id.imageView2)
 
         val select = selectList!![position]
 
@@ -41,7 +41,7 @@ class SelectAdapter(
         }
 
 
-
+        onlinesign.visibility = View.INVISIBLE
         titleRight.visibility = View.INVISIBLE
         subtitleRight.visibility = View.INVISIBLE
         titleLeft.text = "${select.name}"
