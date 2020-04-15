@@ -51,7 +51,7 @@ class AttendanceFragment : Fragment() {
 
     val tmp = SimpleDateFormat("dd-MM-yy")
     val date = tmp.format(Date())
-//    val date = "10-04-20"
+    //    val date = "10-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
@@ -495,51 +495,53 @@ class AttendanceFragment : Fragment() {
                                     println("uuuuuuuuuuuuuuuuuuuurrrrrrrrrrrrrrrrrrr${onlinecourse}")
                                 }
                             }
-
-                            if (onlinecourse.size == 0) {
-                                println("size000000000000000000")
-                                listview_attendance.adapter = null
-                                val img = view!!.findViewById<ImageView>(R.id.img_attendance)
-                                img.setImageResource(R.mipmap.ic_noonlinecourse)
-                                img.visibility = View.VISIBLE
-
-                            }
-                            if (onlinecourse.size == 1) {
-                                currentcourse = onlinecourse[0].courseID
-                                listview_attendance.adapter = null
-                                addFragment(StudentAttendanceFragment(currentcourse!!, date, time))
-                            } else {
-                                println("sizeeeeeeenot000000000")
-                                adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
-                                listview_attendance!!.adapter = adapter
-                                adapter.notifyDataSetChanged()
-                                listview_attendance!!.onItemClickListener =
-                                    AdapterView.OnItemClickListener { parent, view, position, id ->
-                                        Toast.makeText(
-                                            mContext, "Started ${courseList[position].courseID
-                                            }", Toast.LENGTH_SHORT
-                                        ).show()
-                                        courseList.forEach {
-                                            if (it.courseID == onlinecourse[position].courseID) {
-                                                it.courseStatus = "Online"
-                                            }
-                                        }
-                                        courselistdetail.forEach {
-                                            if (it.key == onlinecourse[position].courseID) {
-                                                it.value.courseStatus = "Online"
-                                            }
-                                        }
-                                        currentcourse = onlinecourse[position].courseID
-                                        listview_attendance.adapter = null
-                                        addFragment(StudentAttendanceFragment(currentcourse!!, date, time))
-                                    }
-
-                            }
                         }
                     }
                     adapter.notifyDataSetChanged()
                 }
 
+                if (currenttype == "Student") {
+                    if (onlinecourse.size == 0) {
+                        println("size000000000000000000")
+                        listview_attendance.adapter = null
+                        val img = view!!.findViewById<ImageView>(R.id.img_attendance)
+                        img.setImageResource(R.mipmap.ic_noonlinecourse)
+                        img.visibility = View.VISIBLE
+
+                    }
+                    if (onlinecourse.size == 1) {
+                        currentcourse = onlinecourse[0].courseID
+                        listview_attendance.adapter = null
+                        addFragment(StudentAttendanceFragment(currentcourse!!, date, time))
+                    } else {
+                        println("sizeeeeeeenot000000000")
+                        adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
+                        listview_attendance!!.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        listview_attendance!!.onItemClickListener =
+                            AdapterView.OnItemClickListener { parent, view, position, id ->
+                                Toast.makeText(
+                                    mContext, "Started ${courseList[position].courseID
+                                    }", Toast.LENGTH_SHORT
+                                ).show()
+                                courseList.forEach {
+                                    if (it.courseID == onlinecourse[position].courseID) {
+                                        it.courseStatus = "Online"
+                                    }
+                                }
+                                courselistdetail.forEach {
+                                    if (it.key == onlinecourse[position].courseID) {
+                                        it.value.courseStatus = "Online"
+                                    }
+                                }
+                                currentcourse = onlinecourse[position].courseID
+                                listview_attendance.adapter = null
+                                addFragment(StudentAttendanceFragment(currentcourse!!, date, time))
+                            }
+
+                    }
+                }
+                adapter.notifyDataSetChanged()
             }
         })
     }
