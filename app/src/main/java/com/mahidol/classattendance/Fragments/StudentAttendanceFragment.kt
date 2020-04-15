@@ -15,16 +15,12 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.mahidol.classattendance.Helper.HTTPHelper
-import com.mahidol.classattendance.Models.Attendance
-import com.mahidol.classattendance.Models.currenttype
-import com.mahidol.classattendance.Models.currentuser
+import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_studenattendance.*
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.HashMap
 
-class StudentAttendanceFragment(val selectnamecourse: String, val date: String, val isScanning: Boolean) : Fragment() {
+
+class StudentAttendanceFragment(val selectnamecourse: String, val date: String, val time: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var mActivity: Activity
 
@@ -35,9 +31,9 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_studenattendance, container, false)
 
@@ -53,13 +49,11 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val tmp = SimpleDateFormat("HH:mm:ss a")
-        val time = tmp.format(Date())
         var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
 
         dataReference =
-                FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
-                        .child(date)
+            FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
+                .child(date)
 
         backbtn_studentAttentdance.setOnClickListener {
             Toast.makeText(mContext, "back", Toast.LENGTH_SHORT).show()
@@ -72,9 +66,38 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
 
         durationtime.setOnChronometerTickListener {
             println("isscaninggggggggggg ${isScanning}")
+            var time = SystemClock.elapsedRealtime() - durationtime.base
+            var h = time / 3600000
+            var m = (time - h * 3600000) / 60000
+            var s = (time - h * 3600000 - m * 60000) / 1000
+            var hh = ""
+            var mm = ""
+            var ss = ""
+            if (h < 10) {
+                hh = "0" + h.toString()
+            } else {
+                hh = h.toString()
+            }
+            if (m < 10) {
+                mm = "0" + m.toString()
+            } else {
+                mm = m.toString()
+            }
+            if (s < 10) {
+                ss = "0" + s.toString()
+            } else {
+                ss = s.toString()
+            }
+            durationtime.text = hh + ":" + mm + ":" + ss
+
+            val childUpdates = HashMap<String, Any>()
+            childUpdates.put(currentuser + "/durationtime/", durationtime.text.toString())
+            dataReference.updateChildren(childUpdates)
             if (!isScanning) {
                 durationtime.stop()
+                println("stoppppppppppjjjjjjj" + durationtime.text)
             }
+
         }
 
         var asyncTask = object : AsyncTask<String, String, String>() {
@@ -120,27 +143,29 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
                 if (result != "null") {
                     LogAttendance = Gson().fromJson(result, Attendance::class.java)
                     if (isScanning) {
-                        course_studentAttendance.text = "Course: ${selectnamecourse}"
-                        starttime.text = "Check in at: ${LogAttendance.starttime}"
+                        course_studentAttendance.text = "Course : ${selectnamecourse}"
+                        starttime.text = "Check in at : ${LogAttendance.starttime}"
                         attendance.text = "Present"
-                        datestudentattendance.text = "Date: ${date}"
+                        durationtime.text = LogAttendance.durationtime
+                        datestudentattendance.text = "Date : ${date}"
                     } else {
                         println(result)
-                        course_studentAttendance.text = "Course: ${selectnamecourse}"
+                        course_studentAttendance.text = "Course : ${selectnamecourse}"
                         if (LogAttendance.starttime != "") {
-                            starttime.text = "Check in at: ${LogAttendance.starttime}"
+                            starttime.text = "Check in at : ${LogAttendance.starttime}"
+                            durationtime.text = LogAttendance.durationtime
                         } else {
                             starttime.text = "Manual Add"
                         }
                         attendance.text = LogAttendance.attendance
-                        datestudentattendance.text = "Date: ${LogAttendance.date}"
+                        datestudentattendance.text = "Date : ${LogAttendance.date}"
                     }
                 } else {
                     if (isScanning) {
-                        course_studentAttendance.text = "Course: ${selectnamecourse}"
-                        starttime.text = "Check in at: ${time}"
+                        course_studentAttendance.text = "Course : ${selectnamecourse}"
+                        starttime.text = "Check in at : ${time}"
                         attendance.text = "Present"
-                        datestudentattendance.text = "Date: ${date}"
+                        datestudentattendance.text = "Date : ${date}"
                     }
                 }
             }
