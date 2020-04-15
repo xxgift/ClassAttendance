@@ -267,6 +267,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
             Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
             currentdurationtime = 0.toLong()
+            currentcourse = null
             finish()
         }
 

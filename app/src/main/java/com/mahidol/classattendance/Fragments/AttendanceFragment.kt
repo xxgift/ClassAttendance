@@ -51,7 +51,7 @@ class AttendanceFragment : Fragment() {
 
     val tmp = SimpleDateFormat("dd-MM-yy")
     val date = tmp.format(Date())
-    //    val date = "11-04-20"
+//    val date = "10-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
@@ -172,7 +172,7 @@ class AttendanceFragment : Fragment() {
                         showDialog(view, adapter)
                         adapter.notifyDataSetChanged()
                     } else {
-                        dataReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                        dataReference.addValueEventListener(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {
                             }
 
@@ -185,8 +185,8 @@ class AttendanceFragment : Fragment() {
                                         tmp.put(oneUser!!.courseID, oneUser!!)
                                     }
                                 }
-                                if (tmp.any { it.key== currentcourse }){
-                                }else{
+                                if (tmp.any { it.key == currentcourse }) {
+                                } else {
                                     beaconManager!!.stopRanging(region)
                                     showDialog(view, adapter)
                                     adapter.notifyDataSetChanged()
@@ -455,7 +455,7 @@ class AttendanceFragment : Fragment() {
             courseList
         )
         var query = dataReference.orderByChild("courseID")
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        query.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
             }
 
