@@ -64,46 +64,11 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
             }
         }
 
-        durationtime.setOnChronometerTickListener {
-            println("isscaninggggggggggg ${isScanning}")
-            var time = SystemClock.elapsedRealtime() - durationtime.base
-            var h = time / 3600000
-            var m = (time - h * 3600000) / 60000
-            var s = (time - h * 3600000 - m * 60000) / 1000
-            var hh = ""
-            var mm = ""
-            var ss = ""
-            if (h < 10) {
-                hh = "0" + h.toString()
-            } else {
-                hh = h.toString()
-            }
-            if (m < 10) {
-                mm = "0" + m.toString()
-            } else {
-                mm = m.toString()
-            }
-            if (s < 10) {
-                ss = "0" + s.toString()
-            } else {
-                ss = s.toString()
-            }
-            durationtime.text = hh + ":" + mm + ":" + ss
-
-            val childUpdates = HashMap<String, Any>()
-            childUpdates.put(currentuser + "/durationtime/", durationtime.text.toString())
-            dataReference.updateChildren(childUpdates)
-            if (!isScanning) {
-                durationtime.stop()
-                println("stoppppppppppjjjjjjj" + durationtime.text)
-            }
-
-        }
-
         var asyncTask = object : AsyncTask<String, String, String>() {
             override fun onPreExecute() {
                 super.onPreExecute()
                 if (isScanning) {
+
                     durationtime.base = SystemClock.elapsedRealtime()
                     durationtime.start()
 
@@ -151,26 +116,81 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
                     } else {
                         println(result)
                         course_studentAttendance.text = "Course : ${selectnamecourse}"
-                        if (LogAttendance.starttime != "") {
+                        if (LogAttendance.attendance == "Present") {
                             starttime.text = "Check in at : ${LogAttendance.starttime}"
                             durationtime.text = LogAttendance.durationtime
-                        } else {
-                            starttime.text = "Manual Add"
+                            if (LogAttendance.starttime == "") {
+                                starttime.text = "Manual Add"
+                            }
+                        }
+                        if (LogAttendance.attendance == "Absent") {
+                            durationtime.setText("00:00:00")
                         }
                         attendance.text = LogAttendance.attendance
                         datestudentattendance.text = "Date : ${LogAttendance.date}"
                     }
+
+                    if (LogAttendance.durationtime != "") {
+                        var array = LogAttendance.durationtime.split(":")
+                        println("hellooo${array}")
+                        var olddurationtime = array[0].toLong() * 60 * 60 * 1000 + array[1].toLong() * 60 * 1000 + array[2].toLong() * 1000
+                        currentdurationtime = SystemClock.elapsedRealtime() - olddurationtime
+                        println("olddddddddddddduration${olddurationtime} current ${currentdurationtime}")
+                    }
+
                 } else {
                     if (isScanning) {
                         course_studentAttendance.text = "Course : ${selectnamecourse}"
                         starttime.text = "Check in at : ${time}"
                         attendance.text = "Present"
                         datestudentattendance.text = "Date : ${date}"
+                        println("notfoundddduration ${durationtime.base} ${currentdurationtime}")
                     }
                 }
             }
         }
         asyncTask.execute()
+
+        durationtime.setOnChronometerTickListener {
+            println("isscaninggggggggggg ${isScanning}")
+            var time: Long = 0
+
+            if (currentdurationtime == 0.toLong()) {
+                time = SystemClock.elapsedRealtime() - durationtime.base
+            } else {
+                time = SystemClock.elapsedRealtime() - currentdurationtime
+            }
+            var h = time / 3600000
+            var m = (time - h * 3600000) / 60000
+            var s = (time - h * 3600000 - m * 60000) / 1000
+            var hh = ""
+            var mm = ""
+            var ss = ""
+            if (h < 10) {
+                hh = "0" + h.toString()
+            } else {
+                hh = h.toString()
+            }
+            if (m < 10) {
+                mm = "0" + m.toString()
+            } else {
+                mm = m.toString()
+            }
+            if (s < 10) {
+                ss = "0" + s.toString()
+            } else {
+                ss = s.toString()
+            }
+            durationtime.text = hh + ":" + mm + ":" + ss
+
+            val childUpdates = HashMap<String, Any>()
+            childUpdates.put(currentuser + "/durationtime/", durationtime.text.toString())
+            dataReference.updateChildren(childUpdates)
+            if (!isScanning) {
+                durationtime.stop()
+                println("stoppppppppppjjjjjjj" + durationtime.text)
+            }
+        }
 
 
     }
