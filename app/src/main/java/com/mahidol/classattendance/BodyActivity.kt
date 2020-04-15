@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -63,9 +64,6 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var uname: String? = null
     var name: String? = null
     var userprofile: User? = null
-
-
-
 
 
     //set listener for selected item from bottom navigation bar to go to that fragment
@@ -154,6 +152,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
 
 
+        courseList.clear()
+        courselistdetail.clear()
+
         replaceFragment(BoardFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
 
@@ -180,7 +181,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     namenav!!.text = userprofile!!.username
                     courselistdetail = userprofile!!.courselist
-                    courselistdetail.forEach{
+                    courselistdetail.forEach {
                         courseList.add(it.value)
                     }
 
@@ -258,8 +259,8 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             editor.putString("loginusername", " ")
             editor.commit()
 
-            val userData = User(userprofile!!.username,userprofile!!.password , userprofile!!.type,
-                courselistdetail,"")
+            val userData = User(userprofile!!.username, userprofile!!.password, userprofile!!.type,
+                courselistdetail, "")
             dataReference.child(userprofile!!.username).setValue(userData)
             courseList.clear()
 
@@ -328,16 +329,17 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
     }
 
-//    override fun onBackPressed() {
-//        // note: you can also use 'getSupportFragmentManager()'
-//        val mgr: FragmentManager = FragmentManager
-//        if (mgr.getBackStackEntryCount() === 0) {
-//            // No backstack to pop, so calling super
-//            super.onBackPressed()
-//        } else {
-//            mgr.popBackStack()
-//        }
-//    }
+    private var doubleBackToExitPressedOnce = false
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finish()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please press BACK again to exit", Toast.LENGTH_SHORT).show()
+        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 1000)
+    }
+
 
 //    override fun onStop() {
 //        super.onStop()
