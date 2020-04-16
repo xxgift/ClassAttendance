@@ -31,7 +31,7 @@ import kotlin.collections.HashMap
 
 class
 
-StudentlistFragment(val selectnamecourse: String, val date: String, val isScanning: Boolean) : Fragment() {
+StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val date: String, val isScanning: Boolean) : Fragment() {
     lateinit var mContext: Context
     lateinit var adapter: StudentlistAdapter
     lateinit var mActivity: Activity
@@ -42,7 +42,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
     lateinit var whoEnroll: ArrayList<String>
 
     var dataReference =
-            FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
+            FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
 
 
     override fun onCreateView(
@@ -141,7 +141,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
             if (isScanning) {
                 replaceFragment(AttendanceFragment())
             } else {
-                replaceFragment(LogAttendanceFragment(selectnamecourse))
+                replaceFragment(LogAttendanceFragment(selectnamecourse,selectjoinID))
             }
         }
 
@@ -153,7 +153,7 @@ StudentlistFragment(val selectnamecourse: String, val date: String, val isScanni
     }
 
     private fun showDialog(view: View, adapter: StudentlistAdapter) {
-        val applypopup = popup_addstudent_Fragment(view, adapter, selectnamecourse, date)
+        val applypopup = popup_addstudent_Fragment(view, adapter, selectnamecourse,selectjoinID, date)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
 

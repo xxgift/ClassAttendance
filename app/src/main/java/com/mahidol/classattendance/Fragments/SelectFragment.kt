@@ -18,7 +18,7 @@ import com.mahidol.classattendance.Models.currentuser
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
 
-class SelectFragment(val selectnamecourse: String) : Fragment() {
+class SelectFragment(val selectnamecourse: String,val selectjoinID: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var adapter: SelectAdapter
     lateinit var mActivity: Activity
@@ -72,8 +72,8 @@ class SelectFragment(val selectnamecourse: String) : Fragment() {
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 Toast.makeText(mContext, "${selectList[position].detail}", LENGTH_SHORT).show()
                 when (position) {
-                    0 -> replaceFragment(LogAttendanceFragment(selectnamecourse))
-                    1 -> replaceFragment(MaterialFragment(selectnamecourse))
+                    0 -> replaceFragment(LogAttendanceFragment(selectnamecourse,selectjoinID))
+                    1 -> replaceFragment(MaterialFragment(selectnamecourse,selectjoinID))
                 }
             }
     }
