@@ -20,7 +20,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter, var coursename: String, val date: String) : DialogFragment() {
+class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter, var coursename: String,val joinID: String, val date: String) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var dataReference2: DatabaseReference
@@ -49,7 +49,7 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
         studentAttendaceList = hashMapOf()
         whoEnroll = arrayListOf()
 
-        dataReference = FirebaseDatabase.getInstance().getReference("Attendance").child(coursename).child(date)
+        dataReference = FirebaseDatabase.getInstance().getReference("Attendance").child("${coursename}+${joinID}").child(date)
         dataReference2 = FirebaseDatabase.getInstance().getReference("AllCourse")
 
         var dataQuery = dataReference.orderByChild("starttime")

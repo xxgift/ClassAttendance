@@ -4,6 +4,7 @@ package com.mahidol.classattendance.Models
 //current data
 var currentuser: String? = null
 var currentcourse: String? = null
+var currentjoinID: String? = null
 var currenttype: String? = null
 var currentstatus: String = ""
 var currentImei: String = ""

@@ -25,7 +25,7 @@ import com.mahidol.classattendance.Models.*
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
 
-class MaterialFragment(val selectnamecourse: String) : Fragment() {
+class MaterialFragment(val selectnamecourse: String,val selectjoinID: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var adapter: MaterialAdapter
     lateinit var mActivity: Activity
@@ -77,7 +77,8 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
                     materialList.clear()
                     for (i in p0.children) {
                         val oneUser = i.getValue(Material::class.java)
-                        materialList.add(oneUser!!)
+                        if(selectjoinID==oneUser!!.joinID){
+                        materialList.add(oneUser!!)}
                     }
                     materialList.reverse()
 
@@ -94,13 +95,13 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
         listview_courselist!!.adapter = adapter
 
         addbtn_thiscourse.setOnClickListener {
-            showDialog(view, adapter, selectnamecourse)
+            showDialog(view, adapter, selectnamecourse,selectjoinID)
             adapter.notifyDataSetChanged()
         }
 
         backbtn_thiscourse.setOnClickListener {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()
-            replaceFragment(SelectFragment(selectnamecourse))
+            replaceFragment(SelectFragment(selectnamecourse,selectjoinID))
         }
 
         if (currenttype == "Teacher") {
@@ -160,8 +161,8 @@ class MaterialFragment(val selectnamecourse: String) : Fragment() {
     }
 
 
-    private fun showDialog(view: View, adapter: MaterialAdapter, coursename: String) {
-        val applypopup = popup_addcm_Fragment(view, adapter, coursename)
+    private fun showDialog(view: View, adapter: MaterialAdapter, coursename: String,joinID: String) {
+        val applypopup = popup_addcm_Fragment(view, adapter, coursename,joinID)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
 

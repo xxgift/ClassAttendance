@@ -50,8 +50,8 @@ class AttendanceFragment : Fragment() {
     lateinit var whoEnroll: ArrayList<String>
 
     val tmp = SimpleDateFormat("dd-MM-yy")
-    val date = tmp.format(Date())
-    //    val date = "10-04-20"
+//    val date = tmp.format(Date())
+    val date = "10-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
@@ -122,11 +122,11 @@ class AttendanceFragment : Fragment() {
                 if (currentcourse != null) {
                     if (currenttype == "Teacher") {
                         beaconManager!!.stopRanging(region)
-                        dataReference.child(currentcourse).removeValue()
+                        dataReference.child("${currentcourse}+${currentjoinID}").removeValue()
 
                         studentList = hashMapOf()
 
-                        var dataQuery = dataReference2.child(currentcourse).child(date).orderByChild("username")
+                        var dataQuery = dataReference2.child("${currentcourse}+${currentjoinID}").child(date).orderByChild("username")
 
                         dataQuery.addValueEventListener(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {
@@ -152,7 +152,7 @@ class AttendanceFragment : Fragment() {
                                     whoEnroll.clear()
                                     for (i in p0.children) {
                                         val oneUser = i.getValue(Course::class.java)
-                                        if (oneUser!!.courseID == currentcourse) {
+                                        if (oneUser!!.courseID == currentcourse && oneUser!!.joinID == currentjoinID) {
                                             whoEnroll = oneUser!!.whoEnroll
                                             println("whooooooooooooooooooo${whoEnroll}")
                                         }
@@ -165,7 +165,7 @@ class AttendanceFragment : Fragment() {
                                             studentList.put(it, Attendance(it, "Student", currentcourse!!, date, "", "", "Absent"))
                                         }
                                     }
-                                    dataReference2.child(currentcourse).child(date).setValue(studentList)
+                                    dataReference2.child("${currentcourse}+${currentjoinID}").child(date).setValue(studentList)
                                 }
                             }
                         })
@@ -182,10 +182,10 @@ class AttendanceFragment : Fragment() {
                                     tmp.clear()
                                     for (i in p0.children) {
                                         val oneUser = i.getValue(Course::class.java)
-                                        tmp.put(oneUser!!.courseID, oneUser!!)
+                                        tmp.put("${oneUser!!.courseID}+${oneUser!!.joinID}", oneUser!!)
                                     }
                                 }
-                                if (tmp.any { it.key == currentcourse }) {
+                                if (tmp.any { it.key == currentcourse && it.value.joinID == currentjoinID}) {
                                 } else {
                                     beaconManager!!.stopRanging(region)
                                     showDialog(view, adapter)
@@ -196,12 +196,12 @@ class AttendanceFragment : Fragment() {
                         )
                     }
                     courseList.forEach {
-                        if (it.courseID == currentcourse) {
+                        if (it.courseID == currentcourse && it.joinID == currentjoinID) {
                             it.courseStatus = ""
                         }
                     }
                     courselistdetail.forEach {
-                        if (it.key == currentcourse) {
+                        if (it.key == currentcourse && it.value.joinID == currentjoinID) {
                             it.value.courseStatus = ""
                         }
                     }
@@ -290,15 +290,17 @@ class AttendanceFragment : Fragment() {
 
                                     if (courseList[position].courseStatus == "Online") {
                                         currentcourse = courseList[position].courseID
+                                        currentjoinID = courseList[position].joinID
                                         listview_attendance!!.adapter = null
-                                        addFragment(StudentlistFragment(courseList[position].courseID, date, true))
+                                        addFragment(StudentlistFragment(courseList[position].courseID,courseList[position].joinID, date, true))
                                         return@OnItemClickListener
                                     } else {
                                         courseList[position].courseStatus = "Online"
                                         currentcourse = courseList[position].courseID
+                                        currentjoinID = courseList[position].joinID
                                         courselistdetail[currentcourse!!]!!.courseStatus = "Online"
                                         onlineListValue.put(
-                                            courseList[position].courseID, Course(
+                                            "${courseList[position].courseID}+${courseList[position].joinID}", Course(
                                                 courseList[position].courseID,
                                                 courseList[position].joinID,
                                                 courseList[position].owner,
@@ -312,9 +314,9 @@ class AttendanceFragment : Fragment() {
                                         dataReference.setValue(onlineListValue)
                                         val temp = HashMap<String, Attendance>()
                                         temp.put(currentuser!!, Attendance(currentuser!!, currenttype!!, currentcourse!!, date, time, "", "Teacher"))
-                                        dataReference2.child(currentcourse).child(date).setValue(temp)
+                                        dataReference2.child("${currentcourse}+${currentjoinID}").child(date).setValue(temp)
                                         listview_attendance!!.adapter = null
-                                        addFragment(StudentlistFragment(courseList[position].courseID, date, true))
+                                        addFragment(StudentlistFragment(courseList[position].courseID,courseList[position].joinID, date, true))
                                         return@OnItemClickListener
                                     }
 
@@ -465,7 +467,7 @@ class AttendanceFragment : Fragment() {
                     for (i in p0.children) {
                         val result = i.getValue(Course::class.java)
                         if (currenttype == "Teacher") {
-                            if (onlinecourse.any { it.courseID == result!!.courseID }) {
+                            if (onlinecourse.any { it.joinID == result!!.joinID }) {
                             } else {
                                 onlinecourse.add(
                                     Course(
@@ -480,7 +482,7 @@ class AttendanceFragment : Fragment() {
                             }
                         } else {
                             courselistdetail.forEach {
-                                if (it.key == result!!.courseID) {
+                                if (it.key == result!!.courseID && it.value.joinID == result!!.joinID) {
                                     println("uuuuuuuuuuuuuuuuuuuuuuuuu${it.key} result:: ${result.courseID}  online:::${onlinecourse}")
                                     onlinecourse.add(
                                         Course(
@@ -511,8 +513,9 @@ class AttendanceFragment : Fragment() {
                     }
                     if (onlinecourse.size == 1) {
                         currentcourse = onlinecourse[0].courseID
+                        currentjoinID = onlinecourse[0].joinID
                         listview_attendance.adapter = null
-                        addFragment(StudentAttendanceFragment(currentcourse!!, date, time))
+                        addFragment(StudentAttendanceFragment(currentcourse!!,onlinecourse[0].joinID, date, time))
                     } else {
                         println("sizeeeeeeenot000000000")
                         adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
@@ -525,18 +528,19 @@ class AttendanceFragment : Fragment() {
                                     }", Toast.LENGTH_SHORT
                                 ).show()
                                 courseList.forEach {
-                                    if (it.courseID == onlinecourse[position].courseID) {
+                                    if (it.courseID == onlinecourse[position].courseID && it.joinID == onlinecourse[position].joinID) {
                                         it.courseStatus = "Online"
                                     }
                                 }
                                 courselistdetail.forEach {
-                                    if (it.key == onlinecourse[position].courseID) {
+                                    if (it.key == onlinecourse[position].courseID && it.value.joinID == onlinecourse[position].joinID) {
                                         it.value.courseStatus = "Online"
                                     }
                                 }
                                 currentcourse = onlinecourse[position].courseID
+                                currentjoinID = onlinecourse[position].joinID
                                 listview_attendance.adapter = null
-                                addFragment(StudentAttendanceFragment(currentcourse!!, date, time))
+                                addFragment(StudentAttendanceFragment(currentcourse!!,onlinecourse[position].joinID, date, time))
                             }
 
                     }

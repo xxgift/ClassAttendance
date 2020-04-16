@@ -20,7 +20,7 @@ import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_studenattendance.*
 
 
-class StudentAttendanceFragment(val selectnamecourse: String, val date: String, val time: String) : Fragment() {
+class StudentAttendanceFragment(val selectnamecourse: String,val selectjoinID: String, val date: String, val time: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var mActivity: Activity
 
@@ -52,7 +52,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
         var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
 
         dataReference =
-            FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
+            FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
                 .child(date)
 
         backbtn_studentAttentdance.setOnClickListener {
@@ -60,7 +60,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
             if (isScanning) {
                 replaceFragment(AttendanceFragment())
             } else {
-                replaceFragment(LogAttendanceFragment(selectnamecourse))
+                replaceFragment(LogAttendanceFragment(selectnamecourse,selectjoinID))
             }
         }
 
@@ -101,7 +101,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val date: String, 
 
             override fun doInBackground(vararg p0: String?): String {
                 val helper = HTTPHelper()
-                return helper.getHTTPData("https://studenttracking-47241.firebaseio.com/Attendance/" + selectnamecourse + "/" + date + "/" + currentuser + ".json")
+                return helper.getHTTPData("https://studenttracking-47241.firebaseio.com/Attendance/" + selectnamecourse+"+"+selectjoinID + "/" + date + "/" + currentuser + ".json")
             }
 
             override fun onPostExecute(result: String?) {
