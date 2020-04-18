@@ -50,8 +50,8 @@ class AttendanceFragment : Fragment() {
     lateinit var whoEnroll: ArrayList<String>
 
     val tmp = SimpleDateFormat("dd-MM-yy")
-//    val date = tmp.format(Date())
-    val date = "10-04-20"
+    val date = tmp.format(Date())
+    //    val date = "14-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
@@ -102,11 +102,14 @@ class AttendanceFragment : Fragment() {
 
         myRunnable = Runnable {
             alreadyInclass = false
-            Toast.makeText(
-                context,
-                "not found any beacon",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (currentstatus == "out of class") {
+            } else {
+                Toast.makeText(
+                    context,
+                    "not found any beacon",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             gif.visibility = View.INVISIBLE
             statusText.visibility = View.INVISIBLE
             adapter = MycourseAdapter(
@@ -185,7 +188,7 @@ class AttendanceFragment : Fragment() {
                                         tmp.put("${oneUser!!.courseID}+${oneUser!!.joinID}", oneUser!!)
                                     }
                                 }
-                                if (tmp.any { it.key == currentcourse && it.value.joinID == currentjoinID}) {
+                                if (tmp.any { it.key == "${currentcourse}+${currentjoinID}" }) {
                                 } else {
                                     beaconManager!!.stopRanging(region)
                                     showDialog(view, adapter)
@@ -250,7 +253,6 @@ class AttendanceFragment : Fragment() {
 
         beaconManager!!.setRangingListener(BeaconManager.BeaconRangingListener { beaconRegion, beacons ->
             if (beacons!!.isNotEmpty()) {
-                isScanning = true
                 handler!!.removeCallbacksAndMessages(null)
                 if (!alreadyInclass) {
                     statusText.text = "Scanning"
@@ -262,6 +264,9 @@ class AttendanceFragment : Fragment() {
                 val nearestBeacon = beacons[0]
                 currentstatus = findBeacon(nearestBeacon)
                 if (currentstatus == "in class") {
+
+                    isScanning = true
+
                     counttoEnd = 0
                     countforOut = 0
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
@@ -292,7 +297,7 @@ class AttendanceFragment : Fragment() {
                                         currentcourse = courseList[position].courseID
                                         currentjoinID = courseList[position].joinID
                                         listview_attendance!!.adapter = null
-                                        addFragment(StudentlistFragment(courseList[position].courseID,courseList[position].joinID, date, true))
+                                        addFragment(StudentlistFragment(courseList[position].courseID, courseList[position].joinID, date, true))
                                         return@OnItemClickListener
                                     } else {
                                         courseList[position].courseStatus = "Online"
@@ -316,7 +321,7 @@ class AttendanceFragment : Fragment() {
                                         temp.put(currentuser!!, Attendance(currentuser!!, currenttype!!, currentcourse!!, date, time, "", "Teacher"))
                                         dataReference2.child("${currentcourse}+${currentjoinID}").child(date).setValue(temp)
                                         listview_attendance!!.adapter = null
-                                        addFragment(StudentlistFragment(courseList[position].courseID,courseList[position].joinID, date, true))
+                                        addFragment(StudentlistFragment(courseList[position].courseID, courseList[position].joinID, date, true))
                                         return@OnItemClickListener
                                     }
 
@@ -336,6 +341,9 @@ class AttendanceFragment : Fragment() {
                     alreadyInclass = true
                 }
                 if (currentstatus == "out of class") {
+                    isScanning = false
+                    handler!!.postDelayed(myRunnable, 1000)
+
                     countforOut = 0
                     counttoEnd = counttoEnd + 1
                     Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
@@ -349,6 +357,9 @@ class AttendanceFragment : Fragment() {
                     println("2/////////////////" + countforOut + "////" + counttoEnd)
                     if (countforOut == 3) {
                         currentstatus = "out of class"
+                        isScanning = false
+                        handler!!.postDelayed(myRunnable, 1000)
+
                         countforOut = 0
                         counttoEnd = counttoEnd + 1
                         statusText.text = currentstatus
@@ -359,6 +370,10 @@ class AttendanceFragment : Fragment() {
                 }
             } else {
                 currentstatus = "out of class"
+
+                isScanning = false
+                handler!!.postDelayed(myRunnable, 1000)
+
                 countforOut = 0
                 counttoEnd = counttoEnd + 1
                 statusText.text = currentstatus
@@ -367,20 +382,12 @@ class AttendanceFragment : Fragment() {
 
             }
 
-//            if (counttoEnd == 2) {
-//                currentstatus = "Class is over"
-//                alreadyInclass = false
-//                Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
-//                img.visibility = View.INVISIBLE
-//                gif.visibility = View.INVISIBLE
-//                adapter = MycourseAdapter(
-//                        mContext,
-//                        R.layout.list_detail,
-//                        courseList
-//                )
-//                listview_attendance!!.adapter = null
-//                adapter.notifyDataSetChanged()
-//            }
+            if (counttoEnd == 20) {
+                currentstatus = "Class is over"
+                Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+                handler!!.postDelayed(myRunnable, 1000)
+                counttoEnd = 0
+            }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
             handler!!.postDelayed(myRunnable, 15000)
@@ -515,7 +522,7 @@ class AttendanceFragment : Fragment() {
                         currentcourse = onlinecourse[0].courseID
                         currentjoinID = onlinecourse[0].joinID
                         listview_attendance.adapter = null
-                        addFragment(StudentAttendanceFragment(currentcourse!!,onlinecourse[0].joinID, date, time))
+                        addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[0].joinID, date, time))
                     } else {
                         println("sizeeeeeeenot000000000")
                         adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
@@ -540,7 +547,7 @@ class AttendanceFragment : Fragment() {
                                 currentcourse = onlinecourse[position].courseID
                                 currentjoinID = onlinecourse[position].joinID
                                 listview_attendance.adapter = null
-                                addFragment(StudentAttendanceFragment(currentcourse!!,onlinecourse[position].joinID, date, time))
+                                addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[position].joinID, date, time))
                             }
 
                     }

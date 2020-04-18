@@ -20,7 +20,7 @@ import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_studenattendance.*
 
 
-class StudentAttendanceFragment(val selectnamecourse: String,val selectjoinID: String, val date: String, val time: String) : Fragment() {
+class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: String, val date: String, val time: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var mActivity: Activity
 
@@ -60,7 +60,7 @@ class StudentAttendanceFragment(val selectnamecourse: String,val selectjoinID: S
             if (isScanning) {
                 replaceFragment(AttendanceFragment())
             } else {
-                replaceFragment(LogAttendanceFragment(selectnamecourse,selectjoinID))
+                replaceFragment(LogAttendanceFragment(selectnamecourse, selectjoinID))
             }
         }
 
@@ -101,7 +101,7 @@ class StudentAttendanceFragment(val selectnamecourse: String,val selectjoinID: S
 
             override fun doInBackground(vararg p0: String?): String {
                 val helper = HTTPHelper()
-                return helper.getHTTPData("https://studenttracking-47241.firebaseio.com/Attendance/" + selectnamecourse+"+"+selectjoinID + "/" + date + "/" + currentuser + ".json")
+                return helper.getHTTPData("https://studenttracking-47241.firebaseio.com/Attendance/" + selectnamecourse + "+" + selectjoinID + "/" + date + "/" + currentuser + ".json")
             }
 
             override fun onPostExecute(result: String?) {
