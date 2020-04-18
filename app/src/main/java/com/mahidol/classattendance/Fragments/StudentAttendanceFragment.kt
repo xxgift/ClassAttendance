@@ -2,6 +2,7 @@ package com.mahidol.classattendance.Fragments
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.SystemClock
@@ -51,6 +52,17 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
         super.onViewCreated(view, savedInstanceState)
         var durationtime = view.findViewById<Chronometer>(R.id.chronometer_attendance)
 
+        if(currenttype=="Teacher"){
+            course_studentAttendance.visibility = View.INVISIBLE
+            imageView10.visibility = View.INVISIBLE
+            imageView11.visibility = View.INVISIBLE
+            attendance.visibility = View.INVISIBLE
+            starttime.visibility = View.INVISIBLE
+            backbtn_studentAttentdance.visibility = View.INVISIBLE
+            datestudentattendance.visibility = View.INVISIBLE
+            chronometer_attendance.setTextColor(Color.parseColor("#EEEEEE"))
+        }
+
         dataReference =
             FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
                 .child(date)
@@ -72,30 +84,33 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
                     durationtime.base = SystemClock.elapsedRealtime()
                     durationtime.start()
 
-                    studentList = hashMapOf()
+                    if (currenttype == "Student") {
 
-                    var dataQuery = dataReference.orderByChild("starttime")
+                        studentList = hashMapOf()
 
-                    dataQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                        }
+                        var dataQuery = dataReference.orderByChild("starttime")
 
-                        override fun onDataChange(p0: DataSnapshot) {
-                            if (p0!!.exists()) {
-                                studentList.clear()
-                                for (i in p0.children) {
-                                    val oneUser = i.getValue(Attendance::class.java)
-                                    studentList.put(oneUser!!.username, oneUser)
+                        dataQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if (p0!!.exists()) {
+                                    studentList.clear()
+                                    for (i in p0.children) {
+                                        val oneUser = i.getValue(Attendance::class.java)
+                                        studentList.put(oneUser!!.username, oneUser)
+                                    }
                                 }
+                                if (studentList.any { it.key == currentuser }) {
+                                } else {
+                                    studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
+                                }
+                                dataReference.setValue(studentList)
+                                println("fonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                             }
-                            if (studentList.any { it.key == currentuser }) {
-                            } else {
-                                studentList.put(currentuser!!, Attendance(currentuser!!, currenttype!!, selectnamecourse, date, time, "", "Present"))
-                            }
-                            dataReference.setValue(studentList)
-                            println("fonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
-                        }
-                    })
+                        })
+                    }
                 }
             }
 
@@ -107,27 +122,29 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
             override fun onPostExecute(result: String?) {
                 if (result != "null") {
                     LogAttendance = Gson().fromJson(result, Attendance::class.java)
-                    if (isScanning) {
-                        course_studentAttendance.text = "Course : ${selectnamecourse}"
-                        starttime.text = "Check in at : ${LogAttendance.starttime}"
-                        attendance.text = "Present"
-                        durationtime.text = LogAttendance.durationtime
-                        datestudentattendance.text = "Date : ${date}"
-                    } else {
-                        println(result)
-                        course_studentAttendance.text = "Course : ${selectnamecourse}"
-                        if (LogAttendance.attendance == "Present") {
+                    if(currenttype=="Student") {
+                        if (isScanning) {
+                            course_studentAttendance.text = "Course : ${selectnamecourse}"
                             starttime.text = "Check in at : ${LogAttendance.starttime}"
+                            attendance.text = "Present"
                             durationtime.text = LogAttendance.durationtime
-                            if (LogAttendance.starttime == "") {
-                                starttime.text = "Manual Add"
+                            datestudentattendance.text = "Date : ${date}"
+                        } else {
+                            println(result)
+                            course_studentAttendance.text = "Course : ${selectnamecourse}"
+                            if (LogAttendance.attendance == "Present") {
+                                starttime.text = "Check in at : ${LogAttendance.starttime}"
+                                durationtime.text = LogAttendance.durationtime
+                                if (LogAttendance.starttime == "") {
+                                    starttime.text = "Manual Add"
+                                }
                             }
+                            if (LogAttendance.attendance == "Absent") {
+                                durationtime.setText("00:00:00")
+                            }
+                            attendance.text = LogAttendance.attendance
+                            datestudentattendance.text = "Date : ${LogAttendance.date}"
                         }
-                        if (LogAttendance.attendance == "Absent") {
-                            durationtime.setText("00:00:00")
-                        }
-                        attendance.text = LogAttendance.attendance
-                        datestudentattendance.text = "Date : ${LogAttendance.date}"
                     }
 
                     if (LogAttendance.durationtime != "") {
@@ -139,12 +156,14 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
                     }
 
                 } else {
-                    if (isScanning) {
-                        course_studentAttendance.text = "Course : ${selectnamecourse}"
-                        starttime.text = "Check in at : ${time}"
-                        attendance.text = "Present"
-                        datestudentattendance.text = "Date : ${date}"
-                        println("notfoundddduration ${durationtime.base} ${currentdurationtime}")
+                    if(currenttype=="Student") {
+                        if (isScanning) {
+                            course_studentAttendance.text = "Course : ${selectnamecourse}"
+                            starttime.text = "Check in at : ${time}"
+                            attendance.text = "Present"
+                            datestudentattendance.text = "Date : ${date}"
+                            println("notfoundddduration ${durationtime.base} ${currentdurationtime}")
+                        }
                     }
                 }
             }

@@ -66,7 +66,7 @@ class StudentlistAdapter(
         }
         if (time.attendance == "Teacher") {
             attendance.setTextColor(Color.parseColor("#A254F2"))
-            duration.text = ""
+            duration.text = "${time.durationtime}"
             username.text = "${time.username}"
             start.text = "Course started at ${time.starttime}"
             attendance.text = "${time.attendance}"
