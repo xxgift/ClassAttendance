@@ -207,6 +207,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
             dataReference.updateChildren(childUpdates)
             if (!isScanning) {
                 durationtime.stop()
+                currentattendancetime = durationtime.text.toString()
                 println("stoppppppppppjjjjjjj" + durationtime.text)
             }
         }

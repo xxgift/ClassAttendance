@@ -2,13 +2,22 @@ package com.mahidol.classattendance.Fragments
 
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion
@@ -24,6 +33,7 @@ import java.util.*
 import kotlin.math.pow
 
 import androidx.fragment.app.FragmentTransaction
+import com.mahidol.classattendance.BodyActivity
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -51,7 +61,7 @@ class AttendanceFragment : Fragment() {
 
     val tmp = SimpleDateFormat("dd-MM-yy")
     val date = tmp.format(Date())
-//    val date = "16-03-20"
+//    val date = "12-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
@@ -59,6 +69,8 @@ class AttendanceFragment : Fragment() {
     var countforOut = 0
     var counttoEnd = 0
     var alreadyInclass = false
+
+    private val CHANNEL_ID = "100"
 
 
     override fun onCreateView(
@@ -108,120 +120,127 @@ class AttendanceFragment : Fragment() {
                         isScanning = false
                     }
                 }
-            } else {
-                alreadyInclass = false
-                Toast.makeText(
-                    context,
-                    "not found any beacon",
-                    Toast.LENGTH_SHORT
-                ).show()
+                return@Runnable
+            }
+            alreadyInclass = false
+            Toast.makeText(
+                context,
+                "not found any beacon",
+                Toast.LENGTH_SHORT
+            ).show()
 
-                gif.visibility = View.INVISIBLE
-                statusText.visibility = View.INVISIBLE
-                if (isScanning) {
-                    img.visibility = View.INVISIBLE
-                    isScanning = false
-                    if (currentcourse != null) {
-                        if (currenttype == "Teacher") {
-                            beaconManager!!.stopRanging(region)
-                            dataReference.child("${currentcourse}+${currentjoinID}").removeValue()
+            gif.visibility = View.INVISIBLE
+            statusText.visibility = View.INVISIBLE
+            if (isScanning) {
+                img.visibility = View.INVISIBLE
+                isScanning = false
+                if (currentcourse != null) {
+                    if (currenttype == "Teacher") {
+                        beaconManager!!.stopRanging(region)
+                        dataReference.child("${currentcourse}+${currentjoinID}").removeValue()
 
-                            studentList = hashMapOf()
+                        studentList = hashMapOf()
 
-                            var dataQuery = dataReference2.child("${currentcourse}+${currentjoinID}").child(date).orderByChild("username")
+                        var dataQuery = dataReference2.child("${currentcourse}+${currentjoinID}").child(date).orderByChild("username")
 
-                            dataQuery.addValueEventListener(object : ValueEventListener {
-                                override fun onCancelled(p0: DatabaseError) {
-                                }
+                        dataQuery.addValueEventListener(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
 
-                                override fun onDataChange(p0: DataSnapshot) {
-                                    if (p0!!.exists()) {
-                                        studentList.clear()
-                                        for (i in p0.children) {
-                                            val oneUser = i.getValue(Attendance::class.java)
-                                            studentList.put(oneUser!!.username, oneUser)
-                                        }
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if (p0!!.exists()) {
+                                    studentList.clear()
+                                    for (i in p0.children) {
+                                        val oneUser = i.getValue(Attendance::class.java)
+                                        studentList.put(oneUser!!.username, oneUser)
                                     }
                                 }
-                            })
+                            }
+                        })
 
-                            dataReference3.addValueEventListener(object : ValueEventListener {
-                                override fun onCancelled(p0: DatabaseError) {
-                                }
+                        dataReference3.addValueEventListener(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
+                            }
 
-                                override fun onDataChange(p0: DataSnapshot) {
-                                    if (p0!!.exists()) {
-                                        whoEnroll.clear()
-                                        for (i in p0.children) {
-                                            val oneUser = i.getValue(Course::class.java)
-                                            if (oneUser!!.courseID == currentcourse && oneUser!!.joinID == currentjoinID) {
-                                                whoEnroll = oneUser!!.whoEnroll
-                                                println("whooooooooooooooooooo${whoEnroll}")
-                                            }
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if (p0!!.exists()) {
+                                    whoEnroll.clear()
+                                    for (i in p0.children) {
+                                        val oneUser = i.getValue(Course::class.java)
+                                        if (oneUser!!.courseID == currentcourse && oneUser!!.joinID == currentjoinID) {
+                                            whoEnroll = oneUser!!.whoEnroll
+                                            println("whooooooooooooooooooo${whoEnroll}")
                                         }
-
-                                        whoEnroll.forEach {
-                                            val tmp = it
-                                            if (studentList.any { it.key == tmp }) {
-                                            } else {
-                                                studentList.put(it, Attendance(it, "Student", currentcourse!!, date, "", "", "Absent"))
-                                            }
-                                        }
-                                        dataReference2.child("${currentcourse}+${currentjoinID}").child(date).setValue(studentList)
                                     }
-                                }
-                            })
-                            showDialog(view, adapter)
-                            adapter.notifyDataSetChanged()
-                        }
-                        courseList.forEach {
-                            if (it.courseID == currentcourse && it.joinID == currentjoinID) {
-                                it.courseStatus = ""
-                            }
-                        }
-                        courselistdetail.forEach {
-                            if (it.key == currentcourse && it.value.joinID == currentjoinID) {
-                                it.value.courseStatus = ""
-                            }
-                        }
-                        dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
 
-                    } else {
-                        val img = view!!.findViewById<ImageView>(R.id.img_attendance)
-                        img.setImageResource(R.mipmap.ic_pleaseenterthecr)
-                        img.visibility = View.VISIBLE
+                                    whoEnroll.forEach {
+                                        val tmp = it
+                                        if (studentList.any { it.key == tmp }) {
+                                        } else {
+                                            studentList.put(it, Attendance(it, "Student", currentcourse!!, date, "", "", "Absent"))
+                                        }
+                                    }
+                                    dataReference2.child("${currentcourse}+${currentjoinID}").child(date).setValue(studentList)
+                                    showNotification()
+                                }
+                            }
+                        })
+                        currentstatus = "class is over"
+                        showDialog(view, adapter)
+                        adapter.notifyDataSetChanged()
                     }
+                    courseList.forEach {
+                        if (it.courseID == currentcourse && it.joinID == currentjoinID) {
+                            it.courseStatus = ""
+                        }
+                    }
+                    courselistdetail.forEach {
+                        if (it.key == currentcourse && it.value.joinID == currentjoinID) {
+                            it.value.courseStatus = ""
+                        }
+                    }
+                    dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
 
                 } else {
                     val img = view!!.findViewById<ImageView>(R.id.img_attendance)
                     img.setImageResource(R.mipmap.ic_pleaseenterthecr)
                     img.visibility = View.VISIBLE
                 }
-                println("oooooooooooooooooooooooooooooooooooooooooo")
-                if (currenttype == "Student") {
-                    dataReference.addValueEventListener(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                        }
 
-                        override fun onDataChange(p0: DataSnapshot) {
-                            var tmp: HashMap<String, Course> = hashMapOf()
-                            if (p0!!.exists()) {
-                                tmp.clear()
-                                for (i in p0.children) {
-                                    val oneUser = i.getValue(Course::class.java)
-                                    tmp.put("${oneUser!!.courseID}+${oneUser!!.joinID}", oneUser!!)
-                                }
+            } else {
+                val img = view!!.findViewById<ImageView>(R.id.img_attendance)
+                img.setImageResource(R.mipmap.ic_pleaseenterthecr)
+                img.visibility = View.VISIBLE
+            }
+            println("oooooooooooooooooooooooooooooooooooooooooo")
+            if (currenttype == "Student") {
+                dataReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        var tmp: HashMap<String, Course> = hashMapOf()
+                        if (p0!!.exists()) {
+                            tmp.clear()
+                            for (i in p0.children) {
+                                val oneUser = i.getValue(Course::class.java)
+                                tmp.put("${oneUser!!.courseID}+${oneUser!!.joinID}", oneUser!!)
                             }
-                            if (tmp.any { it.key == "${currentcourse}+${currentjoinID}" }) {
-                            } else {
-                                beaconManager!!.stopRanging(region)
+                        }
+                        if (tmp.any { it.key == "${currentcourse}+${currentjoinID}" }) {
+                        } else {
+                            beaconManager!!.stopRanging(region)
+                            currentstatus = "class is over"
+                            if (currentcourse != "") {
                                 showDialog(view, adapter)
-                                adapter.notifyDataSetChanged()
+                                showNotification()
+                                currentcourse = ""
                             }
+                            adapter.notifyDataSetChanged()
                         }
                     }
-                    )
                 }
+                )
             }
         }
 
@@ -300,6 +319,7 @@ class AttendanceFragment : Fragment() {
                                         listview_attendance!!.adapter = null
                                         addFragment(StudentAttendanceFragment(courseList[position].courseID, courseList[position].joinID, date, time))
                                         addFragment(StudentlistFragment(courseList[position].courseID, courseList[position].joinID, date, true))
+                                        showNotification()
                                         return@OnItemClickListener
                                     } else {
                                         courseList[position].courseStatus = "Online"
@@ -325,6 +345,7 @@ class AttendanceFragment : Fragment() {
                                         listview_attendance!!.adapter = null
                                         addFragment(StudentAttendanceFragment(courseList[position].courseID, courseList[position].joinID, date, time))
                                         addFragment(StudentlistFragment(courseList[position].courseID, courseList[position].joinID, date, true))
+                                        showNotification()
                                         return@OnItemClickListener
                                     }
 
@@ -381,7 +402,7 @@ class AttendanceFragment : Fragment() {
             }
 
             if (counttoEnd == 20) {
-                currentstatus = "Class is over"
+                currentstatus = "class is over"
                 Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                 handler!!.postDelayed(myRunnable, 1000)
                 counttoEnd = 0
@@ -523,6 +544,7 @@ class AttendanceFragment : Fragment() {
                         val listviewAtten = view!!.findViewById<ListView>(R.id.listview_attendance)
                         listviewAtten.adapter = null
                         addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[0].joinID, date, time))
+                        showNotification()
                     } else {
                         println("sizeeeeeeenot000000000")
                         adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
@@ -548,6 +570,7 @@ class AttendanceFragment : Fragment() {
                                 currentjoinID = onlinecourse[position].joinID
                                 listview_attendance.adapter = null
                                 addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[position].joinID, date, time))
+                                showNotification()
                             }
 
                     }
@@ -568,6 +591,48 @@ class AttendanceFragment : Fragment() {
         }
     }
 
+    private fun showNotification() {
+        createNotificationChannel()
+        if (currentstatus == "in class") {
+            if (currenttype == "Teacher") {
+                notifyMessage("${currentuser} started course", "Started at ${time} \nCourse : ${currentcourse} ")
+            } else {
+                notifyMessage("${currentuser} checked in", "Checked in at ${time} \nCourse : ${currentcourse} ")
+            }
+        }
+        if (currentstatus == "class is over") {
+            if (currenttype == "Teacher") {
+
+                var presentList = ArrayList<String>()
+                var absentList = ArrayList<String>()
+
+                dataReference2.child("${currentcourse}+${currentjoinID}").child(date).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0!!.exists()) {
+                            presentList.clear()
+                            absentList.clear()
+                            for (i in p0.children) {
+                                val oneUser = i.getValue(Attendance::class.java)
+                                if (oneUser!!.attendance == "Present") {
+                                    presentList.add(oneUser.username)
+                                }
+                                if (oneUser!!.attendance == "Absent") {
+                                    absentList.add(oneUser.username)
+                                }
+                                println("present ${presentList}  absent ${absentList}")
+                            }
+                        }
+                        notifyMessage("${currentuser} ended course", "Ended at ${time}  \nCourse ${currentcourse} \nPresent : ${presentList.size} Absent : ${absentList.size}")
+                    }
+                })
+            } else {
+                notifyMessage("${currentuser} checked out", "Attendance hours : ${currentattendancetime} \nCourse : ${currentcourse}")
+            }
+        }
+    }
 
     private fun setConnect() {
         beaconManager!!.connect {
@@ -611,4 +676,47 @@ class AttendanceFragment : Fragment() {
 //        println("55555555555555555 on destroy 5555555555555555555")
 //        super.onDestroy()
 //    }
+
+
+    private fun createNotificationChannel() {
+        // if you want to handle all version then use if-else
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "ClassAttendance"
+            val description = "ClassAttendance Notification"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+
+            channel.description = description
+
+            val notificationManager = getSystemService(context!!, NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
+
+        }
+    }
+
+    private fun notifyMessage(title: String, message: String) {
+        val intent1 = Intent(context, BodyActivity::class.java)
+        val pIntent1 = PendingIntent.getActivity(context, 1001, intent1, 0)
+
+        val option1Action =
+            NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground, "Open App", pIntent1)
+                .build()
+        val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_attend)
+
+
+        val mBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
+            .setLargeIcon(icon)
+            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .addAction(option1Action)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setWhen(System.currentTimeMillis() + 200)
+        val notificationManager = NotificationManagerCompat.from(context!!)
+        notificationManager.notify(0, mBuilder.build())
+
+    }
+
+
 }
