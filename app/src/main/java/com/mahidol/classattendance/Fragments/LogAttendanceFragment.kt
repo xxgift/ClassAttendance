@@ -24,7 +24,7 @@ import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.fragment_mycourse.*
 
 
-class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
+class LogAttendanceFragment(val selectnamecourse: String,val selectjoinID: String) : Fragment() {
     lateinit var mContext: Context
     lateinit var adapter: LogAttendanceAdapter
     lateinit var mActivity: Activity
@@ -33,7 +33,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
     lateinit var logList: ArrayList<String>
 
     var dataReference =
-            FirebaseDatabase.getInstance().getReference("Attendance").child(selectnamecourse)
+            FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
 
     var dataQuery = dataReference.orderByChild("date")
 
@@ -93,7 +93,7 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
 
         backbtn_thiscourse.setOnClickListener {
             Toast.makeText(mContext, "back", LENGTH_SHORT).show()
-            replaceFragment(SelectFragment(selectnamecourse))
+            replaceFragment(SelectFragment(selectnamecourse,selectjoinID))
         }
 
         listview_courselist!!.onItemClickListener =
@@ -104,9 +104,9 @@ class LogAttendanceFragment(val selectnamecourse: String) : Fragment() {
                     }", LENGTH_SHORT
                     ).show()
                     if (currenttype == "Teacher") {
-                        replaceFragment(StudentlistFragment(selectnamecourse, logList[position], false))
+                        replaceFragment(StudentlistFragment(selectnamecourse,selectjoinID, logList[position], false))
                     }else{
-                        replaceFragment(StudentAttendanceFragment(selectnamecourse,logList[position],""))
+                        replaceFragment(StudentAttendanceFragment(selectnamecourse,selectjoinID,logList[position],""))
                     }
                 }
 

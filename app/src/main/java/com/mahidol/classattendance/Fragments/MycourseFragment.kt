@@ -134,7 +134,7 @@ class MycourseFragment : Fragment() {
             } else {
                 Toast.makeText(mContext, "Select ${courseList[position].courseID
                 }", LENGTH_SHORT).show()
-                replaceFragment(SelectFragment(courseList[position].courseID))
+                replaceFragment(SelectFragment(courseList[position].courseID, courseList[position].joinID))
             }
         }
 

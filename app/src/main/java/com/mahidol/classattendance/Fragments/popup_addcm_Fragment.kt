@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var coursename:String) : DialogFragment() {
+class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var coursename:String,var joinID: String) : DialogFragment() {
     lateinit var mContext: Context
     lateinit var dataReference: DatabaseReference
     lateinit var dataReference2: DatabaseReference
@@ -112,8 +112,8 @@ class popup_addcm_Fragment(var mView: View, var adapter: MaterialAdapter,var cou
 
             //send value to firebase
 
-            courselistdetail[coursename]!!.courseMaterial.add(Material(coursename,addMaterialID,date,addLink,timestamp))
-            materialList.add(Material(coursename,addMaterialID,date,addLink,timestamp))
+            courselistdetail[coursename]!!.courseMaterial.add(Material(coursename,joinID,addMaterialID,date,addLink,timestamp))
+            materialList.add(Material(coursename,joinID,addMaterialID,date,addLink,timestamp))
 
             dataReference.setValue(materialList)
             dataReference2.setValue(materialList)

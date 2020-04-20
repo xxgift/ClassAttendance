@@ -168,6 +168,10 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                             val result = i.getValue(Course::class.java)
                             whoEnrollList = result!!.whoEnroll
 
+                            if(courselistdetail.any { it.key == result.courseID }){
+                                addcourse_ID.error = "Please delete the old \"${result.courseID}\" course"
+                                return
+                            }
                             if (whoEnrollList.any { it == currentuser }) {
                             } else {
                                 whoEnrollList.add(currentuser!!)
@@ -178,7 +182,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
                             dataReference2.child(result.courseID).setValue(Course(result!!.courseID, result!!.joinID, result!!.owner, "", whoEnrollList, result.courseMaterial))
 
                             println("materialllllllllllll${result.courseMaterial}")
-                            if (courselistdetail.any { it.key == result.courseID }) {
+                            if (courselistdetail.any { it.value.joinID == result.joinID }) {
                             } else {
                                 courselistdetail.put(result!!.courseID, Course(result!!.courseID, result!!.joinID, result!!.owner, "",
                                         ArrayList<String>(), ArrayList<Material>()
