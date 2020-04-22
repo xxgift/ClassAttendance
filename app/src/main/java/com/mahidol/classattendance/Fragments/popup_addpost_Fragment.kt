@@ -1,6 +1,7 @@
 package com.mahidol.classattendance.Fragments
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.view.*
@@ -55,8 +56,12 @@ class popup_addpost_Fragment(var mView: View, var adapter: BoardAdapter) : Dialo
 
         if (currenttype == "Student") {
             imagepost.setImageResource(R.mipmap.ic_studentnew)
+            post_usertype.setTextColor(Color.parseColor("#004cc3"))
+            post_content.setTextColor(Color.parseColor("#004cc3"))
         } else {
             imagepost.setImageResource(R.mipmap.ic_teachernew)
+            post_usertype.setTextColor(Color.parseColor("#A254F2"))
+            post_content.setTextColor(Color.parseColor("#A254F2"))
         }
 
         courselistdetail.forEach {

@@ -701,12 +701,12 @@ class AttendanceFragment : Fragment() {
         val option1Action =
             NotificationCompat.Action.Builder(R.drawable.ic_launcher_foreground, "Open App", pIntent1)
                 .build()
-        val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_attend)
+        val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_logonew)
 
 
         val mBuilder = NotificationCompat.Builder(context!!, CHANNEL_ID)
             .setLargeIcon(icon)
-            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .addAction(option1Action)
             .setContentTitle(title)
             .setContentText(message)

@@ -34,7 +34,7 @@ class popup_attendancedetail_Fragment (var mView: View,val adapter:MycourseAdapt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        popup_attendance_date.text = "${date}"
+        popup_attendance_date.text = "Date: ${date}"
         popup_attendance_coursename.text = "Course: ${coursename}"
         popup_attendance_okbtn.setOnClickListener {
             dialog!!.dismiss()

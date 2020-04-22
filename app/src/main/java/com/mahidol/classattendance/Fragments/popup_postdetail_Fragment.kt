@@ -1,11 +1,14 @@
 package com.mahidol.classattendance.Fragments
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.view.*
 
 import androidx.fragment.app.DialogFragment
+import com.mahidol.classattendance.Models.currenttype
+import com.mahidol.classattendance.Models.currentuser
 
 import com.mahidol.classattendance.R
 import kotlinx.android.synthetic.main.popup_postdetail.*
@@ -40,6 +43,11 @@ class popup_postdetail_Fragment(var mView: View,var user:String,var content:Stri
         popup_post_content.text = " "+content
         popup_post_course.text = course
         popup_post_time.text = date
+
+        if (currenttype == "Student") {
+            popup_post_course.setTextColor(Color.parseColor("#004cc3"))
+        }
+
         if(type == "Teacher"){
             imageView17.setImageResource(R.mipmap.ic_teachernew)
         }else{
