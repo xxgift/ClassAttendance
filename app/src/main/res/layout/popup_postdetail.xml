@@ -59,6 +59,8 @@
         android:background="@drawable/rectangleforpost"
         android:fontFamily="@font/montserrat"
         android:maxLines="3"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"

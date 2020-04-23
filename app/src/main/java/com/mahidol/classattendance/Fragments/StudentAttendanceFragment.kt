@@ -125,7 +125,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
                     if(currenttype=="Student") {
                         if (isScanning) {
                             course_studentAttendance.text = "Course : ${selectnamecourse}"
-                            starttime.text = "Check in at : ${LogAttendance.starttime}"
+                            starttime.text = "Check in : ${LogAttendance.starttime}"
                             attendance.text = "Present"
                             durationtime.text = LogAttendance.durationtime
                             datestudentattendance.text = "Date : ${date}"
@@ -133,7 +133,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
                             println(result)
                             course_studentAttendance.text = "Course : ${selectnamecourse}"
                             if (LogAttendance.attendance == "Present") {
-                                starttime.text = "Check in at : ${LogAttendance.starttime}"
+                                starttime.text = "Check in : ${LogAttendance.starttime}"
                                 durationtime.text = LogAttendance.durationtime
                                 if (LogAttendance.starttime == "") {
                                     starttime.text = "Manual Add"
@@ -159,7 +159,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
                     if(currenttype=="Student") {
                         if (isScanning) {
                             course_studentAttendance.text = "Course : ${selectnamecourse}"
-                            starttime.text = "Check in at : ${time}"
+                            starttime.text = "Check in  : ${time}"
                             attendance.text = "Present"
                             datestudentattendance.text = "Date : ${date}"
                             println("notfoundddduration ${durationtime.base} ${currentdurationtime}")
