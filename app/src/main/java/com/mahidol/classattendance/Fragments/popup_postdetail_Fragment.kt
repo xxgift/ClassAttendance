@@ -44,14 +44,12 @@ class popup_postdetail_Fragment(var mView: View,var user:String,var content:Stri
         popup_post_course.text = course
         popup_post_time.text = date
 
-        if (currenttype == "Student") {
-            popup_post_course.setTextColor(Color.parseColor("#004cc3"))
-        }
-
         if(type == "Teacher"){
             imageView17.setImageResource(R.mipmap.ic_teachernew)
+            popup_post_course.setTextColor(Color.parseColor("#A254F2"))
         }else{
             imageView17.setImageResource(R.mipmap.ic_studentnew)
+            popup_post_course.setTextColor(Color.parseColor("#004cc3"))
         }
        popup_post_okbtn.setOnClickListener {
             dialog!!.dismiss()
