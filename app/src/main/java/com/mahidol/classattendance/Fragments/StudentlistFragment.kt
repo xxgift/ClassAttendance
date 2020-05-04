@@ -40,15 +40,17 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
     lateinit var studentListValue: HashMap<String, Attendance>
     lateinit var studentList: ArrayList<Attendance>
     lateinit var whoEnroll: ArrayList<String>
+    lateinit var presentList: ArrayList<String>
+    lateinit var absentList: ArrayList<String>
 
     var dataReference =
-            FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
+        FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_studentlist, container, false)
 
@@ -68,7 +70,7 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
         backbtn_studentlist.visibility = View.VISIBLE
         addbtn_studentlist.visibility = View.INVISIBLE
         appbar_course_studentlist.text = "Course : ${selectnamecourse}"
-        appbar_date_studentlist.text =   "Date : ${date}"
+        appbar_date_studentlist.text = "Date : ${date}"
 
 
         if (isScanning) {
@@ -78,10 +80,8 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
             }
         } else {
             img_empty_studentlist.setImageResource(R.mipmap.ic_nostudentinclass)
-        }
-
-        if (currenttype == "Teacher") {
-            val touchListener = SwipeToDismissTouchListener(
+            if (currenttype == "Teacher") {
+                val touchListener = SwipeToDismissTouchListener(
                     ListViewAdapter(listview_studentlist),
                     object : SwipeToDismissTouchListener.DismissCallbacks<ListViewAdapter> {
                         override fun canDismiss(position: Int): Boolean {
@@ -96,19 +96,21 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
                         }
                     })
 
-            listview_studentlist!!.setOnTouchListener(touchListener)
+                listview_studentlist!!.setOnTouchListener(touchListener)
 //        listview_courselist!!.setOnScrollListener(touchListener.makeScrollListener() as AbsListView.OnScrollListener)
-            listview_studentlist!!.onItemClickListener =
+                listview_studentlist!!.onItemClickListener =
                     AdapterView.OnItemClickListener { parent, view, position, id ->
                         if (touchListener.existPendingDismisses()) {
                             touchListener.undoPendingDismiss()
                         }
                     }
+            }
         }
-
         studentList = arrayListOf()
         studentListValue = hashMapOf()
         whoEnroll = arrayListOf()
+        presentList = arrayListOf()
+        absentList = arrayListOf()
 
         var dataQuery = dataReference.child(date).orderByChild("username")
 
@@ -119,11 +121,22 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0!!.exists()) {
                     studentList.clear()
+                    presentList.clear()
+                    absentList.clear()
                     for (i in p0.children) {
                         val oneUser = i.getValue(Attendance::class.java)
                         studentListValue.put(oneUser!!.username, Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
                         studentList.add(Attendance(oneUser!!.username, oneUser.type, oneUser.coursename, oneUser.date, oneUser.starttime, oneUser.durationtime, oneUser.attendance))
+                        if (oneUser!!.attendance == "Present") {
+                            presentList.add(oneUser.username)
+                        }
+                        if (oneUser!!.attendance == "Absent") {
+                            absentList.add(oneUser.username)
+                        }
+                        appbar_total_studentlist.text = "Present : ${presentList.size} Absent : ${absentList.size}"
+
                     }
+
                     val imgEmpty = view.findViewById<ImageView>(R.id.img_empty_studentlist)
                     if (studentList.size > 0) {
                         imgEmpty.visibility = View.INVISIBLE
@@ -153,7 +166,7 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
     }
 
     private fun showDialog(view: View, adapter: StudentlistAdapter) {
-        val applypopup = popup_addstudent_Fragment(view, adapter, selectnamecourse,selectjoinID, date)
+        val applypopup = popup_addstudent_Fragment(view, adapter, selectnamecourse, selectjoinID, date)
         applypopup.show(activity!!.supportFragmentManager, "exampleBottomSheet")
     }
 

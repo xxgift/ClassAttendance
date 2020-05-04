@@ -44,6 +44,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <TextView
+        android:id="@+id/appbar_total_studentlist"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:textAlignment="textEnd"
+        android:textColor="#724FB1"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.941"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <Button
         android:id="@+id/backbtn_studentlist"
         android:layout_width="wrap_content"

@@ -270,6 +270,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             currentdurationtime = 0.toLong()
             currentcourse = null
             currentjoinID = null
+            currentstatus = ""
             finish()
         }
 

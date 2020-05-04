@@ -59,7 +59,7 @@ class AttendanceFragment : Fragment() {
     lateinit var onlineListValue: HashMap<String, Any>
     lateinit var whoEnroll: ArrayList<String>
 
-    val tmp = SimpleDateFormat("dd-MM-yy")
+    val tmp = SimpleDateFormat("yy-MM-dd")
     val date = tmp.format(Date())
 //    val date = "12-04-20"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
@@ -214,7 +214,8 @@ class AttendanceFragment : Fragment() {
             }
             println("oooooooooooooooooooooooooooooooooooooooooo")
             if (currenttype == "Student") {
-                dataReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                handler!!.removeCallbacksAndMessages(null)
+                dataReference.addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
 
@@ -409,6 +410,7 @@ class AttendanceFragment : Fragment() {
             }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
+            currentstatus = "class is not over"
             handler!!.postDelayed(myRunnable, 15000)
         })
 
@@ -483,7 +485,7 @@ class AttendanceFragment : Fragment() {
             courseList
         )
         var query = dataReference.orderByChild("courseID")
-        query.addValueEventListener(object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
             }
 
@@ -592,6 +594,9 @@ class AttendanceFragment : Fragment() {
     }
 
     private fun showNotification() {
+
+        val tmp3 = SimpleDateFormat("HH:mm:ss a")
+        val timeEnd = tmp3.format(Date())
         createNotificationChannel()
         if (currentstatus == "in class") {
             if (currenttype == "Teacher") {
@@ -625,7 +630,7 @@ class AttendanceFragment : Fragment() {
                                 println("present ${presentList}  absent ${absentList}")
                             }
                         }
-                        notifyMessage("${currentuser} ended course", "Ended at ${time}  \nCourse ${currentcourse} \nPresent : ${presentList.size} Absent : ${absentList.size}")
+                        notifyMessage("${currentuser} ended course", "Ended at ${timeEnd}  \nCourse ${currentcourse} \nPresent : ${presentList.size} Absent : ${absentList.size}")
                     }
                 })
             } else {
