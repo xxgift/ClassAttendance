@@ -410,7 +410,6 @@ class AttendanceFragment : Fragment() {
             }
 
             println("ggggggggggggggggggggg$isScanning${beaconList.size}")
-            currentstatus = "class is not over"
             handler!!.postDelayed(myRunnable, 15000)
         })
 
