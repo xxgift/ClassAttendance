@@ -118,7 +118,7 @@ class popup_addcourse_Fragment(var mView: View, var adapter: MycourseAdapter) : 
 
 
             //send value to firebase
-            var randjoinID = ('A'..'z').map { it }.shuffled().subList(0, 4).joinToString("")
+            var randjoinID = ('A'..'Z').map { it }.shuffled().subList(0, 4).joinToString("")
             courselistdetail!!.put(addcourseID, Course(addcourseID, randjoinID, currentuser!!, "", ArrayList<String>(),
                     ArrayList<Material>()
             ))

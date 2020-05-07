@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -42,6 +40,7 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
     lateinit var whoEnroll: ArrayList<String>
     lateinit var presentList: ArrayList<String>
     lateinit var absentList: ArrayList<String>
+    lateinit var total:TextView
 
     var dataReference =
         FirebaseDatabase.getInstance().getReference("Attendance").child("${selectnamecourse}+${selectjoinID}")
@@ -133,7 +132,8 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
                         if (oneUser!!.attendance == "Absent") {
                             absentList.add(oneUser.username)
                         }
-                        appbar_total_studentlist.text = "Present : ${presentList.size} Absent : ${absentList.size}"
+                        total = view.findViewById<TextView>(R.id.appbar_total_studentlist)
+                        total.text = "Present : ${presentList.size} Absent : ${absentList.size}"
 
                     }
 
