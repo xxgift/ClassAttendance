@@ -46,6 +46,7 @@ class AttendanceFragment : Fragment() {
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
     lateinit var myRunnable: Runnable
+    lateinit var myRunnable2: Runnable
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
@@ -61,17 +62,17 @@ class AttendanceFragment : Fragment() {
 
     val tmp = SimpleDateFormat("yyyy-MM-dd")
     val date = tmp.format(Date())
-    //    val date = "12-04-20"
+//    val date = "2020-05-01"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
 
     var countforOut = 0
     var counttoEnd = 0
-    var alreadyInclass = false
-    var shownotiFirst = false
 
     private val CHANNEL_ID = "100"
+
+    var alreadyInclass = false
 
 
     override fun onCreateView(
@@ -113,6 +114,16 @@ class AttendanceFragment : Fragment() {
 
         handler = Handler()
 
+        myRunnable2 = Runnable {
+            handler!!.removeCallbacksAndMessages(null)
+            if (currentstatus == "out of class"){
+                currentstatus = "waiting for another"
+                handler!!.postDelayed(myRunnable, 1000)
+                println("runnnnable222222222")
+            }
+        }
+
+
         myRunnable = Runnable {
             handler!!.removeCallbacksAndMessages(null)
             if (currentcourse != null) {
@@ -123,6 +134,8 @@ class AttendanceFragment : Fragment() {
                             isScanning = false
                         }
                     }
+                    handler!!.postDelayed(myRunnable2, 4000)
+                    println("outttttttttoffffffffff")
                     return@Runnable
                 }
             }
@@ -246,6 +259,8 @@ class AttendanceFragment : Fragment() {
                 }
                 )
             }
+            currentattendancetime = ""
+            currentdurationtime = 0.toLong()
         }
 
         Glide
@@ -315,8 +330,6 @@ class AttendanceFragment : Fragment() {
                                         mContext, "Get Started ${courseList[position].courseID
                                         }", Toast.LENGTH_SHORT
                                     ).show()
-                                    queryOnline()
-
                                     if (courseList[position].courseStatus == "Online") {
                                         currentcourse = courseList[position].courseID
                                         currentjoinID = courseList[position].joinID
@@ -328,6 +341,9 @@ class AttendanceFragment : Fragment() {
                                         courseList[position].courseStatus = "Online"
                                         currentcourse = courseList[position].courseID
                                         currentjoinID = courseList[position].joinID
+                                        if (!shownotiFirst) {
+                                            showNotification()
+                                        }
                                         courselistdetail[currentcourse!!]!!.courseStatus = "Online"
                                         onlineListValue.put(
                                             "${courseList[position].courseID}+${courseList[position].joinID}", Course(
@@ -340,9 +356,8 @@ class AttendanceFragment : Fragment() {
 
                                             )
                                         )
-                                        if (!shownotiFirst) {
-                                            showNotification()
-                                        }
+                                        queryOnline()
+
                                         dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
                                         dataReference.setValue(onlineListValue)
                                         val temp = HashMap<String, Attendance>()
@@ -361,10 +376,7 @@ class AttendanceFragment : Fragment() {
                         } else {
                             queryOnline()
                             //not finish durationtime
-
                             println("dddddddddddddddddddddddddddd${onlinecourse}")
-
-
                         }
                     }
                     alreadyInclass = true
@@ -383,7 +395,7 @@ class AttendanceFragment : Fragment() {
 
                     countforOut = countforOut + 1
                     println("2/////////////////" + countforOut + "////" + counttoEnd)
-                    if (countforOut == 3) {
+                    if (countforOut == 5) {
                         currentstatus = "out of class"
                         handler!!.postDelayed(myRunnable, 1000)
 
@@ -541,14 +553,16 @@ class AttendanceFragment : Fragment() {
                         val img = view!!.findViewById<ImageView>(R.id.img_attendance)
                         img.setImageResource(R.mipmap.ic_noonlinecourse)
                         img.visibility = View.VISIBLE
-
+                        handler!!.postDelayed(myRunnable, 1000)
                     }
                     if (onlinecourse.size == 1) {
                         currentcourse = onlinecourse[0].courseID
                         currentjoinID = onlinecourse[0].joinID
                         val listviewAtten = view!!.findViewById<ListView>(R.id.listview_attendance)
                         listviewAtten.adapter = null
-                        showNotification()
+                        if (!shownotiFirst) {
+                            showNotification()
+                        }
                         addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[0].joinID, date, time))
                     } else {
                         println("sizeeeeeeenot000000000")
@@ -574,7 +588,9 @@ class AttendanceFragment : Fragment() {
                                 currentcourse = onlinecourse[position].courseID
                                 currentjoinID = onlinecourse[position].joinID
                                 listview_attendance.adapter = null
-                                showNotification()
+                                if (!shownotiFirst) {
+                                    showNotification()
+                                }
                                 addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[position].joinID, date, time))
                             }
 
@@ -640,9 +656,7 @@ class AttendanceFragment : Fragment() {
             } else {
                 notifyMessage("${currentuser} checked out", "Attendance hours : ${currentattendancetime} \nCourse : ${currentcourse}")
             }
-            currentcourse = null
-            currentattendancetime = ""
-            currentdurationtime = 0.toLong()
+            shownotiFirst = false
         }
     }
 
