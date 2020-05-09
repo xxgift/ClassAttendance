@@ -115,7 +115,7 @@ class popup_addpost_Fragment(var mView: View, var adapter: BoardAdapter) : Dialo
         val user = currentuser!!
         val course = currentcourse!!
         val content = post_content.text.toString()
-        val sdf = SimpleDateFormat("dd-MM-yy @HH:mm a")
+        val sdf = SimpleDateFormat("yyyy-MM-dd @HH:mm a")
         val date = sdf.format(Date())
         val tmp = SimpleDateFormat("yyMMddHHmmss")
         val timestamp = tmp.format(Date())

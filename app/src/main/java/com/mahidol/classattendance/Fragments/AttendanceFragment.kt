@@ -218,10 +218,9 @@ class AttendanceFragment : Fragment() {
                     }
                     dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
 
-                } else {
-                    val img = view!!.findViewById<ImageView>(R.id.img_attendance)
-                    img.setImageResource(R.mipmap.ic_pleaseenterthecr)
-                    img.visibility = View.VISIBLE
+                }else{
+                    gif.visibility = View.VISIBLE
+                    statusText.visibility = View.VISIBLE
                 }
 
             } else {
@@ -341,9 +340,6 @@ class AttendanceFragment : Fragment() {
                                         courseList[position].courseStatus = "Online"
                                         currentcourse = courseList[position].courseID
                                         currentjoinID = courseList[position].joinID
-                                        if (!shownotiFirst) {
-                                            showNotification()
-                                        }
                                         courselistdetail[currentcourse!!]!!.courseStatus = "Online"
                                         onlineListValue.put(
                                             "${courseList[position].courseID}+${courseList[position].joinID}", Course(
@@ -356,8 +352,9 @@ class AttendanceFragment : Fragment() {
 
                                             )
                                         )
-                                        queryOnline()
-
+                                        if (!shownotiFirst) {
+                                            showNotification()
+                                        }
                                         dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
                                         dataReference.setValue(onlineListValue)
                                         val temp = HashMap<String, Attendance>()
@@ -375,7 +372,6 @@ class AttendanceFragment : Fragment() {
 
                         } else {
                             queryOnline()
-                            //not finish durationtime
                             println("dddddddddddddddddddddddddddd${onlinecourse}")
                         }
                     }
@@ -509,21 +505,7 @@ class AttendanceFragment : Fragment() {
                     onlinecourse.clear()
                     for (i in p0.children) {
                         val result = i.getValue(Course::class.java)
-                        if (currenttype == "Teacher") {
-                            if (onlinecourse.any { it.joinID == result!!.joinID }) {
-                            } else {
-                                onlinecourse.add(
-                                    Course(
-                                        result!!.courseID,
-                                        result!!.joinID,
-                                        result!!.owner,
-                                        result!!.courseStatus,
-                                        result!!.whoEnroll,
-                                        ArrayList<Material>()
-                                    )
-                                )
-                            }
-                        } else {
+                        if (currenttype == "Student"){
                             courselistdetail.forEach {
                                 if (it.key == result!!.courseID && it.value.joinID == result!!.joinID) {
                                     println("uuuuuuuuuuuuuuuuuuuuuuuuu${it.key} result:: ${result.courseID}  online:::${onlinecourse}")
@@ -553,7 +535,7 @@ class AttendanceFragment : Fragment() {
                         val img = view!!.findViewById<ImageView>(R.id.img_attendance)
                         img.setImageResource(R.mipmap.ic_noonlinecourse)
                         img.visibility = View.VISIBLE
-                        handler!!.postDelayed(myRunnable, 1000)
+                        handler!!.postDelayed(myRunnable, 3000)
                     }
                     if (onlinecourse.size == 1) {
                         currentcourse = onlinecourse[0].courseID
