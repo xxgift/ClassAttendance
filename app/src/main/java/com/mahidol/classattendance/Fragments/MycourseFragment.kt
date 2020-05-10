@@ -132,8 +132,8 @@ class MycourseFragment : Fragment() {
                 touchListener.undoPendingDismiss()
                 println("hereeeeeeeeeeeeeeeee")
             } else {
-                Toast.makeText(mContext, "Select ${courseList[position].courseID
-                }", LENGTH_SHORT).show()
+//                Toast.makeText(mContext, "Select ${courseList[position].courseID
+//                }", LENGTH_SHORT).show()
                 replaceFragment(SelectFragment(courseList[position].courseID, courseList[position].joinID))
             }
         }

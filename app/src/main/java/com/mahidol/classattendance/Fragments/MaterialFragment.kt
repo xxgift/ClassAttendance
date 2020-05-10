@@ -100,7 +100,7 @@ class MaterialFragment(val selectnamecourse: String,val selectjoinID: String) : 
         }
 
         backbtn_thiscourse.setOnClickListener {
-            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
+//            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
             replaceFragment(SelectFragment(selectnamecourse,selectjoinID))
         }
 

@@ -150,7 +150,7 @@ StudentlistFragment(val selectnamecourse: String,val selectjoinID: String, val d
         listview_studentlist!!.adapter = adapter
 
         backbtn_studentlist.setOnClickListener {
-            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
+//            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
             if (isScanning) {
                 replaceFragment(AttendanceFragment())
             } else {

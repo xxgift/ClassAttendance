@@ -80,7 +80,7 @@ class AttendanceFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(mContext, "scanning...", Toast.LENGTH_LONG).show()
+//        Toast.makeText(mContext, "scanning...", Toast.LENGTH_SHORT).show()
         return inflater.inflate(R.layout.fragment_attendance, container, false)
     }
 
@@ -140,11 +140,11 @@ class AttendanceFragment : Fragment() {
                 }
             }
             alreadyInclass = false
-            Toast.makeText(
-                context,
-                "not found any beacon",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                context,
+//                "not found any beacon",
+//                Toast.LENGTH_SHORT
+//            ).show()
 
             gif.visibility = View.INVISIBLE
             statusText.visibility = View.INVISIBLE
@@ -276,7 +276,7 @@ class AttendanceFragment : Fragment() {
         beaconManager = BeaconManager(context)
 
         beaconManager!!.setLocationListener {
-            Toast.makeText(mContext, it.size, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(mContext, it.size, Toast.LENGTH_SHORT).show()
         }
         region = BeaconRegion(
             "region",
@@ -307,7 +307,7 @@ class AttendanceFragment : Fragment() {
 
                     counttoEnd = 0
                     countforOut = 0
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+//                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                     statusText.visibility = View.INVISIBLE
                     img.visibility = View.INVISIBLE
                     gif.visibility = View.INVISIBLE
@@ -401,7 +401,7 @@ class AttendanceFragment : Fragment() {
                         println("3/////////////////" + countforOut + "////" + counttoEnd)
 
                     }
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
                 }
             } else {
                 currentstatus = "out of class"
@@ -416,7 +416,7 @@ class AttendanceFragment : Fragment() {
 
             if (counttoEnd == 20) {
                 currentstatus = "class is over"
-                Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+//                Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                 handler!!.postDelayed(myRunnable, 1000)
                 counttoEnd = 0
             }
