@@ -68,7 +68,7 @@ class StudentAttendanceFragment(val selectnamecourse: String, val selectjoinID: 
                 .child(date)
 
         backbtn_studentAttentdance.setOnClickListener {
-            Toast.makeText(mContext, "back", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(mContext, "back", Toast.LENGTH_SHORT).show()
             if (isScanning) {
                 replaceFragment(AttendanceFragment())
             } else {

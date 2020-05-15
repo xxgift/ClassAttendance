@@ -46,6 +46,7 @@ class AttendanceFragment : Fragment() {
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
     lateinit var myRunnable: Runnable
+    lateinit var myRunnable2: Runnable
     lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
     lateinit var dataReference: DatabaseReference
@@ -59,18 +60,19 @@ class AttendanceFragment : Fragment() {
     lateinit var onlineListValue: HashMap<String, Any>
     lateinit var whoEnroll: ArrayList<String>
 
-    val tmp = SimpleDateFormat("dd-MM-yy")
+    val tmp = SimpleDateFormat("yyyy-MM-dd")
     val date = tmp.format(Date())
-//    val date = "12-04-20"
+//    val date = "2020-05-01"
     val tmp2 = SimpleDateFormat("HH:mm:ss a")
     val time = tmp2.format(Date())
 
 
     var countforOut = 0
     var counttoEnd = 0
-    var alreadyInclass = false
 
     private val CHANNEL_ID = "100"
+
+    var alreadyInclass = false
 
 
     override fun onCreateView(
@@ -78,7 +80,7 @@ class AttendanceFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(mContext, "scanning...", Toast.LENGTH_LONG).show()
+//        Toast.makeText(mContext, "scanning...", Toast.LENGTH_SHORT).show()
         return inflater.inflate(R.layout.fragment_attendance, container, false)
     }
 
@@ -112,22 +114,37 @@ class AttendanceFragment : Fragment() {
 
         handler = Handler()
 
+        myRunnable2 = Runnable {
+            handler!!.removeCallbacksAndMessages(null)
+            if (currentstatus == "out of class"){
+                currentstatus = "waiting for another"
+                handler!!.postDelayed(myRunnable, 1000)
+                println("runnnnable222222222")
+            }
+        }
+
+
         myRunnable = Runnable {
-            if (currentstatus == "out of class") {
-                if (currenttype == "Student") {
-                    alreadyInclass = false
-                    if (isScanning) {
-                        isScanning = false
+            handler!!.removeCallbacksAndMessages(null)
+            if (currentcourse != null) {
+                if (currentstatus == "out of class") {
+                    if (currenttype == "Student") {
+                        alreadyInclass = false
+                        if (isScanning) {
+                            isScanning = false
+                        }
                     }
+                    handler!!.postDelayed(myRunnable2, 4000)
+                    println("outttttttttoffffffffff")
+                    return@Runnable
                 }
-                return@Runnable
             }
             alreadyInclass = false
-            Toast.makeText(
-                context,
-                "not found any beacon",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                context,
+//                "not found any beacon",
+//                Toast.LENGTH_SHORT
+//            ).show()
 
             gif.visibility = View.INVISIBLE
             statusText.visibility = View.INVISIBLE
@@ -201,10 +218,9 @@ class AttendanceFragment : Fragment() {
                     }
                     dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
 
-                } else {
-                    val img = view!!.findViewById<ImageView>(R.id.img_attendance)
-                    img.setImageResource(R.mipmap.ic_pleaseenterthecr)
-                    img.visibility = View.VISIBLE
+                }else{
+                    gif.visibility = View.VISIBLE
+                    statusText.visibility = View.VISIBLE
                 }
 
             } else {
@@ -214,7 +230,7 @@ class AttendanceFragment : Fragment() {
             }
             println("oooooooooooooooooooooooooooooooooooooooooo")
             if (currenttype == "Student") {
-                dataReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                dataReference.addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
 
@@ -227,21 +243,23 @@ class AttendanceFragment : Fragment() {
                                 tmp.put("${oneUser!!.courseID}+${oneUser!!.joinID}", oneUser!!)
                             }
                         }
-                        if (tmp.any { it.key == "${currentcourse}+${currentjoinID}" }) {
-                        } else {
-                            beaconManager!!.stopRanging(region)
-                            currentstatus = "class is over"
-                            if (currentcourse != "") {
+                        if (currentcourse != null) {
+                            if (tmp.any { it.key == "${currentcourse}+${currentjoinID}" }) {
+                            } else {
+                                beaconManager!!.stopRanging(region)
+                                currentstatus = "class is over"
                                 showDialog(view, adapter)
                                 showNotification()
-                                currentcourse = ""
+                                currentcourse = null
+                                adapter.notifyDataSetChanged()
                             }
-                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
                 )
             }
+            currentattendancetime = ""
+            currentdurationtime = 0.toLong()
         }
 
         Glide
@@ -258,7 +276,7 @@ class AttendanceFragment : Fragment() {
         beaconManager = BeaconManager(context)
 
         beaconManager!!.setLocationListener {
-            Toast.makeText(mContext, it.size, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(mContext, it.size, Toast.LENGTH_SHORT).show()
         }
         region = BeaconRegion(
             "region",
@@ -289,7 +307,7 @@ class AttendanceFragment : Fragment() {
 
                     counttoEnd = 0
                     countforOut = 0
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+//                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                     statusText.visibility = View.INVISIBLE
                     img.visibility = View.INVISIBLE
                     gif.visibility = View.INVISIBLE
@@ -311,15 +329,12 @@ class AttendanceFragment : Fragment() {
                                         mContext, "Get Started ${courseList[position].courseID
                                         }", Toast.LENGTH_SHORT
                                     ).show()
-                                    queryOnline()
-
                                     if (courseList[position].courseStatus == "Online") {
                                         currentcourse = courseList[position].courseID
                                         currentjoinID = courseList[position].joinID
                                         listview_attendance!!.adapter = null
                                         addFragment(StudentAttendanceFragment(courseList[position].courseID, courseList[position].joinID, date, time))
                                         addFragment(StudentlistFragment(courseList[position].courseID, courseList[position].joinID, date, true))
-                                        showNotification()
                                         return@OnItemClickListener
                                     } else {
                                         courseList[position].courseStatus = "Online"
@@ -337,6 +352,9 @@ class AttendanceFragment : Fragment() {
 
                                             )
                                         )
+                                        if (!shownotiFirst) {
+                                            showNotification()
+                                        }
                                         dataReference4.child(currentuser).child("courselist").setValue(courselistdetail)
                                         dataReference.setValue(onlineListValue)
                                         val temp = HashMap<String, Attendance>()
@@ -345,7 +363,6 @@ class AttendanceFragment : Fragment() {
                                         listview_attendance!!.adapter = null
                                         addFragment(StudentAttendanceFragment(courseList[position].courseID, courseList[position].joinID, date, time))
                                         addFragment(StudentlistFragment(courseList[position].courseID, courseList[position].joinID, date, true))
-                                        showNotification()
                                         return@OnItemClickListener
                                     }
 
@@ -355,11 +372,7 @@ class AttendanceFragment : Fragment() {
 
                         } else {
                             queryOnline()
-                            //not finish durationtime
-
                             println("dddddddddddddddddddddddddddd${onlinecourse}")
-
-
                         }
                     }
                     alreadyInclass = true
@@ -378,7 +391,7 @@ class AttendanceFragment : Fragment() {
 
                     countforOut = countforOut + 1
                     println("2/////////////////" + countforOut + "////" + counttoEnd)
-                    if (countforOut == 3) {
+                    if (countforOut == 5) {
                         currentstatus = "out of class"
                         handler!!.postDelayed(myRunnable, 1000)
 
@@ -388,7 +401,7 @@ class AttendanceFragment : Fragment() {
                         println("3/////////////////" + countforOut + "////" + counttoEnd)
 
                     }
-                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
                 }
             } else {
                 currentstatus = "out of class"
@@ -403,7 +416,7 @@ class AttendanceFragment : Fragment() {
 
             if (counttoEnd == 20) {
                 currentstatus = "class is over"
-                Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
+//                Toast.makeText(mContext, currentstatus, Toast.LENGTH_LONG).show()
                 handler!!.postDelayed(myRunnable, 1000)
                 counttoEnd = 0
             }
@@ -483,7 +496,7 @@ class AttendanceFragment : Fragment() {
             courseList
         )
         var query = dataReference.orderByChild("courseID")
-        query.addValueEventListener(object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
             }
 
@@ -492,21 +505,7 @@ class AttendanceFragment : Fragment() {
                     onlinecourse.clear()
                     for (i in p0.children) {
                         val result = i.getValue(Course::class.java)
-                        if (currenttype == "Teacher") {
-                            if (onlinecourse.any { it.joinID == result!!.joinID }) {
-                            } else {
-                                onlinecourse.add(
-                                    Course(
-                                        result!!.courseID,
-                                        result!!.joinID,
-                                        result!!.owner,
-                                        result!!.courseStatus,
-                                        result!!.whoEnroll,
-                                        ArrayList<Material>()
-                                    )
-                                )
-                            }
-                        } else {
+                        if (currenttype == "Student"){
                             courselistdetail.forEach {
                                 if (it.key == result!!.courseID && it.value.joinID == result!!.joinID) {
                                     println("uuuuuuuuuuuuuuuuuuuuuuuuu${it.key} result:: ${result.courseID}  online:::${onlinecourse}")
@@ -536,15 +535,17 @@ class AttendanceFragment : Fragment() {
                         val img = view!!.findViewById<ImageView>(R.id.img_attendance)
                         img.setImageResource(R.mipmap.ic_noonlinecourse)
                         img.visibility = View.VISIBLE
-
+                        handler!!.postDelayed(myRunnable, 3000)
                     }
                     if (onlinecourse.size == 1) {
                         currentcourse = onlinecourse[0].courseID
                         currentjoinID = onlinecourse[0].joinID
                         val listviewAtten = view!!.findViewById<ListView>(R.id.listview_attendance)
                         listviewAtten.adapter = null
+                        if (!shownotiFirst) {
+                            showNotification()
+                        }
                         addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[0].joinID, date, time))
-                        showNotification()
                     } else {
                         println("sizeeeeeeenot000000000")
                         adapter = MycourseAdapter(mContext, R.layout.list_detail, onlinecourse)
@@ -569,8 +570,10 @@ class AttendanceFragment : Fragment() {
                                 currentcourse = onlinecourse[position].courseID
                                 currentjoinID = onlinecourse[position].joinID
                                 listview_attendance.adapter = null
+                                if (!shownotiFirst) {
+                                    showNotification()
+                                }
                                 addFragment(StudentAttendanceFragment(currentcourse!!, onlinecourse[position].joinID, date, time))
-                                showNotification()
                             }
 
                     }
@@ -592,6 +595,9 @@ class AttendanceFragment : Fragment() {
     }
 
     private fun showNotification() {
+
+        val tmp3 = SimpleDateFormat("HH:mm:ss a")
+        val timeEnd = tmp3.format(Date())
         createNotificationChannel()
         if (currentstatus == "in class") {
             if (currenttype == "Teacher") {
@@ -599,6 +605,7 @@ class AttendanceFragment : Fragment() {
             } else {
                 notifyMessage("${currentuser} checked in", "Checked in at ${time} \nCourse : ${currentcourse} ")
             }
+            shownotiFirst = true
         }
         if (currentstatus == "class is over") {
             if (currenttype == "Teacher") {
@@ -625,12 +632,13 @@ class AttendanceFragment : Fragment() {
                                 println("present ${presentList}  absent ${absentList}")
                             }
                         }
-                        notifyMessage("${currentuser} ended course", "Ended at ${time}  \nCourse ${currentcourse} \nPresent : ${presentList.size} Absent : ${absentList.size}")
+                        notifyMessage("${currentuser} ended course", "Ended at ${timeEnd}  \nCourse ${currentcourse} \nPresent : ${presentList.size} Absent : ${absentList.size}")
                     }
                 })
             } else {
                 notifyMessage("${currentuser} checked out", "Attendance hours : ${currentattendancetime} \nCourse : ${currentcourse}")
             }
+            shownotiFirst = false
         }
     }
 

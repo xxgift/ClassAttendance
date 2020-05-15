@@ -14,3 +14,4 @@ var courselistdetail: HashMap<String, Course> = HashMap<String, Course>()
 var courseList: ArrayList<Course> = ArrayList<Course>()
 
 var isScanning:Boolean = false
+var shownotiFirst = false

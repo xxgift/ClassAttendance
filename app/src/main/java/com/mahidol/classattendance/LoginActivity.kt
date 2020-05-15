@@ -116,6 +116,7 @@ class LoginActivity : AppCompatActivity() {
                                         var editor = token.edit()
                                         editor.putString("loginusername", uname)
                                         editor.commit()
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         applicationContext.startActivity(intent)
                                         finish()
                                     } else {
@@ -131,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
                                             editor.commit()
 
 
-
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                             applicationContext.startActivity(intent)
                                             finish()
                                         } else {

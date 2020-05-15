@@ -103,7 +103,7 @@ class popup_addstudent_Fragment(var mView: View, var adapter: StudentlistAdapter
     private fun saveData(): Boolean {
 
         if (currenttype == "Teacher") {
-            addStudentID = addstudent_studentID.text.toString()
+            addStudentID = addstudent_studentID.text.toString().decapitalize()
             //check each edittext must not be null
             if (addStudentID.isEmpty()) {
                 addstudent_studentID.error = "Please enter a message"

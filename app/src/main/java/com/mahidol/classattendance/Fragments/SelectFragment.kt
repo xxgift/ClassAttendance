@@ -64,13 +64,13 @@ class SelectFragment(val selectnamecourse: String,val selectjoinID: String) : Fr
         listview_courselist!!.adapter = adapter
 
         backbtn_thiscourse.setOnClickListener {
-            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
+//            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
             replaceFragment(MycourseFragment())
         }
 
         listview_courselist!!.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                Toast.makeText(mContext, "${selectList[position].detail}", LENGTH_SHORT).show()
+//                Toast.makeText(mContext, "${selectList[position].detail}", LENGTH_SHORT).show()
                 when (position) {
                     0 -> replaceFragment(LogAttendanceFragment(selectnamecourse,selectjoinID))
                     1 -> replaceFragment(MaterialFragment(selectnamecourse,selectjoinID))

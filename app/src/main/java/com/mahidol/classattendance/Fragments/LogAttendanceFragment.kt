@@ -92,17 +92,17 @@ class LogAttendanceFragment(val selectnamecourse: String,val selectjoinID: Strin
         listview_courselist!!.adapter = adapter
 
         backbtn_thiscourse.setOnClickListener {
-            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
+//            Toast.makeText(mContext, "back", LENGTH_SHORT).show()
             replaceFragment(SelectFragment(selectnamecourse,selectjoinID))
         }
 
         listview_courselist!!.onItemClickListener =
                 AdapterView.OnItemClickListener { parent, view, position, id ->
 
-                    Toast.makeText(
-                            mContext, "Select ${logList[position]
-                    }", LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                            mContext, "Select ${logList[position]
+//                    }", LENGTH_SHORT
+//                    ).show()
                     if (currenttype == "Teacher") {
                         replaceFragment(StudentlistFragment(selectnamecourse,selectjoinID, logList[position], false))
                     }else{

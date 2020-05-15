@@ -266,19 +266,20 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             val intent = Intent(this@BodyActivity, LoginActivity::class.java)
             startActivity(intent)
-            Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "log out", Toast.LENGTH_SHORT).show()
             currentdurationtime = 0.toLong()
             currentcourse = null
             currentjoinID = null
+            currentstatus = ""
             finish()
         }
 
-        if (id == R.id.menu_scanner) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ScannerFragment())
-            appBar!!.text = "Scanner"
-            subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
-        }
+//        if (id == R.id.menu_scanner) {
+//            drawer!!.closeDrawer(GravityCompat.START)
+//            replaceFragment(ScannerFragment())
+//            appBar!!.text = "Scanner"
+//            subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+//        }
 
         return true
     }
@@ -305,9 +306,9 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return
             }
             lastUpdate = actualTime
-            replaceFragment(ScannerFragment())
-            appBar!!.text = "Scanner"
-            Toast.makeText(this, "Clear", Toast.LENGTH_SHORT).show()
+            replaceFragment(AttendanceFragment())
+            appBar!!.text = "Attendance"
+//            Toast.makeText(this, "Clear", Toast.LENGTH_SHORT).show()
 
         }
     }
