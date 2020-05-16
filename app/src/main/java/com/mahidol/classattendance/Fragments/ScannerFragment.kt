@@ -13,9 +13,10 @@ import androidx.fragment.app.Fragment
 import com.estimote.coresdk.observation.region.beacon.BeaconRegion
 import com.estimote.coresdk.recognition.packets.Beacon
 import com.estimote.coresdk.service.BeaconManager
-import com.mahidol.classattendance.Adapter.AttendentAdapter
+import com.mahidol.classattendance.Adapter.BeaconstatusAdapter
+import com.mahidol.classattendance.Adapter.MycourseAdapter
 import com.mahidol.classattendance.Adapter.ScannerAdapter
-import com.mahidol.classattendance.Models.BBeacon
+import com.mahidol.classattendance.Models.IBeacon
 import com.mahidol.classattendance.Models.Status
 import com.mahidol.classattendance.Models.currentstatus
 import com.mahidol.classattendance.R
@@ -30,14 +31,15 @@ import kotlin.math.pow
 class ScannerFragment : Fragment() {
 
     lateinit var mContext: Context
-    lateinit var beaconList: ArrayList<BBeacon>
-    lateinit var statusList:ArrayList<Status>
+    lateinit var beaconList: ArrayList<IBeacon>
+    lateinit var statusList: ArrayList<Status>
     private var beaconManager: BeaconManager? = null
     private var region: BeaconRegion? = null
     lateinit var adaptertop: ScannerAdapter
-    lateinit var adapterbottom: AttendentAdapter
+    lateinit var adapterbottom: BeaconstatusAdapter
+    lateinit var adapter: MycourseAdapter
     lateinit var mActivity: Activity
-    private var handler:Handler? = null
+    var count = 0
 
 
     override fun onCreateView(
@@ -66,13 +68,13 @@ class ScannerFragment : Fragment() {
         adaptertop = ScannerAdapter(mContext, R.layout.list_beacon, beaconList)
         listview_scanner!!.adapter = adaptertop
 
-        adapterbottom = AttendentAdapter(mContext, R.layout.row_course, statusList)
-        listview_attendent!!.adapter = adapterbottom
+        adapterbottom = BeaconstatusAdapter(mContext, R.layout.row_course, statusList)
+        listview_detail!!.adapter = adapterbottom
 
         beaconManager = BeaconManager(context)
 
         beaconManager!!.setLocationListener {
-            Toast.makeText(mContext,it.size,Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, it.size, Toast.LENGTH_SHORT).show()
         }
         region = BeaconRegion(
             "region",
@@ -81,23 +83,44 @@ class ScannerFragment : Fragment() {
 
         setConnect()
 
-        beaconManager!!.setForegroundScanPeriod(100, 0)
-        beaconManager!!.setBackgroundScanPeriod(100, 0)
+        beaconManager!!.setForegroundScanPeriod(3000, 0)
+        beaconManager!!.setBackgroundScanPeriod(3000, 0)
 
         beaconManager!!.setRangingListener(BeaconManager.BeaconRangingListener { beaconRegion, beacons ->
+
+
             if (beacons!!.isNotEmpty()) {
                 val nearestBeacon = beacons[0]
-                val places = placesNearBeacon(nearestBeacon)
+
+                adapterbottom.notifyDataSetChanged()
+                adaptertop.notifyDataSetChanged()
+                currentstatus = findBeacon(nearestBeacon)
+                if (currentstatus == "in class") {
+                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                }
+                if (currentstatus == "out of class") {
+                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                }
+                if (currentstatus == "waiting for another") {
+                    count = count + 1
+                    Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
+                    if (count == 10) {
+                        currentstatus = "out of class"
+                    }
+                }
+            } else {
+                currentstatus == "out of class"
+                Toast.makeText(mContext, currentstatus, Toast.LENGTH_SHORT).show()
             }
         })
 
+
     }
 
-    private fun placesNearBeacon(beacon: Beacon): ArrayList<BBeacon>? {
+    private fun findBeacon(beacon: Beacon): String {
         var distance =
             (10.toDouble().pow((beacon.measuredPower.toDouble() - beacon.rssi.toDouble()) / 20))
         var area: String? = null
-        var tmp: List<BBeacon>
 
         when (beacon.major) {
             38845 -> area = "Blue"
@@ -109,7 +132,7 @@ class ScannerFragment : Fragment() {
         val sdf = SimpleDateFormat("dd-MM-yyyy @HH:mm:ss a")
         val currentDate = sdf.format(Date())
 
-        var detail = BBeacon(
+        var detail = IBeacon(
             area!!,
             beacon.major.toString(),
             beacon.minor.toString(),
@@ -119,44 +142,42 @@ class ScannerFragment : Fragment() {
         )
         println("++++++++++______$beaconList")
 
-        //println("mmmm"+ beaconList.filter { it.region == area })
-        if(beaconList.any { it.region == area }){
+        if (beaconList.any { it.region == area }) {
             //เจออันซ้ำ
-            if (beaconList.size >= 2){
+            if (beaconList.size >= 2) {
                 checkInClass()
-                beaconList.clear()
-//                handler = Handler()
-//                Thread(Runnable {
-//                    try{
-//                        Thread.sleep(4000)
-//                        println("----------------slow---------------")
-//                    }catch (e:InterruptedException){
-//                    }
-//                }).start()
-            }else{
+
+                val handler = Handler()
+                val r = Runnable {
+                    beaconList.clear()
+                }
+                handler.postDelayed(r,1000)
+
+
+            } else {
                 currentstatus = "waiting for another"
                 statusList.add(Status(currentstatus))
 
             }
 
-        }else{
+        } else {
             //ไม่เจออันซ้ำ
             beaconList.add(detail)
-            if (beaconList.size >= 2){
+            if (beaconList.size >= 2) {
                 checkInClass()
-                beaconList.clear()
-            }else{
+
+                val handler = Handler()
+                val r = Runnable {
+                    beaconList.clear()
+                }
+                handler.postDelayed(r,1000)
+
+            } else {
                 currentstatus = "waiting for another"
                 statusList.add(Status(currentstatus))
-
-
             }
         }
-
-        adaptertop.notifyDataSetChanged()
-        adapterbottom.notifyDataSetChanged()
-        println("??????????????????$statusList")
-        return beaconList
+        return currentstatus
     }
 
     private fun checkInClass() {
@@ -164,27 +185,14 @@ class ScannerFragment : Fragment() {
             println("-------> in class")
             currentstatus = "in class"
             statusList.add(Status(currentstatus))
-        }else{
+        } else {
             currentstatus = "out of class"
             statusList.add(Status(currentstatus))
         }
-
-
-
-
-//            Timer().schedule(1000) {
-//                beaconList = arrayListOf()
-//                adapter = ScannerAdapter(mContext, R.layout.list_beacon, beaconList)
-//                listview_scanner.adapter = adapter
-//                adapter.notifyDataSetChanged()
-//
-//            }
-        }
-
+    }
 
 
     private fun setConnect() {
-
         beaconManager!!.connect {
             beaconManager!!.startMonitoring(region)
         }
@@ -194,14 +202,15 @@ class ScannerFragment : Fragment() {
         super.onResume()
         beaconManager!!.connect(object : BeaconManager.ServiceReadyCallback {
             override fun onServiceReady() {
-                beaconManager!!.startRanging(region);
+                beaconManager!!.startRanging(region)
             }
 
         })
     }
 
     override fun onPause() {
-        beaconManager!!.stopRanging(region);
+        beaconManager!!.stopRanging(region)
+        Handler().removeCallbacks(null)
         super.onPause()
     }
 

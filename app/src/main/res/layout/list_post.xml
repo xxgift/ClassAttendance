@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_list_post"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/post_bg"
+        android:layout_width="352dp"
+        android:layout_height="95dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/list_bg" />
+
+    <ImageView
+        android:id="@+id/post_bg2"
+        android:layout_width="352dp"
+        android:layout_height="95dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/list_bg" />
+
+    <ImageView
+        android:id="@+id/user_ic2"
+        android:layout_width="59dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_studentchat" />
+
+    <ImageView
+        android:id="@+id/user_ic1"
+        android:layout_width="59dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_teacherchat" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:textColor="#3A4759"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userName2"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="35dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="TextView"
+        android:textAlignment="textEnd"
+        android:textColor="#3A4759"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/post_bg2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/user_ic1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/postContent"
+        android:layout_width="185dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginBottom="3dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="2"
+        android:text="TextView"
+        android:textAlignment="viewStart"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_list"
+        app:layout_constraintEnd_toEndOf="@+id/post_bg"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+    <TextView
+        android:id="@+id/postContent2"
+        android:layout_width="185dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="3dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="2"
+        android:text="TextView"
+        android:textAlignment="textEnd"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_list"
+        app:layout_constraintEnd_toEndOf="@+id/post_bg2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+    <TextView
+        android:id="@+id/timePost"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="TextView"
+        android:textAlignment="textEnd"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/user_ic2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/timePost2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/courseName"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="TextView"
+        android:textAlignment="textEnd"
+        android:textColor="#A254F2"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg"
+        app:layout_constraintTop_toBottomOf="@+id/timePost" />
+
+    <TextView
+        android:id="@+id/courseName2"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:textColor="#004cc3"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/post_bg2"
+        app:layout_constraintTop_toBottomOf="@+id/timePost2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

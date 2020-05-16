@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="317dp"
+        android:layout_height="306dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/post_username"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="Username"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/imagepost"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/post_usertype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/montserrat"
+        android:text="TextView"
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/imagepost"
+        app:layout_constraintTop_toBottomOf="@+id/post_username" />
+
+    <EditText
+        android:id="@+id/post_content"
+        android:layout_width="273dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rectangleforpost"
+        android:ems="10"
+        android:fontFamily="@font/montserrat"
+        android:hint="Write a message"
+        android:inputType="textPersonName"
+        android:maxLines="2"
+        android:textAlignment="center"
+        android:textColor="@color/postmessege"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/addpost_cancelbtn"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/addpost_cancelbtn"
+        android:layout_width="159dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="250dp"
+        android:background="#CBCBCB"
+        android:fontFamily="@font/montserrat"
+        android:text="CANCEL"
+        android:textAllCaps="true"
+        android:textColor="#535353"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+    <Button
+        android:id="@+id/addpost_addbtn"
+        android:layout_width="159dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="250dp"
+        android:background="#6586DE"
+        android:fontFamily="@font/montserrat"
+        android:text="POST"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/addpost_cancelbtn"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+    <ImageView
+        android:id="@+id/imagepost"
+        android:layout_width="61dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:srcCompat="@mipmap/ic_teacheravatar" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="272dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="25dp"
+        android:background="@mipmap/bg_dragdown"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/imagepost"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

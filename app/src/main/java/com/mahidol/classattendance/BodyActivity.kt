@@ -1,53 +1,62 @@
 package com.mahidol.classattendance
 
+
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.AsyncTask
 import android.os.Bundle
-
+import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-
-
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
-import com.mahidol.classattendance.Fragments.*
+import com.mahidol.classattendance.Fragments.AttendanceFragment
+import com.mahidol.classattendance.Fragments.BoardFragment
+import com.mahidol.classattendance.Fragments.MycourseFragment
+import com.mahidol.classattendance.Fragments.ScannerFragment
 import com.mahidol.classattendance.Helper.HTTPHelper
-import com.mahidol.classattendance.Models.SearchModel
-import com.mahidol.classattendance.Models.User
-import com.mahidol.classattendance.Models.currentuser
-
-import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
-import ir.mirrajabi.searchdialog.core.SearchResultListener
-
-
+import com.mahidol.classattendance.Models.*
 import kotlinx.android.synthetic.main.activity_body.*
 import kotlinx.android.synthetic.main.header_nav.*
 
 class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     SensorEventListener {
 
+    lateinit var beaconList: ArrayList<IBeacon>
+    lateinit var statusList: ArrayList<Status>
+
+    lateinit var dataReference: DatabaseReference
+
+
     lateinit var fragmentTransaction: FragmentTransaction
+
     private var sensorManager: SensorManager? = null
     private var drawer: DrawerLayout? = null
     private var appBar: TextView? = null
-    private var subappBar:TextView? = null
-    private var username: TextView? = null
-    private var type: TextView? = null
+    var subappBar: TextView? = null
+    private var settingBtn: ImageButton? = null
 
     private var lastUpdate = 0L
 
@@ -56,81 +65,149 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var name: String? = null
     var userprofile: User? = null
 
+
     //set listener for selected item from bottom navigation bar to go to that fragment
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_timeline -> {
+                R.id.navigation_board -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Timeline"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(HomeFragment())
+                    appBar!!.text = "Board"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+                    replaceFragment(BoardFragment())
+
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_scanner -> {
+                R.id.navigation_mycourse -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Scanner"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(ScannerFragment())
+                    appBar!!.text = "My Course"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+                    replaceFragment(MycourseFragment())
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_post -> {
+                R.id.navigation_attendance -> {
                     drawer!!.closeDrawer(GravityCompat.START)
-                    appBar!!.text = "Post"
-                    subappBar!!.text = userprofile!!.type
-                    replaceFragment(CheckinFragment())
+                    appBar!!.text = "Attendance"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+                    replaceFragment(AttendanceFragment())
+
                     return@OnNavigationItemSelectedListener true
                 }
+
 
             };false
 
         }
 
+    private val bluetoothAdapter: BluetoothAdapter? by lazy(LazyThreadSafetyMode.NONE) {
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothManager.adapter
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_body)
+        // startService(Intent(this, NotificationService::class.java))
+        // Ensures Bluetooth is available on the device and it is enabled. If not,
+        // displays a dialog requesting user permission to enable Bluetooth.
+        bluetoothAdapter?.takeIf { !it.isEnabled }?.apply {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, 2)
+        }
+
+        val permissionCall = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_PHONE_STATE
+        )
+        val permissionLocation = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        val permissionBluetooth = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.BLUETOOTH
+        )
+
+        if (permissionCall != PackageManager.PERMISSION_GRANTED || permissionLocation != PackageManager.PERMISSION_GRANTED || permissionBluetooth != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.BLUETOOTH
+                ), 1
+            )
+        }
+
+        //set title page
+        appBar = findViewById(R.id.titleText)
+        subappBar = findViewById(R.id.subtitleText)
+
+//        username = findViewById(R.id.namenav)
+//        type = findViewById(R.id.nameSurname_nav)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        replaceFragment(HomeFragment())
+
+        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
+
+        dataReference = FirebaseDatabase.getInstance().getReference("UserProfile")
+
+
+        courseList.clear()
+        courselistdetail.clear()
+
+        replaceFragment(BoardFragment())
         Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show()
 
         //sensor
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         lastUpdate = System.currentTimeMillis()
 
-        //set title page
-        appBar = findViewById(R.id.titleText)
-        subappBar = findViewById(R.id.subtitleText)
 
-
-                //get username from transfer data of LoginActivity
-        uname = intent.getStringExtra("uname")
-
+        //get username from transfer data of LoginActivity
+//        uname = intent.getStringExtra("uname")
+        uname = token.getString("loginusername", " ")
         //get json file of this username
         var asyncTask = object : AsyncTask<String, String, String>() {
-
             override fun doInBackground(vararg p0: String?): String {
                 val helper = HTTPHelper()
-                return helper.getHTTPData(url +uname+".json")
+                return helper.getHTTPData(url + uname + ".json")
             }
 
             override fun onPostExecute(result: String?) {
                 if (result != "null") {
+                    println(result)
                     userprofile = Gson().fromJson(result, User::class.java)
                     //set header of navigation bar
-                    username = findViewById(R.id.namenav)
-                    type = findViewById(R.id.nameSurname_nav)
-                    username!!.text = userprofile!!.username
-                    type!!.text = userprofile!!.type
 
-                    headnavIC.setImageResource(R.mipmap.ic_teacheravatar)
+                    namenav!!.text = userprofile!!.username
+                    courselistdetail = userprofile!!.courselist
+                    courselistdetail.forEach {
+                        courseList.add(it.value)
+                    }
 
+                    nameSurname_nav!!.text = userprofile!!.type
 
+                    if (userprofile!!.type == "Student") {
+                        bottomNavigation.setBackgroundColor(getColor(R.color.studentcolor))
+                        settingBtn = findViewById(R.id.setting)
+                        subappBar!!.setTextColor(getColor(R.color.studenttextcolor))
+                        appBar!!.setBackgroundColor(getColor(R.color.studentcolor))
+                        subappBar!!.setBackgroundColor(getColor(R.color.studentsubcolor))
+                        settingBtn!!.setBackgroundTintList(
+                            ContextCompat.getColorStateList(
+                                getApplicationContext(),
+                                R.color.studentcolor
+                            )
+                        )
+                        layout_nav.setBackgroundColor(getColor(R.color.studentcolor))
+                        headnavIC.setImageResource(R.mipmap.ic_studentnew)
+                    }
 
                     //set current user
                     currentuser = userprofile!!.username
-                    appBar!!.text = "Timeline"
-                    subappBar!!.text = userprofile!!.type
+                    currenttype = userprofile!!.type
+                    appBar!!.text = "Board"
+                    subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
 
                 }
             }
@@ -158,81 +235,51 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 drawer!!.openDrawer(GravityCompat.START)
             }
         }
-
-
-        //add listener of search button to open navigation bar when clicked
-        val search = findViewById<ImageButton>(R.id.search)
-        search.setOnClickListener {
-            val searchView:SearchView? = null
-            SimpleSearchDialogCompat(
-                this@BodyActivity, "Search", "What are you looking for...?", null, initData(),
-                SearchResultListener {baseSearchDialogCompat, item, position ->
-                    Toast.makeText(this, item.title,Toast.LENGTH_SHORT).show()
-                    baseSearchDialogCompat.dismiss()
-                }
-            ).show()
-
-        }
-
     }
-
-
-    private fun initData(): ArrayList<SearchModel> {
-        val items = ArrayList<SearchModel>()
-        items.add(SearchModel("Thailand"))
-        items.add(SearchModel("Japan"))
-        items.add(SearchModel("Korea"))
-        items.add(SearchModel("USA"))
-        items.add(SearchModel("China"))
-        items.add(SearchModel("Russia"))
-        items.add(SearchModel("Finland"))
-
-        return items
-
-    }
-
-
-
 
     //function for replace fragment
     private fun replaceFragment(fragment: Fragment) {
         fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
+        fragmentTransaction.addToBackStack("tag")
         fragmentTransaction.commit()
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         // Handle navigation view item clicks here.
         val id = item.itemId
+        var token = getSharedPreferences("uname", Context.MODE_PRIVATE)
+
 
         //go to log in page when selected log out
-        if (id == R.id.teacher_logout) {
+        if (id == R.id.menu_logout) {
             drawer!!.closeDrawer(GravityCompat.START)
+            var editor = token.edit()
+            editor.putString("loginusername", " ")
+            editor.commit()
+
+            val userData = User(userprofile!!.username, userprofile!!.password, userprofile!!.type,
+                courselistdetail, "")
+            dataReference.child(userprofile!!.username).setValue(userData)
+            courseList.clear()
+
             val intent = Intent(this@BodyActivity, LoginActivity::class.java)
             startActivity(intent)
-            Toast.makeText(this, "log out!!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "log out", Toast.LENGTH_SHORT).show()
+            currentdurationtime = 0.toLong()
+            currentcourse = null
+            currentjoinID = null
+            currentstatus = ""
             finish()
         }
-        if (id == R.id.teacher_thiscourse) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ThiscourseteacherFragment())
-            appBar!!.text = "Course List"
-            subappBar!!.text = "${userprofile!!.type}: ${userprofile!!.username}"
-        }
-        if (id == R.id.teacher_studentinclass) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(StudentinclassFragment())
-            appBar!!.text = "Student List"
-            subappBar!!.text = "Student List"
-        }
-        if (id == R.id.teacher_classmeterial) {
-            drawer!!.closeDrawer(GravityCompat.START)
-            replaceFragment(ClassmaterialFragment())
-            appBar!!.text = "Class Materials"
-            subappBar!!.text = "Course List"
-        }
+
+//        if (id == R.id.menu_scanner) {
+//            drawer!!.closeDrawer(GravityCompat.START)
+//            replaceFragment(ScannerFragment())
+//            appBar!!.text = "Scanner"
+//            subappBar!!.text = "${userprofile!!.type} : ${userprofile!!.username}"
+//        }
 
         return true
     }
@@ -244,6 +291,7 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             getAccelerometer(event)
         }
     }
+
     private fun getAccelerometer(event: SensorEvent) {
         val values = event.values
         val x = values[0]
@@ -258,15 +306,17 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return
             }
             lastUpdate = actualTime
-            replaceFragment(ScannerFragment())
-            appBar!!.text = "Scanner"
-            Toast.makeText(this, "Clear", Toast.LENGTH_SHORT).show()
+            replaceFragment(AttendanceFragment())
+            appBar!!.text = "Attendance"
+//            Toast.makeText(this, "Clear", Toast.LENGTH_SHORT).show()
 
         }
     }
+
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
 
     }
+
     override fun onPause() {
         super.onPause()
         sensorManager!!.unregisterListener(this)
@@ -274,11 +324,28 @@ class BodyActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        sensorManager!!.registerListener(this, sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager!!.registerListener(
+            this,
+            sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+    }
+
+    private var doubleBackToExitPressedOnce = false
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finish()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please press BACK again to exit", Toast.LENGTH_SHORT).show()
+        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 1000)
     }
 
 
-
-
+//    override fun onStop() {
+//        super.onStop()
+//        //  startService(Intent(this, NotificationService::class.java))
+//    }
 
 }

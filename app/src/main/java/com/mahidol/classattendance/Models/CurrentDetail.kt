@@ -3,10 +3,15 @@ package com.mahidol.classattendance.Models
 
 //current data
 var currentuser: String? = null
-var currentbeacon: String? = null
-var currentcontent: String? = null
-var currenttime: String? = null
+var currentcourse: String? = null
+var currentjoinID: String? = null
 var currenttype: String? = null
-var currentstatus:String = ""
-var currenttotaltime:String? = null
-var courselistdetail:ArrayList<Course>? = arrayListOf()
+var currentstatus: String = ""
+var currentImei: String = ""
+var currentdurationtime: Long = 0
+var currentattendancetime:String = ""
+var courselistdetail: HashMap<String, Course> = HashMap<String, Course>()
+var courseList: ArrayList<Course> = ArrayList<Course>()
+
+var isScanning:Boolean = false
+var shownotiFirst = false

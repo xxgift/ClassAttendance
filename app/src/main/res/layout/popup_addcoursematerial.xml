@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="317dp"
+        android:layout_height="276dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textviewwww"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Add Course Material"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/addcm_coursename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Course name"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/textviewwww"
+        app:layout_constraintTop_toBottomOf="@+id/textviewwww" />
+
+
+    <EditText
+        android:id="@+id/addcm_materialID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="103dp"
+        android:background="@mipmap/username_edittext"
+        android:ems="10"
+        android:fontFamily="@font/montserrat"
+        android:hint="Material ID"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textColor="@color/purple"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+
+    <EditText
+        android:id="@+id/addcm_materialLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="153dp"
+        android:background="@mipmap/username_edittext"
+        android:ems="10"
+        android:fontFamily="@font/montserrat"
+        android:hint="Please enter URL"
+        android:inputType="textPersonName"
+        android:text="https://"
+        android:textAlignment="center"
+        android:textColor="@color/purple"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+
+
+    <Button
+        android:id="@+id/addcm_addbtn"
+        android:layout_width="159dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="220dp"
+        android:background="#6586DE"
+        android:fontFamily="@font/montserrat"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/addcm_cancelbtn"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        android:text="ADD" />
+
+    <Button
+        android:id="@+id/addcm_cancelbtn"
+        android:layout_width="159dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="220dp"
+        android:background="#CBCBCB"
+        android:fontFamily="@font/montserrat"
+        android:textAllCaps="true"
+        android:textColor="#535353"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        android:text="CANCEL" />
+
+    <ImageView
+        android:id="@+id/imageView08"
+        android:layout_width="47dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:srcCompat="@mipmap/uploadclassmat_ic" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
